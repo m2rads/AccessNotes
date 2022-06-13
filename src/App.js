@@ -1,11 +1,8 @@
 import "./App.css";
-// import Wiki from "./WikiHighlighter/Wiki";
-import Highlighter from "./WikiHighlighter/Highlighter";
-
+import Highlighter from "./AccessNoteHighlighter/Highlighter";
 function App() {
   return (
     <div className="App">
-      {/* <Wiki /> */}
       <Highlighter />
     </div>
   );

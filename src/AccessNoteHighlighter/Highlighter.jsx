@@ -6,19 +6,21 @@ import "rangy/lib/rangy-highlighter";
 import "rangy/lib/rangy-textrange";
 import "rangy/lib/rangy-serializer";
 import "../App.css";
+import Tootlip from "../Tooltip/Tooltip";
 
 class Highlighter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSerialized: "",
-      serializedHighlights: decodeURIComponent(
-        window.location.search.slice(window.location.search.indexOf("=") + 1)
-      ),
+      toolTipStyle: {
+        opacity: 0,
+      },
     };
+    this.showToolTip = this.showToolTip.bind(this);
   }
 
   componentDidMount() {
+    document.addEventListener("mouseup", this.handleMouseUp);
     rangy.init();
     this.highlighter = rangy.createHighlighter();
     this.highlighter.addClassApplier(
@@ -42,27 +44,17 @@ class Highlighter extends React.Component {
             this.highlight = this.highlighter.getHighlightForElement(
               event.target
             );
-            // if (
-            //   window.confirm("Delete this note (ID " + this.highlight.id + ")?")
-            // ) {
-            //   this.highlighter.removeHighlights([this.highlight]);
-            // }
-            // return false;
-            // console.log(this.highlight);
-            // this.highlighter.unhighlightSelection();
           },
         },
       })
     );
+  }
 
-    if (this.state.serializedHighlights) {
-      this.highlighter.deserialize(this.state.serializedHighlights);
-    }
+  componentDidUpdate() {
+    console.log(this.state.userAnnotation);
   }
 
   highlightSelectedText = () => {
-    console.log(window.getSelection().toString());
-    console.log(window.getSelection().getRangeAt(0).getClientRects());
     this.highlighter.highlightSelection("highlight");
   };
 
@@ -76,6 +68,34 @@ class Highlighter extends React.Component {
 
   noteSelectedText = () => {
     this.highlighter.highlightSelection("note");
+  };
+
+  handleMouseUp = (e) => {
+    if (e.target.className !== "highlight") {
+      setTimeout(this.showToolTip(), 2);
+    }
+  };
+
+  showToolTip = () => {
+    let selection = window.getSelection();
+    let selectionRange = selection.getRangeAt(0).getBoundingClientRect();
+    let toolTipLocStyle = {
+      opacity: 0,
+      display: "none",
+    };
+    if (selection.toString() !== "") {
+      let top = selectionRange - 80;
+      let left = (selectionRange.left + selectionRange.right) / 2 - 60;
+      toolTipLocStyle = {
+        top: top,
+        left: left,
+        opacity: 1,
+      };
+    }
+
+    this.setState({
+      toolTipStyle: toolTipLocStyle,
+    });
   };
 
   render() {
@@ -93,6 +113,7 @@ class Highlighter extends React.Component {
           Serialize Selection
         </button>
         <button onClick={this.noteSelectedText}>add note</button>
+        <Tootlip toolTipLocStyle={this.state.toolTipStyle} />
         <br />
         <br />
         {/* {isSerialized !== "" && <div>{isSerialized}</div>} */}
