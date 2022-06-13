@@ -49,9 +49,9 @@ class Highlighter extends React.Component {
       })
     );
   }
-
-  componentDidUpdate() {
-    console.log(this.state.userAnnotation);
+  // cleanup event listeners to avoid memory leak on older browsers
+  componentWillUnmount() {
+    document.removeEventListener("mouseup", this.handleMouseUp);
   }
 
   highlightSelectedText = () => {

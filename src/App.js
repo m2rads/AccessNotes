@@ -1,5 +1,5 @@
 import "./App.css";
-import Highlighter from "./AccessNoteHighlighter/Highlighter";
+import Highlighter from "./Highlighter/Highlighter";
 function App() {
   return (
     <div className="App">
