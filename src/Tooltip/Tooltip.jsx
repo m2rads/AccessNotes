@@ -30,15 +30,18 @@ const Tootlip = (props) => {
           {/* Blue */}
         </button>
       </div>
-      <div>
-        <button onClick={() => console.log("add note")}>Add Note</button>
-      </div>
-      <div>
-        <button onClick={() => props.onRemove()}>Read</button>
-      </div>
-      <div>
-        <button onClick={() => props.onRemove()}>Remove</button>
-      </div>
+
+      <button className="btn-el" onClick={() => console.log("add note")}>
+        Add Note
+      </button>
+
+      <button className="btn-el" onClick={() => props.onRemove()}>
+        Read
+      </button>
+
+      <button className="btn-el" onClick={() => props.onRemove()}>
+        Remove
+      </button>
     </div>
   );
 };
