@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import "./Tooltip.css";
 
 const Tootlip = (props) => {
@@ -41,6 +42,11 @@ const Tootlip = (props) => {
       </div>
     </div>
   );
+=======
+
+const Tootlip = (props) => {
+  return <div style={props.toolTipLocStyle}>Tooltip is showing</div>;
+>>>>>>> a5fcae4d7d505d2f16cf34d3290a56b4ae8071c5
 };
 
 export default Tootlip;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export const getCurrentScrollPosition = () => {
   return window.pageYOffset !== undefined
     ? window.pageYOffset
@@ -26,3 +27,6 @@ export function getPositionToToolTip(selection) {
     opacity: 1,
   };
 }
+=======
+export function getPositionToToolTip(selection) {}
+>>>>>>> a5fcae4d7d505d2f16cf34d3290a56b4ae8071c5
