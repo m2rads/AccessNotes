@@ -16,10 +16,8 @@ class Highlighter extends React.Component {
       toolTipStyle: {
         opacity: 0,
       },
-      color: "",
     };
     this.showToolTip = this.showToolTip.bind(this);
-    this.highlightSelectedText = this.highlightSelectedText.bind(this);
   }
 
   componentDidMount() {
@@ -27,7 +25,7 @@ class Highlighter extends React.Component {
     rangy.init();
     this.highlighter = rangy.createHighlighter();
     this.highlighter.addClassApplier(
-      rangy.createClassApplier("highlight", {
+      rangy.createClassApplier("h-y", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
@@ -38,12 +36,34 @@ class Highlighter extends React.Component {
       })
     );
     this.highlighter.addClassApplier(
-      rangy.createClassApplier("note", {
+      rangy.createClassApplier("h-g", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: (event) => {
-            // show the highlight
+          onclick: () => {
+            this.showToolTip();
+          },
+        },
+      })
+    );
+    this.highlighter.addClassApplier(
+      rangy.createClassApplier("h-p", {
+        ignoreWhiteSpace: true,
+        elementTagName: "span",
+        elementProperties: {
+          onclick: () => {
+            this.showToolTip();
+          },
+        },
+      })
+    );
+    this.highlighter.addClassApplier(
+      rangy.createClassApplier("h-b", {
+        ignoreWhiteSpace: true,
+        elementTagName: "span",
+        elementProperties: {
+          onclick: () => {
+            this.showToolTip();
           },
         },
       })
@@ -78,11 +98,7 @@ class Highlighter extends React.Component {
   }
 
   highlightSelectedText = (color) => {
-    console.log(color);
-    this.setState({
-      color: color,
-    });
-    this.highlighter.highlightSelection("highlight");
+    this.highlighter.highlightSelection(color);
   };
 
   displaySerialized = () => {

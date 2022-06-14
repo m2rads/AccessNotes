@@ -5,6 +5,7 @@
   opacity: 0;
   padding: 7px;
   position: absolute;
+  justify-content: center;
 }
 
 .h-color {

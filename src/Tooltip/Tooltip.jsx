@@ -7,31 +7,38 @@ const Tootlip = (props) => {
       <div className="h-color">
         <button
           className="color-b h-y"
-          onClick={() => props.onHighlight("fdd835")}
+          onClick={() => props.onHighlight("h-y")}
         >
           {/* Yellow */}
         </button>
         <button
           className="color-b h-g"
-          onClick={() => props.onHighlight("a5d6a7")}
+          onClick={() => props.onHighlight("h-g")}
         >
           {/* Green */}
         </button>
         <button
           className="color-b h-p"
-          onClick={() => props.onHighlight("f48fb1")}
+          onClick={() => props.onHighlight("h-p")}
         >
           {/* Pink */}
         </button>
         <button
           className="color-b h-b"
-          onClick={() => props.onHighlight("64b5f6")}
+          onClick={() => props.onHighlight("h-b")}
         >
           {/* Blue */}
         </button>
       </div>
-      {/* <button onClick={() => props.onHighlight()}>Highlight</button>
-      <button onClick={() => props.onRemove()}>Remove</button> */}
+      <div>
+        <button onClick={() => console.log("add note")}>Add Note</button>
+      </div>
+      <div>
+        <button onClick={() => props.onRemove()}>Read</button>
+      </div>
+      <div>
+        <button onClick={() => props.onRemove()}>Remove</button>
+      </div>
     </div>
   );
 };

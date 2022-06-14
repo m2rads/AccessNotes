@@ -15,18 +15,18 @@ a {
   display: inline;
 }
 
-#h-y {
+.h-y {
   background-color: #fdd835;
 }
 
-#h-g {
+.h-g {
   background-color: #a5d6a7;
 }
 
-#h-p {
+.h-p {
   background-color: #f48fb1;
 }
 
-#h-b {
+.h-b {
   background-color: #64b5f6;
 }
