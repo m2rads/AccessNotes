@@ -1,0 +1,36 @@
+.tooltip {
+  background: #e1f5fe;
+  border: 1px solid #e1f5fe;
+  border-radius: 10px;
+  opacity: 0;
+  padding: 7px;
+  position: absolute;
+}
+
+.h-color {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.color-b {
+  border-radius: 50%;
+  padding: 15px;
+  margin-right: 5px;
+}
+
+.h-y {
+  background-color: #fdd835;
+}
+
+.h-g {
+  background-color: #a5d6a7;
+}
+
+.h-p {
+  background-color: #f48fb1;
+}
+
+.h-b {
+  background-color: #64b5f6;
+}
