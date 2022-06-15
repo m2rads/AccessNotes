@@ -1,23 +1,29 @@
 .tooltip {
   background: #e1f5fe;
-  border: 1px solid #e1f5fe;
+  /* border: 1px solid #e1f5fe; */
   border-radius: 10px;
   opacity: 0;
   padding: 7px;
   position: absolute;
-  justify-content: center;
 }
 
 .h-color {
   display: flex;
-  justify-content: space-around;
+  margin: 0 auto;
+  /* width: 80%; */
+  justify-content: space-evenly;
   align-items: center;
 }
 
-.color-b {
+.h-color p {
+  font-size: 1rem;
+}
+
+.color-btn {
   border-radius: 50%;
   padding: 15px;
   margin-right: 5px;
+  cursor: pointer;
 }
 
 .h-y {
@@ -34,4 +40,50 @@
 
 .h-b {
   background-color: #64b5f6;
+}
+
+.btn-gp {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  width: 100%;
+  margin-top: 10px;
+  border-top: 2px #0d47a1 solid;
+}
+
+.btn-gp > * {
+  flex: 1 100%;
+}
+
+.btn-el {
+  display: inline-block;
+  border: none;
+  padding: 8px 5px;
+  width: 100%;
+  margin: 0;
+  text-decoration: none;
+  background: #e1f5fe;
+  color: black;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 50ms ease-in-out, transform 50ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-bottom: 2px #0d47a1 solid;
+}
+
+.btn-el:hover,
+.btn-el:focus {
+  background: #bbdefb;
+}
+
+.btn-el:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+.btn-el:active {
+  transform: scale(0.99);
 }
