@@ -22,53 +22,63 @@ class Highlighter extends React.Component {
 
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
+
     rangy.init();
     this.highlighter = rangy.createHighlighter();
+
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: () => {
-            this.showToolTip();
+          id: "highlight",
+          onclick: (e) => {
+            this.activateTooltip(e);
           },
         },
       })
     );
+
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-g", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: () => {
-            this.showToolTip();
+          id: "highlight",
+          onclick: (e) => {
+            this.activateTooltip(e);
           },
         },
       })
     );
+
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-p", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: () => {
-            this.showToolTip();
+          id: "highlight",
+          onclick: (e) => {
+            this.activateTooltip(e);
           },
         },
       })
     );
+
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-b", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: () => {
-            this.showToolTip();
+          id: "highlight",
+          onclick: (e) => {
+            this.activateTooltip(e);
           },
         },
       })
     );
   }
+
   // cleanup event listeners to avoid memory leak on older browsers
   componentWillUnmount() {
     document.removeEventListener("mouseup", this.handleMouseUp);
@@ -133,6 +143,17 @@ class Highlighter extends React.Component {
       toolTipStyle: toolTipLocStyle,
     });
   };
+
+  // show tooltip when clicking on the highlighted text
+  activateTooltip(e) {
+    if (e.target.id === "highlight") {
+      this.setState({
+        toolTipStyle: getPositionToToolTip(
+          document.getElementById(e.target.id)
+        ),
+      });
+    }
+  }
 }
 
 export default Highlighter;

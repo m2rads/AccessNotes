@@ -1,10 +1,15 @@
 .tooltip {
-  background: #e1f5fe;
+  background: #ffffff;
   /* border: 1px solid #e1f5fe; */
   border-radius: 10px;
   opacity: 0;
   padding: 7px;
   position: absolute;
+  z-index: 1000;
+}
+
+.tooltip {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .h-color {
@@ -26,20 +31,25 @@
   cursor: pointer;
 }
 
+.color-btn:hover,
+.color-btn:focus {
+  border: 2px #00695c solid;
+}
+
 .h-y {
-  background-color: #fdd835;
+  background-color: #ffeb3b;
 }
 
 .h-g {
-  background-color: #a5d6a7;
+  background-color: #c5e1a5;
 }
 
 .h-p {
-  background-color: #f48fb1;
+  background-color: #f8bbd0;
 }
 
 .h-b {
-  background-color: #64b5f6;
+  background-color: #81d4fa;
 }
 
 .btn-gp {
@@ -48,7 +58,6 @@
   padding: 10px 0;
   width: 100%;
   margin-top: 10px;
-  border-top: 2px #0d47a1 solid;
 }
 
 .btn-gp > * {
@@ -62,21 +71,25 @@
   width: 100%;
   margin: 0;
   text-decoration: none;
-  background: #e1f5fe;
+  background: white;
   color: black;
   font-family: sans-serif;
   font-size: 1rem;
   cursor: pointer;
   text-align: left;
-  transition: background 50ms ease-in-out, transform 50ms ease;
+  transition: background 90ms ease-in-out, transform 90ms ease;
   -webkit-appearance: none;
   -moz-appearance: none;
-  border-bottom: 2px #0d47a1 solid;
+  border-bottom: 2px #00695c solid;
+}
+
+.btn-gp:first-child {
+  border-top: 2px #00695c solid !important;
 }
 
 .btn-el:hover,
 .btn-el:focus {
-  background: #bbdefb;
+  background: #e0f2f1;
 }
 
 .btn-el:focus {
