@@ -96,7 +96,7 @@ class Highlighter extends React.Component {
           toolTipLocStyle={this.state.toolTipStyle}
           onHighlight={(color) => this.highlightSelectedText(color)}
           onRemove={() => this.removeHighlightSelection()}
-          onAddNote={() => this.handleAddNote()}
+          onAddNote={() => this.newHandleNote()}
         />
         <StickyNote
           stickyNoteStyle={this.state.stickyNoteStyle}
@@ -166,8 +166,23 @@ class Highlighter extends React.Component {
     });
   };
 
-  handleAddNote = (color) => {
-    this.highlighter.highlightSelection(color);
+  handleAddNote = () => {
+    let toolTipLocStyle = {
+      opacity: 0,
+      display: "none",
+    };
+
+    this.setState({
+      toolTipStyle: toolTipLocStyle,
+      stickyNoteStyle: {
+        top: 30 + "%",
+        left: 50 + "%",
+        opacity: 1,
+      },
+    });
+  };
+
+  newHandleNote = () => {
     let toolTipLocStyle = {
       opacity: 0,
       display: "none",

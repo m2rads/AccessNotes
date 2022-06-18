@@ -13,6 +13,10 @@ const Tootlip = (props) => {
     setHColor(color);
   };
 
+  // const handleAddNote = (color) => {
+  //   props.onAddNote();
+  // };
+
   return (
     <div className="tooltip" id="tooltip" style={props.toolTipLocStyle}>
       <div className="heading">
@@ -46,7 +50,7 @@ const Tootlip = (props) => {
       </div>
 
       <div className="btn-gp">
-        <button className="btn-el" onClick={() => props.onAddNote(hColor)}>
+        <button className="btn-el" onClick={() => props.onAddNote()}>
           Add Note
         </button>
 
