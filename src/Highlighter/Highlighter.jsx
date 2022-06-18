@@ -7,6 +7,7 @@ import "rangy/lib/rangy-textrange";
 import "rangy/lib/rangy-serializer";
 import "../App.css";
 import Tootlip from "../Tooltip/Tooltip";
+import StickyNote from "../StickyNote/StickyNote";
 import { getPositionToToolTip } from "../Utility/Utility";
 
 class Highlighter extends React.Component {
@@ -16,6 +17,10 @@ class Highlighter extends React.Component {
       toolTipStyle: {
         opacity: 0,
       },
+      stickyNoteStyle: {
+        opacity: 0,
+      },
+      currentNote: "",
     };
     this.showToolTip = this.showToolTip.bind(this);
   }
@@ -33,6 +38,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
+            // let highlight = this.highlighter.getHighlightForElement(e.target);
             this.activateTooltip(e);
           },
         },
@@ -87,22 +93,13 @@ class Highlighter extends React.Component {
   render() {
     return (
       <div className="App">
-        <p>Select any text and click "Highlight Text</p>
-        <h1>Hello CodeSandbox</h1>
-        <h2>Start editing to see some magic happen!</h2>
-        <button onClick={this.highlightSelectedText}>
-          Highlight Selection
-        </button>
-        <button onClick={this.removeHighlightSelection}>
-          Serialize Selection
-        </button>
         <Tootlip
           toolTipLocStyle={this.state.toolTipStyle}
           onHighlight={(color) => this.highlightSelectedText(color)}
           onRemove={() => this.removeHighlightSelection()}
+          onAddNote={() => this.handleAddNote()}
         />
-        <br />
-        <br />
+        <StickyNote stickyNoteStyle={this.state.stickyNoteStyle} />
       </div>
     );
   }
@@ -144,6 +141,8 @@ class Highlighter extends React.Component {
     });
   };
 
+  showCommentBox = () => {};
+
   // show tooltip when clicking on the highlighted text
   activateTooltip(e) {
     if (e.target.id === "highlight") {
@@ -154,6 +153,22 @@ class Highlighter extends React.Component {
       });
     }
   }
+
+  handleAddNote = () => {
+    let selection = window.getSelection();
+    // let noteLocStyle = {
+    //   opacity: 0,
+    //   display: "none",
+    // };
+    // if (selection.toString() !== "") {
+
+    // }
+    let noteLocStyle = getPositionToToolTip(selection);
+    this.setState({
+      stickyNoteStyle: noteLocStyle,
+    });
+    console.log(this.highlighter);
+  };
 }
 
 export default Highlighter;

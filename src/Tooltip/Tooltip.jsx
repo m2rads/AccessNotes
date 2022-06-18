@@ -1,7 +1,14 @@
 import React from "react";
 import "./Tooltip.css";
+import { useState } from "react";
 
 const Tootlip = (props) => {
+  const [hColor, setHColor] = useState("h-y");
+
+  const handleSetColor = (color) => {
+    setHColor(color);
+    props.onHighlight(hColor);
+  };
   return (
     <div className="tooltip" id="tooltip" style={props.toolTipLocStyle}>
       <div className="heading">
@@ -9,25 +16,25 @@ const Tootlip = (props) => {
         <div className="h-color">
           <button
             className="color-btn h-y"
-            onClick={() => props.onHighlight("h-y")}
+            onClick={() => handleSetColor("h-y")}
           >
             {/* Yellow */}
           </button>
           <button
             className="color-btn h-g"
-            onClick={() => props.onHighlight("h-g")}
+            onClick={() => handleSetColor("h-g")}
           >
             {/* Green */}
           </button>
           <button
             className="color-btn h-p"
-            onClick={() => props.onHighlight("h-p")}
+            onClick={() => handleSetColor("h-p")}
           >
             {/* Pink */}
           </button>
           <button
             className="color-btn h-b"
-            onClick={() => props.onHighlight("h-b")}
+            onClick={() => handleSetColor("h-b")}
           >
             {/* Blue */}
           </button>
@@ -35,7 +42,7 @@ const Tootlip = (props) => {
       </div>
 
       <div className="btn-gp">
-        <button className="btn-el" onClick={() => console.log("add note")}>
+        <button className="btn-el" onClick={() => props.onAddNote()}>
           Add Note
         </button>
 
