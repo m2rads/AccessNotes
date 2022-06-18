@@ -1,14 +1,18 @@
 import React from "react";
 import "./Tooltip.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Tootlip = (props) => {
   const [hColor, setHColor] = useState("h-y");
 
+  useEffect(() => {
+    props.onHighlight(hColor);
+  });
+
   const handleSetColor = (color) => {
     setHColor(color);
-    props.onHighlight(hColor);
   };
+
   return (
     <div className="tooltip" id="tooltip" style={props.toolTipLocStyle}>
       <div className="heading">
@@ -42,7 +46,7 @@ const Tootlip = (props) => {
       </div>
 
       <div className="btn-gp">
-        <button className="btn-el" onClick={() => props.onAddNote()}>
+        <button className="btn-el" onClick={() => props.onAddNote(hColor)}>
           Add Note
         </button>
 

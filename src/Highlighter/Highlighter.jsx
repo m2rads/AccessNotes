@@ -105,6 +105,7 @@ class Highlighter extends React.Component {
       </div>
     );
   }
+
   // make the call to highlight state driven
   highlightSelectedText = (color) => {
     this.highlighter.highlightSelection(color);
@@ -116,10 +117,6 @@ class Highlighter extends React.Component {
 
   removeHighlightSelection = () => {
     this.highlighter.unhighlightSelection();
-  };
-
-  noteSelectedText = () => {
-    this.highlighter.highlightSelection("note");
   };
 
   handleMouseUp = (e) => {
@@ -169,7 +166,8 @@ class Highlighter extends React.Component {
     });
   };
 
-  handleAddNote = () => {
+  handleAddNote = (color) => {
+    this.highlighter.highlightSelection(color);
     let toolTipLocStyle = {
       opacity: 0,
       display: "none",
