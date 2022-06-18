@@ -8,7 +8,6 @@ import "rangy/lib/rangy-serializer";
 import "../App.css";
 import Tootlip from "../Tooltip/Tooltip";
 import StickyNote from "../StickyNote/StickyNote";
-import { getPositionToToolTip } from "../Utility/Utility";
 
 class Highlighter extends React.Component {
   constructor(props) {
@@ -99,11 +98,14 @@ class Highlighter extends React.Component {
           onRemove={() => this.removeHighlightSelection()}
           onAddNote={() => this.handleAddNote()}
         />
-        <StickyNote stickyNoteStyle={this.state.stickyNoteStyle} />
+        <StickyNote
+          stickyNoteStyle={this.state.stickyNoteStyle}
+          onCloseNote={() => this.handleCloseNote()}
+        />
       </div>
     );
   }
-
+  // make the call to highlight state driven
   highlightSelectedText = (color) => {
     this.highlighter.highlightSelection(color);
   };
@@ -133,7 +135,11 @@ class Highlighter extends React.Component {
       display: "none",
     };
     if (selection.toString() !== "") {
-      toolTipLocStyle = getPositionToToolTip(selection);
+      toolTipLocStyle = {
+        top: 30 + "%",
+        left: 40 + "%",
+        opacity: 1,
+      };
     }
 
     this.setState({
@@ -141,34 +147,49 @@ class Highlighter extends React.Component {
     });
   };
 
-  showCommentBox = () => {};
-
   // show tooltip when clicking on the highlighted text
   activateTooltip(e) {
     if (e.target.id === "highlight") {
       this.setState({
-        toolTipStyle: getPositionToToolTip(
-          document.getElementById(e.target.id)
-        ),
+        toolTipStyle: {
+          top: 30 + "%",
+          left: 40 + "%",
+          opacity: 1,
+        },
       });
     }
   }
 
-  handleAddNote = () => {
-    let selection = window.getSelection();
-    // let noteLocStyle = {
-    //   opacity: 0,
-    //   display: "none",
-    // };
-    // if (selection.toString() !== "") {
-
-    // }
-    let noteLocStyle = getPositionToToolTip(selection);
+  handleCloseNote = () => {
     this.setState({
-      stickyNoteStyle: noteLocStyle,
+      stickyNoteStyle: {
+        display: "none",
+        opacity: 0,
+      },
     });
-    console.log(this.highlighter);
   };
+
+  handleAddNote = () => {
+    let toolTipLocStyle = {
+      opacity: 0,
+      display: "none",
+    };
+
+    this.setState({
+      toolTipStyle: toolTipLocStyle,
+      stickyNoteStyle: {
+        top: 30 + "%",
+        left: 50 + "%",
+        opacity: 1,
+      },
+    });
+  };
+
+  // save note to local storage
+  // or use chrome storage
+  // ideally local storage if it is
+  // going to be used for safari
+  saveNote = () => {};
 }
 
 export default Highlighter;

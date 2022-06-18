@@ -1,14 +1,15 @@
 // import React, {useEffect} from 'react'
 import styled from "styled-components";
-import Draggable from "react-draggable";
+// import Draggable from "react-draggable";
 
 const Container = styled.div`
-  z-index: 1000;
+  z-index: 10;
   border: 1px solid grey;
-  // border-radius: 10px;
+  border-radius: 10px;
   opacity: 0;
-  position: absolute;
+  position: fixed;
   background: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
 
 // top: ${(props) => props.y + "px"};
@@ -16,12 +17,12 @@ const Container = styled.div`
 
 const Header = styled.div`
   height: 20px;
-  // border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 0 0;
   background-color: papayawhip;
 `;
 
 const CloseButton = styled.button`
-  // border-radius: 0 10px 0 0;
+  border-radius: 0 10px 0 0;
   height: 20px;
   border: none;
   opacity: 0.5;
@@ -49,7 +50,7 @@ function StickyNote(props) {
       {/* <Draggable handle="#handle"> */}
       <Container className="container" style={props.stickyNoteStyle}>
         <Header id="handle">
-          <CloseButton>X</CloseButton>
+          <CloseButton onClick={() => props.onCloseNote()}>X</CloseButton>
         </Header>
         <NoteTextArea />
       </Container>
