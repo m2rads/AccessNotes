@@ -97,7 +97,7 @@ class Highlighter extends React.Component {
           toolTipLocStyle={this.state.toolTipStyle}
           onHighlight={(color) => this.highlightSelectedText(color)}
           onRemove={() => this.removeHighlightSelection()}
-          onAddNote={() => this.handleAddNote()}
+          onAddNote={(noteColor) => this.handleAddNote(noteColor)}
         />
         <StickyNote
           stickyNoteStyle={this.state.stickyNoteStyle}
@@ -167,8 +167,8 @@ class Highlighter extends React.Component {
     });
   };
   // bd8563a
-  handleAddNote = () => {
-    console.log(this.highlighter)
+  handleAddNote = (noteColor) => {
+    this.highlighter.highlightSelection(noteColor);
     let toolTipLocStyle = {
       opacity: 0,
       display: "none",
@@ -184,21 +184,6 @@ class Highlighter extends React.Component {
     });
   };
 
-  newHandleNote = () => {
-    let toolTipLocStyle = {
-      opacity: 0,
-      display: "none",
-    };
-
-    this.setState({
-      toolTipStyle: toolTipLocStyle,
-      stickyNoteStyle: {
-        top: 30 + "%",
-        left: 50 + "%",
-        opacity: 1,
-      },
-    });
-  };
 
   // save note to local storage
   // or use chrome storage
