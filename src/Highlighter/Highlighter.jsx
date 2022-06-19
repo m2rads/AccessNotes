@@ -37,7 +37,8 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightForElement(e.target);
+            let highlight = this.highlighter.getHighlightForElement(e.target);
+            console.log(highlight);
             this.activateTooltip(e);
           },
         },
@@ -165,7 +166,7 @@ class Highlighter extends React.Component {
       },
     });
   };
-
+  // a33c871
   handleAddNote = () => {
     let toolTipLocStyle = {
       opacity: 0,
