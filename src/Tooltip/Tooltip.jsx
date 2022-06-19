@@ -1,62 +1,70 @@
 import React from "react";
 import "./Tooltip.css";
-import { useState } from "react";
+// import { useState } from "react";
 
-const Tootlip = (props) => {
-  const [hColor, setHColor] = useState("h-y");
+class Tootlip extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hColor: "h-y"
+    };
+  }
 
-  const handleSetColor = (color) => {
-    setHColor(color)
-    props.onHighlight(hColor);
+  handleSetColor = (color) => {
+    this.setState((state, props) => {
+      return {hColor: color };
+    }, () => { this.props.onHighlight(this.state.hColor) })
   };
 
-  return (
-    <div className="tooltip" id="tooltip" style={props.toolTipLocStyle}>
-      <div className="heading">
-        <p>Highlight</p>
-        <div className="h-color">
-          <button
-            className="color-btn h-y"
-            onClick={() => handleSetColor("h-y")}
-          >
-            {/* Yellow */}
+  render() {
+    return (
+      <div className="tooltip" id="tooltip" style={this.props.toolTipLocStyle}>
+        <div className="heading">
+          <p>Highlight</p>
+          <div className="h-color">
+            <button
+              className="color-btn h-y"
+              onClick={() => this.handleSetColor("h-y")}
+            >
+              {/* Yellow */}
+            </button>
+            <button
+              className="color-btn h-g"
+              onClick={() => this.handleSetColor("h-g")}
+            >
+              {/* Green */}
+            </button>
+            <button
+              className="color-btn h-p"
+              onClick={() => this.handleSetColor("h-p")}
+            >
+              {/* Pink */}
+            </button>
+            <button
+              className="color-btn h-b"
+              onClick={() => this.handleSetColor("h-b")}
+            >
+              {/* Blue */}
+            </button>
+          </div>
+        </div>
+  
+        <div className="btn-gp">
+          <button className="btn-el" >
+            Add Note
           </button>
-          <button
-            className="color-btn h-g"
-            onClick={() => handleSetColor("h-g")}
-          >
-            {/* Green */}
+  
+          <button className="btn-el" onClick={() => this.props.onRemove()}>
+            Read
           </button>
-          <button
-            className="color-btn h-p"
-            onClick={() => handleSetColor("h-p")}
-          >
-            {/* Pink */}
-          </button>
-          <button
-            className="color-btn h-b"
-            onClick={() => handleSetColor("h-b")}
-          >
-            {/* Blue */}
+  
+          <button className="btn-el" onClick={() => this.props.onRemove()}>
+            Remove
           </button>
         </div>
       </div>
-
-      <div className="btn-gp">
-        <button className="btn-el" >
-          Add Note
-        </button>
-
-        <button className="btn-el" onClick={() => props.onRemove()}>
-          Read
-        </button>
-
-        <button className="btn-el" onClick={() => props.onRemove()}>
-          Remove
-        </button>
-      </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default Tootlip;

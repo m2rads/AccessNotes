@@ -166,7 +166,7 @@ class Highlighter extends React.Component {
       },
     });
   };
-  // a33c871
+  // bd8563a
   handleAddNote = () => {
     console.log(this.highlighter)
     let toolTipLocStyle = {
