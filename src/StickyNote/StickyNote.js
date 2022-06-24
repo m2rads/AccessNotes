@@ -1,6 +1,5 @@
-// import React, {useEffect} from 'react'
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-// import Draggable from "react-draggable";
 
 const Container = styled.div`
   z-index: 10;
@@ -41,17 +40,20 @@ const NoteTextArea = styled.textarea`
 `;
 
 function StickyNote(props) {
-  // drag the sticekynote when clicked on the header
+  useEffect(() => {
+    document.getElementById("noteTextArea").mouesup = (e) => {
+      e.preventDefault();
+    };
+  });
   return (
+    // change styled component to normal css
     <div>
-      {/* <Draggable handle="#handle"> */}
       <Container className="container" style={props.stickyNoteStyle}>
         <Header id="handle">
           <CloseButton onClick={() => props.onCloseNote()}>X</CloseButton>
         </Header>
-        <NoteTextArea />
+        <NoteTextArea id="noteTextArea" />
       </Container>
-      {/* </Draggable> */}
     </div>
   );
 }

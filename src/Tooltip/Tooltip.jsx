@@ -50,7 +50,7 @@ class Tootlip extends React.Component {
         </div>
   
         <div className="btn-gp">
-          <button className="btn-el" onClick={() => this.props.onAddNote(this.state.hColor)} >
+          <button className="btn-el" onClick={() => this.props.onAddNote(this.state.hColor)}>
             Add Note
           </button>
   

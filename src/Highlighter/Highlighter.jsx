@@ -20,8 +20,10 @@ class Highlighter extends React.Component {
         opacity: 0,
       },
       currentNote: "",
+      highlightId: 1,
     };
     this.showToolTip = this.showToolTip.bind(this);
+    this.uniquIdCounter = this.uniquIdCounter.bind(this);
   }
 
   componentDidMount() {
@@ -37,9 +39,11 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            let highlight = this.highlighter.getHighlightForElement(e.target);
-            console.log(highlight);
             this.activateTooltip(e);
+            // let highlight = this.highlighter.getHighlightForElement(e.target);
+            // console.log(highlight);
+            // console.log(e.target);
+            // this.uniquIdCounter();
           },
         },
       })
@@ -52,6 +56,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
+            console.log(e.target);
             this.activateTooltip(e);
           },
         },
@@ -167,8 +172,15 @@ class Highlighter extends React.Component {
     });
   };
   // bd8563a
-  handleAddNote = (noteColor) => {
+  handleAddNote = (noteColor, noteTxt) => {
     this.highlighter.highlightSelection(noteColor);
+    let slm = this.highlighter.getHighlightsInSelection();
+    let highlight = this.highlighter.getHighlightForElement(
+      document.getElementById(slm[0].classApplier.elementProperties.id)
+    );
+    highlight.note = noteTxt;
+    console.log(highlight);
+
     let toolTipLocStyle = {
       opacity: 0,
       display: "none",
@@ -182,8 +194,17 @@ class Highlighter extends React.Component {
         opacity: 1,
       },
     });
+
+    // this.setState({currentNote: noteTxt})
   };
 
+  // gives a uniqu id attribute to the classApplier elementProperties
+  uniquIdCounter = () => {
+    // let currentId;
+    this.setState({ highlightId: this.state.highlightId + 1 });
+    console.log(this.state.highlightId);
+    return this.state.highlightId;
+  };
 
   // save note to local storage
   // or use chrome storage
