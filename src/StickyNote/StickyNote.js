@@ -1,17 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import "./StickyNote.css";
 
 function StickyNote(props) {
-  const [note, setNote] = useState("");
-  const handleNoteChange = (e) => {
-    e.preventDefault();
-  };
   const noteContent = useRef();
+
+  const handleSaveNote = (e) => {
+    e.preventDefault();
+    props.onSave(noteContent.current.value);
+  };
 
   return (
     <div>
       <div className="note-container" style={props.stickyNoteStyle}>
-        <div className="note-header" id="handle">
+        <div className="note-header">
           <button className="close-butt" onClick={() => props.onCloseNote()}>
             X
           </button>
@@ -20,9 +21,15 @@ function StickyNote(props) {
           className="note-content"
           id="noteTextArea"
           ref={noteContent}
+          defaultValue={props.currentNote}
           type="text"
-          onChange={handleNoteChange}
         />
+
+        <div className="note-footer">
+          <button className="close-butt" onClick={(e) => handleSaveNote(e)}>
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );
