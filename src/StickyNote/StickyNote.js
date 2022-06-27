@@ -1,12 +1,16 @@
-import React, { useRef } from "react";
+import React from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { updated } from "../features/noteTxt/noteTxt-slice";
+import { clearNote } from "../features/noteTxt/noteTxt-slice";
 import "./StickyNote.css";
 
 function StickyNote(props) {
-  const noteContent = useRef();
+  const note = useAppSelector((state) => state.note.value);
+  const dispatch = useAppDispatch();
 
   const handleSaveNote = (e) => {
-    e.preventDefault();
-    props.onSave(noteContent.current.value);
+    props.onSave(note);
+    dispatch(clearNote());
   };
 
   return (
@@ -20,8 +24,8 @@ function StickyNote(props) {
         <textarea
           className="note-content"
           id="noteTextArea"
-          ref={noteContent}
-          defaultValue={props.currentNote}
+          value={note}
+          onChange={(e) => dispatch(updated(e.target.value))}
           type="text"
         />
 

@@ -19,11 +19,10 @@ class Highlighter extends React.Component {
       stickyNoteStyle: {
         opacity: 0,
       },
-      currentNote: "Hello",
       activeHighlight: null,
     };
     this.showToolTip = this.showToolTip.bind(this);
-    // this.handleAddNote = this.handleAddNote.bind(this);
+    this.handleAddNote = this.handleAddNote.bind(this);
   }
 
   componentDidMount() {
@@ -40,10 +39,7 @@ class Highlighter extends React.Component {
           id: "highlight",
           onclick: (e) => {
             let highlight = this.highlighter.getHighlightForElement(e.target);
-            this.setState({ currentNote: highlight.note });
-            this.setState({ activeHighlight: highlight }, () => {
-              console.log(this.state.activeHighlight.id);
-            });
+            console.log(highlight);
             this.activateTooltip(e);
           },
         },
@@ -57,9 +53,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            let highlight = this.highlighter.getHighlightForElement(e.target);
-            this.setState({ currentNote: highlight.note });
-            this.setState({ activeHighlight: highlight });
+            // let highlight = this.highlighter.getHighlightForElement(e.target);
             this.activateTooltip(e);
           },
         },
@@ -73,9 +67,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            let highlight = this.highlighter.getHighlightForElement(e.target);
-            this.setState({ currentNote: highlight.note });
-            this.setState({ activeHighlight: highlight });
+            // let highlight = this.highlighter.getHighlightForElement(e.target);
             this.activateTooltip(e);
           },
         },
@@ -89,9 +81,8 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            let highlight = this.highlighter.getHighlightForElement(e.target);
-            this.setState({ currentNote: highlight.note });
-            this.setState({ activeHighlight: highlight });
+            // let highlight = this.highlighter.getHighlightForElement(e.target);
+            this.updateNoteState();
             this.activateTooltip(e);
           },
         },
@@ -117,7 +108,6 @@ class Highlighter extends React.Component {
           stickyNoteStyle={this.state.stickyNoteStyle}
           onCloseNote={() => this.handleCloseNote()}
           onSave={(noteTxt) => this.saveNote(noteTxt)}
-          currentNote={this.state.currentNote}
         />
       </div>
     );
@@ -188,17 +178,10 @@ class Highlighter extends React.Component {
     this.highlighter.highlightSelection(noteColor);
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
 
-    let highlight = this.highlighter.getHighlightForElement(
-      document.getElementById(
-        highlightInSelection[0].classApplier.elementProperties.id
-      )
-    );
-
-    if (highlightInSelection !== undefined && highlight !== null) {
-      console.log(highlight.id);
-      this.setState({ currentNote: "" });
-      highlight.note = this.state.currentNote;
-      this.setState({ activeHighlight: highlight }, () => {
+    if (highlightInSelection !== undefined) {
+      highlightInSelection[0].note = " ";
+      this.setState({ activeHighlight: highlightInSelection[0] }, () => {
+        console.log(highlightInSelection[0]);
         return;
       });
     }
@@ -220,13 +203,11 @@ class Highlighter extends React.Component {
 
   saveNote = (noteTxt) => {
     console.log(noteTxt);
-    this.setState({ currentNote: noteTxt });
+    let highlight = this.state.activeHighlight;
+    highlight.note += noteTxt;
 
-    let highlightHolder = this.state.activeHighlight;
-
-    highlightHolder.note = noteTxt;
-    this.setState({ activeHighlight: highlightHolder }, () => {
-      console.log("saveNote: " + this.state.activeHighlight.id);
+    this.setState({ activeHighlight: highlight }, () => {
+      return;
     });
   };
 }
