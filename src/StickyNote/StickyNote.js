@@ -27,6 +27,9 @@ function StickyNote(props) {
           <button className="save-butt" onClick={(e) => props.onSave(note)}>
             Save
           </button>
+          <button className="del-butt" onClick={(e) => props.onDelete()}>
+            Delete
+          </button>
         </div>
       </div>
     </div>

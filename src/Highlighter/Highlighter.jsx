@@ -112,6 +112,7 @@ class Highlighter extends React.Component {
           stickyNoteStyle={this.state.stickyNoteStyle}
           onCloseNote={() => this.handleCloseNote()}
           onSave={(noteTxt) => this.saveNote(noteTxt)}
+          onDelete={() => this.deleteNote()}
         />
       </div>
     );
@@ -223,6 +224,18 @@ class Highlighter extends React.Component {
     let noteHodler = this.state.noteList;
     noteHodler[this.state.activeHighlight] = noteTxt;
     this.setState({ noteList: noteHodler });
+  };
+
+  deleteNote = () => {
+    let currentHighlight = this.state.activeHighlight;
+    if (
+      window.confirm("Delete this highlight (ID " + currentHighlight + ")?")
+    ) {
+      let noteHodler = this.state.noteList;
+      noteHodler[currentHighlight] = "";
+      this.setState({ noteList: noteHodler });
+      this.handleCloseNote();
+    }
   };
 }
 

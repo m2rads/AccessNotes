@@ -35,6 +35,14 @@
   float: right;
 }
 
+.del-butt {
+  border-radius: 0 0 0 10px;
+  height: 20px;
+  border: none;
+  opacity: 0.5;
+  float: left;
+}
+
 .note-content {
   color: black;
   height: 200px;
