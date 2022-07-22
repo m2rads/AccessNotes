@@ -27,6 +27,14 @@
   float: right;
 }
 
+.save-butt {
+  border-radius: 0 0 10px 0;
+  height: 20px;
+  border: none;
+  opacity: 0.5;
+  float: right;
+}
+
 .note-content {
   color: black;
   height: 200px;

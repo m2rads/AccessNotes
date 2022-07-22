@@ -8,6 +8,8 @@ import "rangy/lib/rangy-serializer";
 import "../App.css";
 import Tootlip from "../Tooltip/Tooltip";
 import StickyNote from "../StickyNote/StickyNote";
+import { clearNote, updated } from "../features/noteTxt/noteTxt-slice";
+import { connect } from "react-redux";
 
 class Highlighter extends React.Component {
   constructor(props) {
@@ -19,6 +21,7 @@ class Highlighter extends React.Component {
       stickyNoteStyle: {
         opacity: 0,
       },
+      noteList: {},
       activeHighlight: null,
     };
     this.showToolTip = this.showToolTip.bind(this);
@@ -38,8 +41,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            let highlight = this.highlighter.getHighlightForElement(e.target);
-            console.log(highlight);
+            // let highlight = this.highlighter.getHighlightsInSelection();
             this.activateTooltip(e);
           },
         },
@@ -53,7 +55,8 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightForElement(e.target);
+            // let highlight = this.highlighter.getHighlightsInSelection();
+            // console.log(highlight[0]);
             this.activateTooltip(e);
           },
         },
@@ -67,7 +70,8 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightForElement(e.target);
+            // let highlight = this.highlighter.getHighlightsInSelection();
+            // console.log(highlight[0]);
             this.activateTooltip(e);
           },
         },
@@ -81,8 +85,8 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightForElement(e.target);
-            this.updateNoteState();
+            // let highlight = this.highlighter.getHighlightsInSelection();
+            // console.log(highlight[0]);
             this.activateTooltip(e);
           },
         },
@@ -124,6 +128,11 @@ class Highlighter extends React.Component {
 
   removeHighlightSelection = () => {
     this.highlighter.unhighlightSelection();
+    // let highlight = this.highlighter.getHighlightsInSelection();
+    // if (window.confirm("Delete this highlight (ID " + highlight.id + ")?")) {
+    //   this.highlighter.removeHighlights([highlight]);
+    // }
+    // return false;
   };
 
   handleMouseUp = (e) => {
@@ -138,6 +147,7 @@ class Highlighter extends React.Component {
       opacity: 0,
       display: "none",
     };
+
     if (selection.toString() !== "") {
       toolTipLocStyle = {
         top: 30 + "%",
@@ -171,21 +181,10 @@ class Highlighter extends React.Component {
         opacity: 0,
       },
     });
+    this.props.clearNote();
   };
 
-  // bd8563a
-  handleAddNote = (noteColor) => {
-    this.highlighter.highlightSelection(noteColor);
-    let highlightInSelection = this.highlighter.getHighlightsInSelection();
-
-    if (highlightInSelection !== undefined) {
-      highlightInSelection[0].note = " ";
-      this.setState({ activeHighlight: highlightInSelection[0] }, () => {
-        console.log(highlightInSelection[0]);
-        return;
-      });
-    }
-
+  noteDisplay() {
     let toolTipLocStyle = {
       opacity: 0,
       display: "none",
@@ -199,17 +198,45 @@ class Highlighter extends React.Component {
         opacity: 1,
       },
     });
+  }
+
+  handleAddNote = (noteColor) => {
+    this.highlighter.highlightSelection(noteColor);
+    let highlightInSelection = this.highlighter.getHighlightsInSelection();
+    this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
+      return 0;
+    });
+
+    let noteHodler = this.state.noteList;
+    if (noteHodler[highlightInSelection[0].id] !== undefined) {
+      this.props.updated(noteHodler[highlightInSelection[0].id]);
+    } else {
+      noteHodler[highlightInSelection[0].id] = "";
+    }
+
+    this.setState({ noteList: noteHodler });
+
+    this.noteDisplay();
   };
 
   saveNote = (noteTxt) => {
-    console.log(noteTxt);
-    let highlight = this.state.activeHighlight;
-    highlight.note += noteTxt;
-
-    this.setState({ activeHighlight: highlight }, () => {
-      return;
-    });
+    let noteHodler = this.state.noteList;
+    noteHodler[this.state.activeHighlight] = noteTxt;
+    this.setState({ noteList: noteHodler });
   };
 }
 
-export default Highlighter;
+const mapStateToProps = (state) => {
+  return {
+    note: state.note.value,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updated: (noteTxt) => dispatch(updated(noteTxt)),
+    clearNote: () => dispatch(clearNote()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Highlighter);

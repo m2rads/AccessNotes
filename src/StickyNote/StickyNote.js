@@ -1,17 +1,11 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { updated } from "../features/noteTxt/noteTxt-slice";
-import { clearNote } from "../features/noteTxt/noteTxt-slice";
 import "./StickyNote.css";
 
 function StickyNote(props) {
   const note = useAppSelector((state) => state.note.value);
   const dispatch = useAppDispatch();
-
-  const handleSaveNote = (e) => {
-    props.onSave(note);
-    dispatch(clearNote());
-  };
 
   return (
     <div>
@@ -30,7 +24,7 @@ function StickyNote(props) {
         />
 
         <div className="note-footer">
-          <button className="close-butt" onClick={(e) => handleSaveNote(e)}>
+          <button className="save-butt" onClick={(e) => props.onSave(note)}>
             Save
           </button>
         </div>
