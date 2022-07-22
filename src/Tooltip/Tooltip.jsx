@@ -6,14 +6,19 @@ class Tootlip extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hColor: "h-y"
+      hColor: "h-y",
     };
   }
 
   handleSetColor = (color) => {
-    this.setState((state, props) => {
-      return {hColor: color };
-    }, () => { this.props.onHighlight(this.state.hColor) })
+    this.setState(
+      (state, props) => {
+        return { hColor: color };
+      },
+      () => {
+        this.props.onHighlight(this.state.hColor);
+      }
+    );
   };
 
   render() {
@@ -48,16 +53,19 @@ class Tootlip extends React.Component {
             </button>
           </div>
         </div>
-  
+
         <div className="btn-gp">
-          <button className="btn-el" onClick={() => this.props.onAddNote(this.state.hColor)}>
+          <button
+            className="btn-el"
+            onClick={() => this.props.onAddNote(this.state.hColor)}
+          >
             Add Note
           </button>
-  
-          <button className="btn-el" onClick={() => this.props.onRemove()}>
+
+          <button className="btn-el" onClick={() => this.props.onRead()}>
             Read
           </button>
-  
+
           <button className="btn-el" onClick={() => this.props.onRemove()}>
             Remove
           </button>
@@ -65,6 +73,6 @@ class Tootlip extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default Tootlip;

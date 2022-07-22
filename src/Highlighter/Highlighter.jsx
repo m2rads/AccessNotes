@@ -107,6 +107,7 @@ class Highlighter extends React.Component {
           onHighlight={(color) => this.highlightSelectedText(color)}
           onRemove={() => this.removeHighlightSelection()}
           onAddNote={(noteColor) => this.handleAddNote(noteColor)}
+          onRead={() => this.highlightTextReader()}
         />
         <StickyNote
           stickyNoteStyle={this.state.stickyNoteStyle}
@@ -128,12 +129,10 @@ class Highlighter extends React.Component {
   };
 
   removeHighlightSelection = () => {
-    this.highlighter.unhighlightSelection();
-    // let highlight = this.highlighter.getHighlightsInSelection();
-    // if (window.confirm("Delete this highlight (ID " + highlight.id + ")?")) {
-    //   this.highlighter.removeHighlights([highlight]);
-    // }
-    // return false;
+    let highlight = this.highlighter.getHighlightsInSelection();
+    if (window.confirm("Delete this highlight (ID " + highlight.id + ")?")) {
+      this.highlighter.unhighlightSelection();
+    }
   };
 
   handleMouseUp = (e) => {
@@ -235,6 +234,20 @@ class Highlighter extends React.Component {
       noteHodler[currentHighlight] = "";
       this.setState({ noteList: noteHodler });
       this.handleCloseNote();
+    }
+  };
+
+  highlightTextReader = () => {
+    let highlightInSelection = this.highlighter.getHighlightsInSelection();
+
+    if (highlightInSelection[0] === undefined) {
+      console.log(window.getSelection().toString());
+      let textSlection = window.getSelection().toString();
+      var speech = new SpeechSynthesisUtterance();
+      speech.text = textSlection;
+      window.speechSynthesis.speak(speech);
+    } else {
+      console.log("throw an error");
     }
   };
 }
