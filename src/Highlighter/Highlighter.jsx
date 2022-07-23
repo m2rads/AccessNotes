@@ -208,10 +208,12 @@ class Highlighter extends React.Component {
     });
 
     let noteHodler = this.state.noteList;
-    if (noteHodler[highlightInSelection[0].id] !== undefined) {
-      this.props.updated(noteHodler[highlightInSelection[0].id]);
+    let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
+    if (currentNote !== undefined) {
+      this.props.updated(currentNote);
     } else {
-      noteHodler[highlightInSelection[0].id] = "";
+      window.localStorage.setItem(highlightInSelection[0].id, "");
+      // noteHodler[highlightInSelection[0].id] = "";
     }
 
     this.setState({ noteList: noteHodler });
@@ -220,9 +222,11 @@ class Highlighter extends React.Component {
   };
 
   saveNote = (noteTxt) => {
-    let noteHodler = this.state.noteList;
-    noteHodler[this.state.activeHighlight] = noteTxt;
-    this.setState({ noteList: noteHodler });
+    let currentHighlight = this.state.activeHighlight;
+    window.localStorage.setItem(currentHighlight, noteTxt);
+    // let noteHodler = this.state.noteList;
+    // noteHodler[this.state.activeHighlight] = noteTxt;
+    // this.setState({ noteList: noteHodler });
   };
 
   deleteNote = () => {
@@ -230,9 +234,11 @@ class Highlighter extends React.Component {
     if (
       window.confirm("Delete this highlight (ID " + currentHighlight + ")?")
     ) {
-      let noteHodler = this.state.noteList;
-      noteHodler[currentHighlight] = "";
-      this.setState({ noteList: noteHodler });
+      // let noteHodler = this.state.noteList;
+      // noteHodler[currentHighlight] = "";
+      // this.setState({ noteList: noteHodler });
+      // window.localStorage.clear();
+      window.localStorage.removeItem(currentHighlight);
       this.handleCloseNote();
     }
   };
@@ -241,11 +247,14 @@ class Highlighter extends React.Component {
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
 
     if (highlightInSelection[0] === undefined) {
-      console.log(window.getSelection().toString());
-      let textSlection = window.getSelection().toString();
-      var speech = new SpeechSynthesisUtterance();
-      speech.text = textSlection;
-      window.speechSynthesis.speak(speech);
+      if ("speechSynthesis" in window) {
+        let textSlection = window.getSelection().toString();
+        var speech = new SpeechSynthesisUtterance();
+        speech.text = textSlection;
+        window.speechSynthesis.speak(speech);
+      } else {
+        alert("Sorry, your browser doesn't support text to speech!");
+      }
     } else {
       console.log("throw an error");
     }
