@@ -21,7 +21,6 @@ class Highlighter extends React.Component {
       stickyNoteStyle: {
         opacity: 0,
       },
-      noteList: {},
       activeHighlight: null,
     };
     this.showToolTip = this.showToolTip.bind(this);
