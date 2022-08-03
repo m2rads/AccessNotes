@@ -1,5 +1,5 @@
 {
-  "name": "access-notes-npx",
+  "name": "access-notes",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -21,7 +21,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "build": "react-scripts build",
     "build:extension": "node ./scripts/build-non-split.js && yarn build:clean",
     "build:clean": "cd build && mv static/js/*.js main.js && mv static/css/*.css main.css && rm -r static",
