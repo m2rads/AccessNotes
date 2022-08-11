@@ -1,0 +1,23 @@
+a {
+  text-decoration: none;
+}
+
+.clear {
+  display: inline;
+}
+
+.h-y {
+  background-color: #fdd835;
+}
+
+.h-g {
+  background-color: #a5d6a7;
+}
+
+.h-p {
+  background-color: #f48fb1;
+}
+
+.h-b {
+  background-color: #e1f5fe;
+}
