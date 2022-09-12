@@ -1,3 +1,4 @@
+/* global Chrome */
 import React from "react";
 import rangy from "rangy";
 import "rangy/lib/rangy-classapplier";
@@ -25,6 +26,7 @@ class Highlighter extends React.Component {
       stickyNoteStyle: {
         opacity: 0,
       },
+      serializedHls: [],
       noteList: {},
       activeHighlight: null,
     };
@@ -35,13 +37,8 @@ class Highlighter extends React.Component {
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
 
-    let sr;
-
-    if (sr !== null) {
-      this.serializedHls = sr;
-    } else {
-      this.serializedHls = [];
-    }
+    const url = window.location.href;
+    this.getStorageLocalMode(url);
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
@@ -104,10 +101,6 @@ class Highlighter extends React.Component {
     );
   }
 
-  componentDidUpdate() {
-    // window.localStorage.setItem("sr", this.serializedHighlights);
-  }
-
   // cleanup event listeners to avoid memory leak on older browsers
   componentWillUnmount() {
     document.removeEventListener("mouseup", this.handleMouseUp);
@@ -133,6 +126,27 @@ class Highlighter extends React.Component {
     );
   }
 
+  getStorageLocalMode = (url) => {
+    // update serialized highlits state to access all data
+    if (!localMode) {
+      chrome.storage.local.get(url, (items) => {
+        items[url] &&
+          this.setState({
+            serializedHls: [...this.state.serializedHls, ...items[url]],
+          });
+        console.log(items[url]);
+      });
+    }
+  };
+
+  setStorageLocalMode = (url, item) => {
+    if (!localMode) {
+      chrome.storage.local.set({ [url]: item }, () => {
+        console.log("the value is: ", item);
+      });
+    }
+  };
+
   storeSerializedHighlights = (hlId, hlColor, sr) => {
     let srHl = {
       id: hlId,
@@ -140,9 +154,11 @@ class Highlighter extends React.Component {
       color: hlColor,
       // note: "", storing the note directly in localstorage
     };
-    console.log(srHl);
-    this.serializedHls.push(srHl);
-    // add to local storage
+    this.setState({
+      serializedHls: [...this.state.serializedHls, srHl],
+    });
+    const url = window.location.href;
+    this.setStorageLocalMode(url, srHl);
   };
 
   // make the call to highlight state driven
@@ -244,7 +260,6 @@ class Highlighter extends React.Component {
     }
 
     // console.log(highlightInSelection);
-
     this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
       return 0;
     });
@@ -253,12 +268,14 @@ class Highlighter extends React.Component {
   ****************
     getter
   */
-    let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
-    if (currentNote !== undefined) {
-      this.props.updated(currentNote);
-    } else {
-      window.localStorage.setItem(highlightInSelection[0].id, " ");
-    }
+    // let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
+    let highlightList = this.state.serializedHls;
+    console.log(serializedHls);
+    // if (currentNote !== undefined) {
+    //   this.props.updated(currentNote);
+    // } else {
+    //   window.localStorage.setItem(highlightInSelection[0].id, " ");
+    // }
 
     this.noteDisplay();
   };
