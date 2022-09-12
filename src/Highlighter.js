@@ -35,16 +35,13 @@ class Highlighter extends React.Component {
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
 
-    let sr = JSON.parse(localStorage.getItem("sr"));
+    let sr;
 
-    console.log(sr);
     if (sr !== null) {
       this.serializedHls = sr;
     } else {
       this.serializedHls = [];
     }
-
-    window.localStorage.clear();
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
@@ -83,7 +80,6 @@ class Highlighter extends React.Component {
           id: "highlight",
           onclick: (e) => {
             // let highlight = this.highlighter.getHighlightsInSelection();
-            // console.log(highlight[0]);
             this.activateTooltip(e);
           },
         },
@@ -146,7 +142,7 @@ class Highlighter extends React.Component {
     };
     console.log(srHl);
     this.serializedHls.push(srHl);
-    window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
+    // add to local storage
   };
 
   // make the call to highlight state driven
@@ -159,15 +155,12 @@ class Highlighter extends React.Component {
 
   displaySerialized = () => {
     this.setState({ isSerialized: this.highlighter.serialize() });
-    console.log(this.state.isSerialized);
   };
 
   removeHighlightSelection = () => {
     // let highlight = this.highlighter.getHighlightsInSelection();
     this.deleteNote(true);
     this.highlighter.unhighlightSelection();
-    // if (window.confirm("Delete this highlight (ID " + highlight[0].id + ")?")) {
-    // }
   };
 
   handleMouseUp = (e) => {
@@ -256,6 +249,10 @@ class Highlighter extends React.Component {
       return 0;
     });
 
+    /* 
+  ****************
+    getter
+  */
     let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
     if (currentNote !== undefined) {
       this.props.updated(currentNote);
@@ -266,11 +263,19 @@ class Highlighter extends React.Component {
     this.noteDisplay();
   };
 
+  /* 
+  ****************
+    Setter
+  */
   saveNote = (noteTxt) => {
     let currentHighlight = this.state.activeHighlight;
     window.localStorage.setItem(currentHighlight, noteTxt);
   };
 
+  /* 
+  ****************
+    Setter
+  */
   deleteNote = (rmHl) => {
     let currentHighlight = this.state.activeHighlight;
     if (rmHl) {
