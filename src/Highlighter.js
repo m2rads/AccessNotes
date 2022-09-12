@@ -106,19 +106,6 @@ class Highlighter extends React.Component {
         },
       })
     );
-
-    // restore the highlights
-    if (this.serializedHls !== null) {
-      for (let i in this.serializedHls) {
-        try {
-          rangy.deserializeSelection(this.serializedHls[i].sr);
-          this.highlighter.highlightSelection(this.serializedHls[i].color);
-          let highlightInSelection =
-            this.highlighter.getHighlightsInSelection();
-          console.log(highlightInSelection);
-        } catch (exp) {}
-      }
-    }
   }
 
   componentDidUpdate() {
