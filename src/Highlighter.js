@@ -1,3 +1,4 @@
+/* global Chrome */
 import React from "react";
 import rangy from "rangy";
 import "rangy/lib/rangy-classapplier";
@@ -35,16 +36,7 @@ class Highlighter extends React.Component {
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
 
-    let sr = JSON.parse(localStorage.getItem("sr"));
-
-    console.log(sr);
-    if (sr !== null) {
-      this.serializedHls = sr;
-    } else {
-      this.serializedHls = [];
-    }
-
-    window.localStorage.clear();
+    let storageCache = {};
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
@@ -150,6 +142,22 @@ class Highlighter extends React.Component {
     );
   }
 
+  getStorageLocalMode = (url) => {
+    if (!localMode) {
+      chrome.storage.local.get(url, (items) => {
+        items[url] && this.setState({ noteList: items[url] });
+        console.log(this.state.noteList);
+        console.log(items[url]);
+      });
+    }
+  };
+
+  setStorageLocalMode = (url, item) => {
+    if (!localMode) {
+      chrome.storage.local.set({ [url]: item });
+    }
+  };
+
   storeSerializedHighlights = (hlId, hlColor, sr) => {
     let srHl = {
       id: hlId,
@@ -159,7 +167,8 @@ class Highlighter extends React.Component {
     };
     console.log(srHl);
     this.serializedHls.push(srHl);
-    window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
+    this.setStorageLocalMode(serializedHls);
+    // window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
   };
 
   // make the call to highlight state driven
@@ -172,7 +181,7 @@ class Highlighter extends React.Component {
 
   displaySerialized = () => {
     this.setState({ isSerialized: this.highlighter.serialize() });
-    console.log(this.state.isSerialized);
+    // console.log(this.state.isSerialized);
   };
 
   removeHighlightSelection = () => {
