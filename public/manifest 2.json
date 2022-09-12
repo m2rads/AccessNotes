@@ -1,0 +1,18 @@
+{
+  "short_name": "AccessNotes",
+  "Name": "AccessNotes Highlighter",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "A chrome study tool that allows users to highlight any content on the web and take notes for it",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_hrls>"],
+      "js": ["./main.js"],
+      "css": ["/main.css"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "./popup.html"
+  }
+}

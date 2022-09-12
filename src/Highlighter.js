@@ -11,7 +11,7 @@ import Tootlip from "./Tooltip/Tooltip";
 import StickyNote from "./StickyNote/StickyNote";
 import { clearNote, updated } from "./features/noteTxt/noteTxt-slice";
 import { connect } from "react-redux";
-// import { restoreHighlight } from "./Helper";
+import { localMode } from "./constants";
 
 class Highlighter extends React.Component {
   constructor(props) {
@@ -34,7 +34,9 @@ class Highlighter extends React.Component {
 
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
+
     let sr = JSON.parse(localStorage.getItem("sr"));
+
     console.log(sr);
     if (sr !== null) {
       this.serializedHls = sr;
@@ -42,7 +44,7 @@ class Highlighter extends React.Component {
       this.serializedHls = [];
     }
 
-    // window.localStorage.clear();
+    window.localStorage.clear();
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
