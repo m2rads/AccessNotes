@@ -26,6 +26,7 @@ class Highlighter extends React.Component {
       stickyNoteStyle: {
         opacity: 0,
       },
+      serializedHls: [],
       noteList: {},
       activeHighlight: null,
     };
@@ -36,7 +37,12 @@ class Highlighter extends React.Component {
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
 
+<<<<<<< HEAD
     let storageCache = {};
+=======
+    const url = window.location.href;
+    this.getStorageLocalMode(url);
+>>>>>>> development
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
@@ -75,7 +81,6 @@ class Highlighter extends React.Component {
           id: "highlight",
           onclick: (e) => {
             // let highlight = this.highlighter.getHighlightsInSelection();
-            // console.log(highlight[0]);
             this.activateTooltip(e);
           },
         },
@@ -98,23 +103,6 @@ class Highlighter extends React.Component {
         },
       })
     );
-
-    // restore the highlights
-    if (this.serializedHls !== null) {
-      for (let i in this.serializedHls) {
-        try {
-          rangy.deserializeSelection(this.serializedHls[i].sr);
-          this.highlighter.highlightSelection(this.serializedHls[i].color);
-          let highlightInSelection =
-            this.highlighter.getHighlightsInSelection();
-          console.log(highlightInSelection);
-        } catch (exp) {}
-      }
-    }
-  }
-
-  componentDidUpdate() {
-    // window.localStorage.setItem("sr", this.serializedHighlights);
   }
 
   // cleanup event listeners to avoid memory leak on older browsers
@@ -143,10 +131,20 @@ class Highlighter extends React.Component {
   }
 
   getStorageLocalMode = (url) => {
+<<<<<<< HEAD
     if (!localMode) {
       chrome.storage.local.get(url, (items) => {
         items[url] && this.setState({ noteList: items[url] });
         console.log(this.state.noteList);
+=======
+    // update serialized highlits state to access all data
+    if (!localMode) {
+      chrome.storage.local.get(url, (items) => {
+        items[url] &&
+          this.setState({
+            serializedHls: [...this.state.serializedHls, ...items[url]],
+          });
+>>>>>>> development
         console.log(items[url]);
       });
     }
@@ -154,7 +152,13 @@ class Highlighter extends React.Component {
 
   setStorageLocalMode = (url, item) => {
     if (!localMode) {
+<<<<<<< HEAD
       chrome.storage.local.set({ [url]: item });
+=======
+      chrome.storage.local.set({ [url]: item }, () => {
+        console.log("the value is: ", item);
+      });
+>>>>>>> development
     }
   };
 
@@ -165,10 +169,18 @@ class Highlighter extends React.Component {
       color: hlColor,
       // note: "", storing the note directly in localstorage
     };
+<<<<<<< HEAD
     console.log(srHl);
     this.serializedHls.push(srHl);
     this.setStorageLocalMode(serializedHls);
     // window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
+=======
+    this.setState({
+      serializedHls: [...this.state.serializedHls, srHl],
+    });
+    const url = window.location.href;
+    this.setStorageLocalMode(url, srHl);
+>>>>>>> development
   };
 
   // make the call to highlight state driven
@@ -181,15 +193,16 @@ class Highlighter extends React.Component {
 
   displaySerialized = () => {
     this.setState({ isSerialized: this.highlighter.serialize() });
+<<<<<<< HEAD
     // console.log(this.state.isSerialized);
+=======
+>>>>>>> development
   };
 
   removeHighlightSelection = () => {
     // let highlight = this.highlighter.getHighlightsInSelection();
     this.deleteNote(true);
     this.highlighter.unhighlightSelection();
-    // if (window.confirm("Delete this highlight (ID " + highlight[0].id + ")?")) {
-    // }
   };
 
   handleMouseUp = (e) => {
@@ -273,26 +286,39 @@ class Highlighter extends React.Component {
     }
 
     // console.log(highlightInSelection);
-
     this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
       return 0;
     });
 
-    let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
-    if (currentNote !== undefined) {
-      this.props.updated(currentNote);
-    } else {
-      window.localStorage.setItem(highlightInSelection[0].id, " ");
-    }
+    /* 
+  ****************
+    getter
+  */
+    // let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
+    let highlightList = this.state.serializedHls;
+    console.log(serializedHls);
+    // if (currentNote !== undefined) {
+    //   this.props.updated(currentNote);
+    // } else {
+    //   window.localStorage.setItem(highlightInSelection[0].id, " ");
+    // }
 
     this.noteDisplay();
   };
 
+  /* 
+  ****************
+    Setter
+  */
   saveNote = (noteTxt) => {
     let currentHighlight = this.state.activeHighlight;
     window.localStorage.setItem(currentHighlight, noteTxt);
   };
 
+  /* 
+  ****************
+    Setter
+  */
   deleteNote = (rmHl) => {
     let currentHighlight = this.state.activeHighlight;
     if (rmHl) {
