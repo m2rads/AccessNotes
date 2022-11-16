@@ -3,8 +3,8 @@
 AccessNotes is a chrome extension written with React Framework. Before cloning the app, make sure that you have npm installed.
 
 <p align="center">
-  <img src="/media/accessnotes" width="350" title="hover text">
-  <img src="/media/accessnotes" width="350" alt="accessibility text">
+  <img src="/media/accessnotes.png" width="350" title="hover text">
+  <img src="/media/accessnotes.png" width="350" alt="accessibility text">
 </p>
 
 # Running the app
