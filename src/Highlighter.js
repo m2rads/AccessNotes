@@ -38,7 +38,7 @@ class Highlighter extends React.Component {
     document.addEventListener("mouseup", this.handleMouseUp);
 
     const url = window.location.href;
-    this.getStorageLocalMode(url);
+    // this.getStorageLocalMode(url);
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
@@ -249,28 +249,28 @@ class Highlighter extends React.Component {
 
     if (highlightInSelection[0] !== undefined) {
       console.log(highlightInSelection);
-      console.log(this.serializedHls);
+      // console.log(this.serializedHls);
       // let currentNote = this.serializedHls[0].sr
     } else {
       // serialize the selction before dom makes any new changes for highlights
       let sr = rangy.serializeSelection();
-      this.highlighter.highlightSelection(hlcolor);
-      highlightInSelection = this.highlighter.getHighlightsInSelection();
-      this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+      // this.highlighter.highlightSelection(hlcolor);
+      // highlightInSelection = this.highlighter.getHighlightsInSelection();
+      // this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
     }
 
     // console.log(highlightInSelection);
-    this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
-      return 0;
-    });
+    // this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
+    //   return 0;
+    // });
 
     /* 
   ****************
     getter
   */
     // let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
-    let highlightList = this.state.serializedHls;
-    console.log(serializedHls);
+    // let highlightList = this.state.serializedHls;
+    // console.log(serializedHls);
     // if (currentNote !== undefined) {
     //   this.props.updated(currentNote);
     // } else {
@@ -294,37 +294,37 @@ class Highlighter extends React.Component {
     Setter
   */
   deleteNote = (rmHl) => {
-    let currentHighlight = this.state.activeHighlight;
-    if (rmHl) {
-      if (
-        window.confirm("Delete this highlight (ID " + currentHighlight + ")?")
-      ) {
-        // window.localStorage.clear();
-        if (this.serializedHls !== null) {
-          for (let i in this.serializedHls) {
-            try {
-              let highlightInSelection =
-                this.highlighter.getHighlightsInSelection();
-              if (this.serializedHls[i].id === highlightInSelection[0].id) {
-                this.serializedHls.splice(i, 1);
-                window.localStorage.setItem(
-                  "sr",
-                  JSON.stringify(this.serializedHls)
-                );
-                window.localStorage.removeItem(currentHighlight);
-                this.handleCloseNote();
-              }
-            } catch (exp) {}
-          }
-        }
-      }
-    } else {
-      if (window.confirm("Delete this note (ID " + currentHighlight + ")?")) {
-        // window.localStorage.clear();
-        window.localStorage.removeItem(currentHighlight);
-        this.handleCloseNote();
-      }
-    }
+    // let currentHighlight = this.state.activeHighlight;
+    // if (rmHl) {
+    //   if (
+    //     window.confirm("Delete this highlight (ID " + currentHighlight + ")?")
+    //   ) {
+    //     // window.localStorage.clear();
+    //     if (this.serializedHls !== null) {
+    //       for (let i in this.serializedHls) {
+    //         try {
+    //           let highlightInSelection =
+    //             this.highlighter.getHighlightsInSelection();
+    //           if (this.serializedHls[i].id === highlightInSelection[0].id) {
+    //             this.serializedHls.splice(i, 1);
+    //             window.localStorage.setItem(
+    //               "sr",
+    //               JSON.stringify(this.serializedHls)
+    //             );
+    //             window.localStorage.removeItem(currentHighlight);
+    //             this.handleCloseNote();
+    //           }
+    //         } catch (exp) {}
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   if (window.confirm("Delete this note (ID " + currentHighlight + ")?")) {
+    //     // window.localStorage.clear();
+    //     window.localStorage.removeItem(currentHighlight);
+    //     this.handleCloseNote();
+    //   }
+    // }
   };
 
   highlightTextReader = () => {
