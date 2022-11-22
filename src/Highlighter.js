@@ -249,13 +249,13 @@ class Highlighter extends React.Component {
 
     if (highlightInSelection[0] !== undefined) {
       console.log(highlightInSelection);
-      // console.log(this.serializedHls);
-      // let currentNote = this.serializedHls[0].sr
+      console.log(this.serializedHls);
+      let currentNote = this.serializedHls[0].sr;
     } else {
       // serialize the selction before dom makes any new changes for highlights
-      let sr = rangy.serializeSelection();
-      // this.highlighter.highlightSelection(hlcolor);
-      // highlightInSelection = this.highlighter.getHighlightsInSelection();
+      // let sr = rangy.serializeSelection();
+      this.highlighter.highlightSelection(hlcolor);
+      highlightInSelection = this.highlighter.getHighlightsInSelection();
       // this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
     }
 
