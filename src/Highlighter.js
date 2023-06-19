@@ -61,7 +61,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            let highlight = this.highlighter.getHighlightsInSelection();
+            // let highlight = this.highlighter.getHighlightsInSelection();
             console.log(highlight[0]);
             this.activateTooltip(e);
           },
@@ -91,7 +91,7 @@ class Highlighter extends React.Component {
           id: "highlight",
           onclick: (e) => {
             // let highlight = this.highlighter.getHighlightsInSelection();
-            // console.log(highlight[0]);
+            console.log(highlight[0]);
             console.log(this.state.globalHighlighter);
             this.displaySerialized();
             this.activateTooltip(e);
@@ -126,18 +126,18 @@ class Highlighter extends React.Component {
     );
   }
 
-  getStorageLocalMode = (url) => {
-    // update serialized highlits state to access all data
-    if (!localMode) {
-      chrome.storage.local.get(url, (items) => {
-        items[url] &&
-          this.setState({
-            serializedHls: [...this.state.serializedHls, ...items[url]],
-          });
-        console.log(items[url]);
-      });
-    }
-  };
+  // getStorageLocalMode = (url) => {
+  //   // update serialized highlits state to access all data
+  //   if (!localMode) {
+  //     chrome.storage.local.get(url, (items) => {
+  //       items[url] &&
+  //         this.setState({
+  //           serializedHls: [...this.state.serializedHls, ...items[url]],
+  //         });
+  //       console.log(items[url]);
+  //     });
+  //   }
+  // };
 
   setStorageLocalMode = (url, item) => {
     if (!localMode) {
@@ -158,7 +158,7 @@ class Highlighter extends React.Component {
       serializedHls: [...this.state.serializedHls, srHl],
     });
     const url = window.location.href;
-    this.setStorageLocalMode(url, srHl);
+    // this.setStorageLocalMode(url, srHl);
   };
 
   // make the call to highlight state driven
@@ -250,7 +250,7 @@ class Highlighter extends React.Component {
     if (highlightInSelection[0] !== undefined) {
       console.log(highlightInSelection);
       console.log(this.serializedHls);
-      let currentNote = this.serializedHls[0].sr;
+      // let currentNote = this.serializedHls[0].sr;
     } else {
       // serialize the selction before dom makes any new changes for highlights
       // let sr = rangy.serializeSelection();
