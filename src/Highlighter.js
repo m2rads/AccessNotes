@@ -38,7 +38,7 @@ class Highlighter extends React.Component {
     document.addEventListener("mouseup", this.handleMouseUp);
 
     const url = window.location.href;
-    this.getStorageLocalMode(url);
+    // this.getStorageLocalMode(url);
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
