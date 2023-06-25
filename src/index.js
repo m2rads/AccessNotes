@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "./index.css";
 import Highlighter from "./Highlighter";
 import * as serviceWorker from "./serviceWorker";
@@ -14,20 +14,18 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 
 // StickyNotes / content script
 !popupRoot &&
-  ReactDOM.render(
+  ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <React.StrictMode>
       <Provider store={store}>
         <Highlighter />
       </Provider>
-    </React.StrictMode>,
-    document.getElementById("insertion-point")
+    </React.StrictMode>
   );
 
 // PopupComponent / popup.html
 popupRoot && // to suppress minified react error 200
-  ReactDOM.render(
-    <React.Fragment>{/* <PopupComponent /> */}</React.Fragment>,
-    popupRoot
+  ReactDOM.createRoot(popupRoot).render(
+    <React.Fragment>{/* <PopupComponent /> */}</React.Fragment>
   );
 
 // If you want your app to work offline and load faster, you can change

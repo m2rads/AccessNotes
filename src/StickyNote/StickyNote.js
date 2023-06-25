@@ -18,7 +18,7 @@ function StickyNote(props) {
         <textarea
           className="note-content"
           id="noteTextArea"
-          value={note}
+          value={note || ""}
           onChange={(e) => dispatch(updated(e.target.value))}
           type="text"
         />
