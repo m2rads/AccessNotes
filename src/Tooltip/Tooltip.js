@@ -25,7 +25,6 @@ class Tootlip extends React.Component {
     return (
       <div className="tooltip" id="tooltip" style={this.props.toolTipLocStyle}>
         <div className="heading">
-          <p>Highlight</p>
           <div className="h-color">
             <button
               className="color-btn h-y"
