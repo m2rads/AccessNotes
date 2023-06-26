@@ -94,7 +94,7 @@ class Highlighter extends React.Component {
           id: "highlight",
           onclick: (e) => {
             // let highlight = this.highlighter.getHighlightsInSelection();
-            console.log(this.state.globalHighlighter);
+            // console.log(this.state.globalHighlighter);
             this.displaySerialized();
             this.activateTooltip(e);
           },
