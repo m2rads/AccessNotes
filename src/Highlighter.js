@@ -41,10 +41,6 @@ class Highlighter extends React.Component {
       this.serializedHls = [];
     }
 
-    if (!this.props.localStorage) {
-      window.localStorage.clear();
-    }
-
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
         ignoreWhiteSpace: true,
