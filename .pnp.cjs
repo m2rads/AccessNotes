@@ -38,7 +38,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rangy-serializer", "npm:2.1.0"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:18.2.0"],\
-            ["react-draggable", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:4.4.5"],\
             ["react-redux", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:8.1.1"],\
             ["react-scripts", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:5.0.1"],\
             ["redux", "npm:4.2.1"],\
@@ -5573,7 +5572,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rangy-serializer", "npm:2.1.0"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:18.2.0"],\
-            ["react-draggable", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:4.4.5"],\
             ["react-redux", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:8.1.1"],\
             ["react-scripts", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:5.0.1"],\
             ["redux", "npm:4.2.1"],\
@@ -6932,15 +6930,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:4.2.3"],\
             ["strip-ansi", "npm:6.0.1"],\
             ["wrap-ansi", "npm:7.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["clsx", [\
-        ["npm:1.2.1", {\
-          "packageLocation": "./.yarn/cache/clsx-npm-1.2.1-77792dc182-30befca801.zip/node_modules/clsx/",\
-          "packageDependencies": [\
-            ["clsx", "npm:1.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15279,34 +15268,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "packagePeers": [\
             "@types/react",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["react-draggable", [\
-        ["npm:4.4.5", {\
-          "packageLocation": "./.yarn/cache/react-draggable-npm-4.4.5-f5c4c58302-21c3775db0.zip/node_modules/react-draggable/",\
-          "packageDependencies": [\
-            ["react-draggable", "npm:4.4.5"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:4.4.5", {\
-          "packageLocation": "./.yarn/__virtual__/react-draggable-virtual-b7159a7d7d/0/cache/react-draggable-npm-4.4.5-f5c4c58302-21c3775db0.zip/node_modules/react-draggable/",\
-          "packageDependencies": [\
-            ["react-draggable", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:4.4.5"],\
-            ["@types/react", null],\
-            ["@types/react-dom", null],\
-            ["clsx", "npm:1.2.1"],\
-            ["prop-types", "npm:15.8.1"],\
-            ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:46df0ca14c9199ee253aeb8e21bb5e40ce83c7e44afb0a79940cfa2787b08552cd317707fa26c8ede51c22fb06271728a1ed4e006d336109240a27cdd54e5e16#npm:18.2.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react-dom",\
-            "@types/react",\
-            "react-dom",\
             "react"\
           ],\
           "linkType": "HARD"\
