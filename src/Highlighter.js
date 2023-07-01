@@ -1,11 +1,11 @@
 import React from "react";
 import rangy from "rangy";
-// import "rangy/lib/rangy-classapplier";
-// import "rangy/lib/rangy-core";
-// import "rangy/lib/rangy-highlighter";
-// import "rangy/lib/rangy-textrange";
-// import "rangy/lib/rangy-serializer";
-// import "rangy/lib/rangy-selectionsaverestore";
+import "rangy/lib/rangy-classapplier";
+import "rangy/lib/rangy-core";
+import "rangy/lib/rangy-highlighter";
+import "rangy/lib/rangy-textrange";
+import "rangy/lib/rangy-serializer";
+import "rangy/lib/rangy-selectionsaverestore";
 import "./App.css";
 import Tootlip from "./Tooltip/Tooltip";
 import StickyNote from "./StickyNote/StickyNote";
