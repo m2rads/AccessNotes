@@ -78,8 +78,8 @@
   cursor: pointer;
   text-align: left;
   transition: background 90ms ease-in-out, transform 90ms ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  /* -webkit-appearance: none;
+  -moz-appearance: none; */
   border-bottom: 2px #00695c solid;
 }
 
