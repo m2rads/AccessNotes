@@ -174,9 +174,18 @@ class Highlighter extends React.Component {
   };
 
   handleMouseUp = (e) => {
-    if (e.target.className !== "highlight") {
+    const targetElement = e.target;
+    console.log(targetElement);
+    if (
+      !targetElement.classList.contains("note-content") &&
+      e.target.className !== "highlight"
+    ) {
       setTimeout(this.showToolTip(), 2);
     }
+
+    // if (e.target.className !== "highlight") {
+    //   setTimeout(this.showToolTip(), 2);
+    // }
   };
 
   showToolTip = () => {
