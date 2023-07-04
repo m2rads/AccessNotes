@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { updated } from "../features/noteTxt/noteTxt-slice";
 import "./StickyNote.css";
@@ -8,7 +8,7 @@ function StickyNote(props) {
   const dispatch = useAppDispatch();
 
   return (
-    <div>
+    <div className="sticky-note">
       <div className="note-container" style={props.stickyNoteStyle}>
         <div className="note-header">
           <button className="close-butt" onClick={() => props.onCloseNote()}>
