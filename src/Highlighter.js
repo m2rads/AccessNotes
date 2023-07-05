@@ -36,13 +36,31 @@ class Highlighter extends React.Component {
 
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
-    let sr = JSON.parse(localStorage.getItem("sr"));
+    // let sr = JSON.parse(localStorage.getItem("sr"));
+
     // console.log(sr);
-    if (sr !== null) {
-      this.serializedHls = sr;
-    } else {
-      this.serializedHls = [];
-    }
+    // if (sr !== null) {
+    //   this.serializedHls = sr;
+    // } else {
+    //   this.serializedHls = [];
+    // }
+
+    // Make an HTTP GET request using Axios to fetch the annotations from the server
+    axios
+      .get("http://localhost:5000/api/annotations")
+      .then((response) => {
+        // Assuming the response is an array of annotations
+        const data = response.data;
+        console.log(data);
+        if (data !== null && Array.isArray(data)) {
+          this.serializedHls = data;
+        } else {
+          this.serializedHls = [];
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching annotations:", error);
+      });
 
     this.highlighter.addClassApplier(
       rangy.createClassApplier("h-y", {
@@ -51,7 +69,6 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightsInSelection();
             this.activateTooltip(e);
           },
         },
@@ -102,17 +119,17 @@ class Highlighter extends React.Component {
     );
 
     // restore the highlights
-    if (this.serializedHls !== null) {
-      for (let i in this.serializedHls) {
-        try {
-          rangy.deserializeSelection(this.serializedHls[i].sr);
-          this.highlighter.highlightSelection(this.serializedHls[i].color);
-          let highlightInSelection =
-            this.highlighter.getHighlightsInSelection();
-          // console.log(highlightInSelection);
-        } catch (exp) {}
-      }
-    }
+    // if (this.serializedHls !== null) {
+    //   for (let i in this.serializedHls) {
+    //     try {
+    //       rangy.deserializeSelection(this.serializedHls[i].sr);
+    //       this.highlighter.highlightSelection(this.serializedHls[i].color);
+    //       // let highlightInSelection =
+    //       // this.highlighter.getHighlightsInSelection();
+    //       // console.log(highlightInSelection);
+    //     } catch (exp) {}
+    //   }
+    // }
   }
 
   componentDidUpdate() {
@@ -157,9 +174,14 @@ class Highlighter extends React.Component {
   // };
 
   // Save the annotation to the database
-  storeSerializedHighlights = async (color, serializedSelection) => {
+  storeSerializedHighlights = async (
+    highlightId,
+    color,
+    serializedSelection
+  ) => {
     try {
-      await axios.post("/api/annotations", {
+      await axios.post("http://localhost:5000/api/annotations", {
+        highlightId,
         color,
         serializedSelection,
       });
