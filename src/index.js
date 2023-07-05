@@ -15,11 +15,11 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 // StickyNotes / content script
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
-    <React.StrictMode>
+    <>
       <Provider store={store}>
         <Highlighter />
       </Provider>
-    </React.StrictMode>
+    </>
   );
 
 // PopupComponent / popup.html
