@@ -24,6 +24,8 @@ class Highlighter extends React.Component {
       stickyNoteStyle: {
         display: "none",
       },
+      middleX: 100,
+      middleY: 100,
       noteList: {},
       activeHighlight: null,
     };
@@ -157,6 +159,7 @@ class Highlighter extends React.Component {
     let sr = rangy.serializeSelection();
     this.highlighter.highlightSelection(color);
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
+    console.log("highlight in selection", highlightInSelection);
     // this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
     try {
       this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
@@ -182,6 +185,12 @@ class Highlighter extends React.Component {
   };
 
   handleMouseUp = (e) => {
+    // let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
+    // console.log("bounding rect", pos);
+
+    // const middleX = pos.left + pos.width / 2;
+    // const middleY = pos.top + pos.height / 2;
+
     const targetElement = e.target;
     if (
       !targetElement.classList.contains("note-header") &&
@@ -189,11 +198,20 @@ class Highlighter extends React.Component {
       !targetElement.classList.contains("note-footer") &&
       e.target.className !== "highlight"
     ) {
+      let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
+      this.setState({
+        middleX: pos.left,
+        middleY: pos.top,
+      });
+
       setTimeout(this.showToolTip(), 2);
     }
   };
 
   showToolTip = () => {
+    console.log("Middle X position:", this.state.middleX);
+    console.log("Middle Y position:", this.state.middleY);
+
     let selection = window.getSelection();
     let toolTipLocStyle = {
       opacity: 0,
@@ -202,8 +220,8 @@ class Highlighter extends React.Component {
 
     if (selection.toString() !== "") {
       toolTipLocStyle = {
-        top: 30 + "%",
-        left: 40 + "%",
+        left: this.state.middleX + "px",
+        top: this.state.middleY + "px",
         opacity: 1,
       };
     }
@@ -218,8 +236,8 @@ class Highlighter extends React.Component {
     if (e.target.id === "highlight") {
       this.setState({
         toolTipStyle: {
-          top: 30 + "%",
-          left: 40 + "%",
+          left: this.state.middleX + "px",
+          top: this.state.middleY + "px",
           opacity: 1,
         },
       });
