@@ -36,7 +36,7 @@ class Highlighter extends React.Component {
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
     let sr = JSON.parse(localStorage.getItem("sr"));
-    console.log(sr);
+    // console.log(sr);
     if (sr !== null) {
       this.serializedHls = sr;
     } else {
@@ -108,7 +108,7 @@ class Highlighter extends React.Component {
           this.highlighter.highlightSelection(this.serializedHls[i].color);
           let highlightInSelection =
             this.highlighter.getHighlightsInSelection();
-          console.log(highlightInSelection);
+          // console.log(highlightInSelection);
         } catch (exp) {}
       }
     }
@@ -149,7 +149,7 @@ class Highlighter extends React.Component {
       sr: sr,
       color: hlColor,
     };
-    console.log(srHl);
+    // console.log(srHl);
     this.serializedHls.push(srHl);
     window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
   };
@@ -159,8 +159,6 @@ class Highlighter extends React.Component {
     let sr = rangy.serializeSelection();
     this.highlighter.highlightSelection(color);
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
-    console.log("highlight in selection", highlightInSelection);
-    // this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
     try {
       this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
     } catch (error) {
@@ -173,7 +171,6 @@ class Highlighter extends React.Component {
 
   displaySerialized = () => {
     this.setState({ isSerialized: this.highlighter.serialize() });
-    console.log(this.state.isSerialized);
   };
 
   removeHighlightSelection = () => {
@@ -185,12 +182,6 @@ class Highlighter extends React.Component {
   };
 
   handleMouseUp = (e) => {
-    // let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    // console.log("bounding rect", pos);
-
-    // const middleX = pos.left + pos.width / 2;
-    // const middleY = pos.top + pos.height / 2;
-
     const targetElement = e.target;
     if (
       !targetElement.classList.contains("note-header") &&
@@ -209,9 +200,6 @@ class Highlighter extends React.Component {
   };
 
   showToolTip = () => {
-    console.log("Middle X position:", this.state.middleX);
-    console.log("Middle Y position:", this.state.middleY);
-
     let selection = window.getSelection();
     let toolTipLocStyle = {
       opacity: 0,
@@ -297,13 +285,6 @@ class Highlighter extends React.Component {
       // console.error("An error occurred while saving the state:", error);
     }
 
-    // let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
-    // if (currentNote !== undefined) {
-    //   this.props.updated(currentNote);
-    // } else {
-    //   window.localStorage.setItem(highlightInSelection[0].id, " ");
-    // }
-
     try {
       let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
       if (currentNote !== undefined) {
@@ -312,7 +293,7 @@ class Highlighter extends React.Component {
         window.localStorage.setItem(highlightInSelection[0].id, " ");
       }
     } catch (error) {
-      console.error("An error occurred while accessing local storage:", error);
+      // console.error("An error occurred while accessing local storage:", error);
     }
 
     this.noteDisplay();
