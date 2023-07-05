@@ -263,8 +263,6 @@ class Highlighter extends React.Component {
     this.setState({
       toolTipStyle: toolTipLocStyle,
       stickyNoteStyle: {
-        top: 30 + "%",
-        left: 50 + "%",
         opacity: 1,
       },
     });
