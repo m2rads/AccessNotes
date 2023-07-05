@@ -201,7 +201,7 @@ class Highlighter extends React.Component {
       let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
       this.setState({
         middleX: pos.left,
-        middleY: pos.top,
+        middleY: pos.bottom,
       });
 
       setTimeout(this.showToolTip(), 2);
