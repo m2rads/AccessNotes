@@ -49,11 +49,40 @@ class Highlighter extends React.Component {
     axios
       .get("http://localhost:5000/api/annotations")
       .then((response) => {
-        // Assuming the response is an array of annotations
         const data = response.data;
-        console.log(data);
+        console.log("data", data);
         if (data !== null && Array.isArray(data)) {
-          this.serializedHls = data;
+          this.serializedHls = data.map((annotation) => {
+            // Remove unwanted fields (_id and __v)
+            delete annotation._id;
+            delete annotation.__v;
+            return {
+              sr: annotation.serializedSelection,
+              color: annotation.color,
+            };
+          });
+
+          console.log("serilzied hls", this.serializedHls);
+
+          // Code to restore the highlights
+          for (let i in this.serializedHls) {
+            try {
+              const serializedSelection = this.serializedHls[i].sr;
+              if (typeof serializedSelection === "string") {
+                rangy.deserializeSelection(serializedSelection);
+                this.highlighter.highlightSelection(
+                  this.serializedHls[i].color
+                );
+              } else {
+                console.error(
+                  "Invalid serialized selection format:",
+                  serializedSelection
+                );
+              }
+            } catch (exp) {
+              console.error("Error restoring highlights:", exp);
+            }
+          }
         } else {
           this.serializedHls = [];
         }
@@ -95,7 +124,6 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightsInSelection();
             this.activateTooltip(e);
           },
         },
@@ -109,9 +137,6 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
-            // let highlight = this.highlighter.getHighlightsInSelection();
-            // console.log(this.state.globalHighlighter);
-            this.displaySerialized();
             this.activateTooltip(e);
           },
         },
