@@ -36,14 +36,6 @@ class Highlighter extends React.Component {
 
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
-    // let sr = JSON.parse(localStorage.getItem("sr"));
-
-    // console.log(sr);
-    // if (sr !== null) {
-    //   this.serializedHls = sr;
-    // } else {
-    //   this.serializedHls = [];
-    // }
 
     // Make an HTTP GET request using Axios to fetch the annotations from the server
     axios
@@ -64,7 +56,7 @@ class Highlighter extends React.Component {
 
           console.log("serilzied hls", this.serializedHls);
 
-          // Code to restore the highlights
+          // restore the highlights
           for (let i in this.serializedHls) {
             try {
               const serializedSelection = this.serializedHls[i].sr;
@@ -142,19 +134,6 @@ class Highlighter extends React.Component {
         },
       })
     );
-
-    // restore the highlights
-    // if (this.serializedHls !== null) {
-    //   for (let i in this.serializedHls) {
-    //     try {
-    //       rangy.deserializeSelection(this.serializedHls[i].sr);
-    //       this.highlighter.highlightSelection(this.serializedHls[i].color);
-    //       // let highlightInSelection =
-    //       // this.highlighter.getHighlightsInSelection();
-    //       // console.log(highlightInSelection);
-    //     } catch (exp) {}
-    //   }
-    // }
   }
 
   componentDidUpdate() {
