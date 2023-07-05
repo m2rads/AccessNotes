@@ -143,15 +143,29 @@ class Highlighter extends React.Component {
     );
   }
 
-  storeSerializedHighlights = (hlId, hlColor, sr) => {
-    let srHl = {
-      id: hlId,
-      sr: sr,
-      color: hlColor,
-    };
-    // console.log(srHl);
-    this.serializedHls.push(srHl);
-    window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
+  // save annotations to DB has to replace this
+  // storeSerializedHighlights = (hlId, hlColor, sr) => {
+  //   let srHl = {
+  //     id: hlId,
+  //     sr: sr,
+  //     color: hlColor,
+  //   };
+  //   // console.log(srHl);
+  //   this.serializedHls.push(srHl);
+  //   window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
+  // };
+
+  // Save the annotation to the database
+  storeSerializedHighlights = async (color, serializedSelection) => {
+    try {
+      await axios.post("/api/annotations", {
+        color,
+        serializedSelection,
+      });
+      console.log("Annotation saved to the database");
+    } catch (error) {
+      console.error("Error saving annotation to the database:", error);
+    }
   };
 
   // make the call to highlight state driven
@@ -266,7 +280,6 @@ class Highlighter extends React.Component {
       let sr = rangy.serializeSelection();
       this.highlighter.highlightSelection(hlcolor);
       highlightInSelection = this.highlighter.getHighlightsInSelection();
-      // this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
       try {
         this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
       } catch (error) {
