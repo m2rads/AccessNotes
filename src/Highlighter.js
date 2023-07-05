@@ -157,7 +157,15 @@ class Highlighter extends React.Component {
     let sr = rangy.serializeSelection();
     this.highlighter.highlightSelection(color);
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
-    this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
+    // this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
+    try {
+      this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
+    } catch (error) {
+      console.error(
+        "An error occurred while storing serialized highlights:",
+        error
+      );
+    }
   };
 
   displaySerialized = () => {
@@ -175,17 +183,14 @@ class Highlighter extends React.Component {
 
   handleMouseUp = (e) => {
     const targetElement = e.target;
-    console.log(targetElement);
     if (
+      !targetElement.classList.contains("note-header") &&
       !targetElement.classList.contains("note-content") &&
+      !targetElement.classList.contains("note-footer") &&
       e.target.className !== "highlight"
     ) {
       setTimeout(this.showToolTip(), 2);
     }
-
-    // if (e.target.className !== "highlight") {
-    //   setTimeout(this.showToolTip(), 2);
-    // }
   };
 
   showToolTip = () => {
@@ -253,16 +258,20 @@ class Highlighter extends React.Component {
     if (highlightInSelection[0] !== undefined) {
       console.log(highlightInSelection);
       console.log(this.serializedHls);
-      // let currentNote = this.serializedHls[0].sr
     } else {
-      // serialize the selction before dom makes any new changes for highlights
       let sr = rangy.serializeSelection();
       this.highlighter.highlightSelection(hlcolor);
       highlightInSelection = this.highlighter.getHighlightsInSelection();
-      this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+      // this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+      try {
+        this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+      } catch (error) {
+        console.error(
+          "An error occurred while storing serialized highlights:",
+          error
+        );
+      }
     }
-
-    // console.log(highlightInSelection);
 
     this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
       return 0;
