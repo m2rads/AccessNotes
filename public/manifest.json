@@ -1,5 +1,5 @@
 {
-  "name": "React Sticky Notes App",
+  "name": "AccessNotes",
   "version": "1.0.0",
   "manifest_version": 3,
   "description": "Lets you annotate web pages and persists those annotations across page visits.",
@@ -10,13 +10,9 @@
       "css": ["/main.css"]
     }
   ],
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage"],
   "action": {
     "default_popup": "./popup.html"
   },
-  "host_permissions": [
-    "*://*/*"
-  ]
+  "host_permissions": ["*://*/*"]
 }
