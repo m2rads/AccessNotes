@@ -197,7 +197,8 @@ class Highlighter extends React.Component {
 
   // make the call to highlight state driven
   highlightSelectedText = (color) => {
-    let sr = rangy.serializeSelection();
+    let selObj = rangy.getSelection();
+    let sr = rangy.serializeSelection(selObj, true);
     this.highlighter.highlightSelection(color);
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
     try {
