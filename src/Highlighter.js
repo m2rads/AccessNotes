@@ -234,10 +234,12 @@ class Highlighter extends React.Component {
 
     if (selection.toString() !== "") {
       const range = selection.getRangeAt(0);
-      const lastLine =
-        range.getClientRects()[range.getClientRects().length - 1];
-      const tooltipX = lastLine.right; // Adjust if needed
-      const tooltipY = lastLine.bottom; // Adjust if needed
+      const { left, top, width, height } = range.getBoundingClientRect();
+
+      const tooltipWidth = 500;
+      const tooltipHeight = 200;
+      const tooltipX = left + (width - tooltipWidth) / 2;
+      const tooltipY = top + (height - tooltipHeight) / 2;
 
       const toolTipLocStyle = {
         left: tooltipX + "px",
