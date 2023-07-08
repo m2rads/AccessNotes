@@ -237,7 +237,7 @@ class Highlighter extends React.Component {
         middleY: pos.bottom,
       });
 
-      setTimeout(this.showToolTip(), 2);
+      setTimeout(this.showToolTip(), 9);
     }
   };
 
