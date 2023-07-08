@@ -42,7 +42,6 @@ class Highlighter extends React.Component {
       .get("http://localhost:5000/api/annotations")
       .then((response) => {
         const data = response.data;
-        console.log("data", data);
         if (data !== null && Array.isArray(data)) {
           this.serializedHls = data.map((annotation) => {
             // Remove unwanted fields (_id and __v)
@@ -53,9 +52,6 @@ class Highlighter extends React.Component {
               color: annotation.color,
             };
           });
-
-          console.log("serilzied hls", this.serializedHls);
-
           // restore the highlights
           for (let i in this.serializedHls) {
             try {
@@ -217,14 +213,8 @@ class Highlighter extends React.Component {
       !targetElement.classList.contains("note-header") &&
       !targetElement.classList.contains("note-content") &&
       !targetElement.classList.contains("note-footer") &&
-      e.target.className !== "highlight"
+      targetElement.className !== "highlight"
     ) {
-      let pos = window.getSelection().getRangeAt(0).getBoundingClientRect();
-      this.setState({
-        middleX: pos.left,
-        middleY: pos.bottom,
-      });
-
       setTimeout(this.showToolTip(), 500);
     }
   };
@@ -234,12 +224,26 @@ class Highlighter extends React.Component {
 
     if (selection.toString() !== "") {
       const range = selection.getRangeAt(0);
-      const { left, top, width, height } = range.getBoundingClientRect();
-
-      const tooltipWidth = 500;
+      const lastLine =
+        range.getClientRects()[range.getClientRects().length - 1];
+      const tooltipWidth = 200;
       const tooltipHeight = 200;
-      const tooltipX = left + (width - tooltipWidth) / 2;
-      const tooltipY = top + (height - tooltipHeight) / 2;
+      let tooltipX = lastLine.right;
+      let tooltipY = lastLine.bottom;
+
+      // Adjust the tooltip position if it exceeds the screen boundaries
+      const screenWidth =
+        window.innerWidth || document.documentElement.clientWidth;
+      const screenHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+
+      if (tooltipX + tooltipWidth > screenWidth) {
+        tooltipX = Math.max(lastLine.left - tooltipWidth, 0);
+      }
+
+      if (tooltipY + tooltipHeight > screenHeight) {
+        tooltipY = Math.max(lastLine.top - tooltipHeight, 0);
+      }
 
       const toolTipLocStyle = {
         left: tooltipX + "px",
