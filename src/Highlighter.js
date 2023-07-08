@@ -237,28 +237,38 @@ class Highlighter extends React.Component {
         middleY: pos.bottom,
       });
 
-      setTimeout(this.showToolTip(), 9);
+      setTimeout(this.showToolTip(), 500);
     }
   };
 
   showToolTip = () => {
     let selection = window.getSelection();
-    let toolTipLocStyle = {
-      opacity: 0,
-      display: "none",
-    };
 
     if (selection.toString() !== "") {
-      toolTipLocStyle = {
-        left: this.state.middleX + "px",
-        top: this.state.middleY + "px",
+      const range = selection.getRangeAt(0);
+      const lastLine =
+        range.getClientRects()[range.getClientRects().length - 1];
+      const tooltipX = lastLine.right; // Adjust if needed
+      const tooltipY = lastLine.bottom; // Adjust if needed
+
+      const toolTipLocStyle = {
+        left: tooltipX + "px",
+        top: tooltipY + "px",
         opacity: 1,
       };
-    }
 
-    this.setState({
-      toolTipStyle: toolTipLocStyle,
-    });
+      this.setState({
+        toolTipStyle: toolTipLocStyle,
+      });
+    } else {
+      let toolTipLocStyle = {
+        opacity: 0,
+        display: "none",
+      };
+      this.setState({
+        toolTipStyle: toolTipLocStyle,
+      });
+    }
   };
 
   // show tooltip when clicking on the highlighted text
