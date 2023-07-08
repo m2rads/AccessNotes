@@ -165,18 +165,6 @@ class Highlighter extends React.Component {
     );
   }
 
-  // save annotations to DB has to replace this
-  // storeSerializedHighlights = (hlId, hlColor, sr) => {
-  //   let srHl = {
-  //     id: hlId,
-  //     sr: sr,
-  //     color: hlColor,
-  //   };
-  //   // console.log(srHl);
-  //   this.serializedHls.push(srHl);
-  //   window.localStorage.setItem("sr", JSON.stringify(this.serializedHls));
-  // };
-
   // Save the annotation to the database
   storeSerializedHighlights = async (
     highlightId,
