@@ -238,10 +238,7 @@ class Highlighter extends React.Component {
         window.innerHeight || document.documentElement.clientHeight;
 
       if (tooltipX + tooltipWidth > screenWidth) {
-        tooltipX = Math.max(
-          lastLine.left - tooltipWidth,
-          screenWidth - tooltipWidth
-        );
+        tooltipX = Math.max(lastLine.left - tooltipWidth, 0);
       }
 
       if (tooltipY + tooltipHeight > screenHeight) {
