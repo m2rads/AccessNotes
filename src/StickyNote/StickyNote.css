@@ -1,5 +1,5 @@
 .note-container {
-  /* z-index: 10; */
+  z-index: 10;
   /* border: 1px solid grey; */
   border-radius: 10px;
   opacity: 0;
