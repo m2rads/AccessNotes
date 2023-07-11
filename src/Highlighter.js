@@ -219,6 +219,7 @@ class Highlighter extends React.Component {
     }
   };
 
+  // show tooltip when higlighting the text
   showToolTip = () => {
     let selection = window.getSelection();
 
@@ -265,6 +266,7 @@ class Highlighter extends React.Component {
     }
   };
 
+  // activate the tooltip when clicked on the highlighted text
   activateTooltip = (e) => {
     if (e.target.id === "highlight") {
       const rect = e.target.getBoundingClientRect();
