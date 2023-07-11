@@ -225,36 +225,39 @@ class Highlighter extends React.Component {
 
     if (selection.toString() !== "") {
       const range = selection.getRangeAt(0);
-      const lastLine =
-        range.getClientRects()[range.getClientRects().length - 1];
-      const tooltipWidth = 200;
-      const tooltipHeight = 200;
-      let tooltipX = lastLine.right;
-      let tooltipY = lastLine.bottom;
+      const clientRects = range.getClientRects();
 
-      // Adjust the tooltip position if it exceeds the screen boundaries
-      const screenWidth =
-        window.innerWidth || document.documentElement.clientWidth;
-      const screenHeight =
-        window.innerHeight || document.documentElement.clientHeight;
+      if (clientRects.length > 0) {
+        const lastLine = clientRects[clientRects.length - 1];
+        const tooltipWidth = 200;
+        const tooltipHeight = 200;
+        let tooltipX = lastLine.right;
+        let tooltipY = lastLine.bottom;
 
-      if (tooltipX + tooltipWidth > screenWidth) {
-        tooltipX = Math.max(lastLine.left - tooltipWidth, 0);
+        // Adjust the tooltip position if it exceeds the screen boundaries
+        const screenWidth =
+          window.innerWidth || document.documentElement.clientWidth;
+        const screenHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+
+        if (tooltipX + tooltipWidth > screenWidth) {
+          tooltipX = Math.max(lastLine.left - tooltipWidth, 0);
+        }
+
+        if (tooltipY + tooltipHeight > screenHeight) {
+          tooltipY = Math.max(lastLine.top - tooltipHeight, 0);
+        }
+
+        const toolTipLocStyle = {
+          left: tooltipX + "px",
+          top: tooltipY + "px",
+          opacity: 1,
+        };
+
+        this.setState({
+          toolTipStyle: toolTipLocStyle,
+        });
       }
-
-      if (tooltipY + tooltipHeight > screenHeight) {
-        tooltipY = Math.max(lastLine.top - tooltipHeight, 0);
-      }
-
-      const toolTipLocStyle = {
-        left: tooltipX + "px",
-        top: tooltipY + "px",
-        opacity: 1,
-      };
-
-      this.setState({
-        toolTipStyle: toolTipLocStyle,
-      });
     } else {
       let toolTipLocStyle = {
         opacity: 0,
