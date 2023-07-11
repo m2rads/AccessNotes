@@ -340,39 +340,45 @@ class Highlighter extends React.Component {
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
 
     if (highlightInSelection[0] !== undefined) {
-      console.log(highlightInSelection);
-      console.log(this.serializedHls);
-    } else {
-      let sr = rangy.serializeSelection();
-      this.highlighter.highlightSelection(hlcolor);
-      highlightInSelection = this.highlighter.getHighlightsInSelection();
-      try {
-        this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
-      } catch (error) {
-        // console.error(
-        //   "An error occurred while storing serialized highlights:",
-        //   error
-        // );
-      }
+      // console.log(highlightInSelection);
+      // console.log(this.serializedHls);
+      return;
+    }
+
+    let sr = rangy.serializeSelection();
+    this.highlighter.highlightSelection(hlcolor);
+    highlightInSelection = this.highlighter.getHighlightsInSelection();
+
+    try {
+      this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+    } catch (error) {
+      console.error(
+        "An error occurred while storing serialized highlights:",
+        error
+      );
     }
 
     try {
-      this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
+      const [firstHighlight] = highlightInSelection;
+      const { id } = firstHighlight;
+      this.setState({ activeHighlight: id }, () => {
         return 0;
       });
     } catch (error) {
-      // console.error("An error occurred while saving the state:", error);
+      console.error("An error occurred while saving the state:", error);
     }
 
     try {
-      let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
+      const [firstHighlight] = highlightInSelection;
+      const { id } = firstHighlight;
+      const currentNote = window.localStorage.getItem(id) || "";
       if (currentNote !== undefined) {
         this.props.updated(currentNote);
       } else {
-        window.localStorage.setItem(highlightInSelection[0].id, " ");
+        window.localStorage.setItem(id, " ");
       }
     } catch (error) {
-      // console.error("An error occurred while accessing local storage:", error);
+      console.error("An error occurred while accessing local storage:", error);
     }
 
     this.noteDisplay();
