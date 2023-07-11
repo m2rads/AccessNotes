@@ -265,18 +265,50 @@ class Highlighter extends React.Component {
     }
   };
 
-  // show tooltip when clicking on the highlighted text
-  activateTooltip(e) {
+  activateTooltip = (e) => {
     if (e.target.id === "highlight") {
+      const rect = e.target.getBoundingClientRect();
+      const highlightWidth = rect.width;
+      const highlightHeight = rect.height;
+      const tooltipWidth = 200;
+      const tooltipHeight = 400;
+      let tooltipX = rect.left + (highlightWidth - tooltipWidth) / 2;
+      let tooltipY = rect.top + (highlightHeight - tooltipHeight) / 2;
+
+      const screenWidth =
+        window.innerWidth || document.documentElement.clientWidth;
+      const screenHeight =
+        window.innerHeight || document.documentElement.clientHeight;
+
+      // Check if tooltip exceeds the right boundary
+      if (tooltipX + tooltipWidth > screenWidth) {
+        tooltipX = screenWidth - tooltipWidth;
+      }
+
+      // Check if tooltip exceeds the bottom boundary
+      if (tooltipY + tooltipHeight > screenHeight) {
+        tooltipY = screenHeight - tooltipHeight;
+      }
+
+      // Check if tooltip exceeds the left boundary
+      if (tooltipX < 0) {
+        tooltipX = 0;
+      }
+
+      // Check if tooltip exceeds the top boundary
+      if (tooltipY < 0) {
+        tooltipY = 0;
+      }
+
       this.setState({
         toolTipStyle: {
-          left: this.state.middleX + "px",
-          top: this.state.middleY + "px",
+          left: tooltipX + "px",
+          top: tooltipY + "px",
           opacity: 1,
         },
       });
     }
-  }
+  };
 
   handleCloseNote = () => {
     this.setState({
