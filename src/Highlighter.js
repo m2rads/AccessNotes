@@ -225,39 +225,36 @@ class Highlighter extends React.Component {
 
     if (selection.toString() !== "") {
       const range = selection.getRangeAt(0);
-      const clientRects = range.getClientRects();
+      const lastLine =
+        range.getClientRects()[range.getClientRects().length - 1];
+      const tooltipWidth = 200;
+      const tooltipHeight = 200;
+      let tooltipX = lastLine.right;
+      let tooltipY = lastLine.bottom;
 
-      if (clientRects.length > 0) {
-        const lastLine = clientRects[clientRects.length - 1];
-        const tooltipWidth = 200;
-        const tooltipHeight = 200;
-        let tooltipX = lastLine.right;
-        let tooltipY = lastLine.bottom;
+      // Adjust the tooltip position if it exceeds the screen boundaries
+      const screenWidth =
+        window.innerWidth || document.documentElement.clientWidth;
+      const screenHeight =
+        window.innerHeight || document.documentElement.clientHeight;
 
-        // Adjust the tooltip position if it exceeds the screen boundaries
-        const screenWidth =
-          window.innerWidth || document.documentElement.clientWidth;
-        const screenHeight =
-          window.innerHeight || document.documentElement.clientHeight;
-
-        if (tooltipX + tooltipWidth > screenWidth) {
-          tooltipX = Math.max(lastLine.left - tooltipWidth, 0);
-        }
-
-        if (tooltipY + tooltipHeight > screenHeight) {
-          tooltipY = Math.max(lastLine.top - tooltipHeight, 0);
-        }
-
-        const toolTipLocStyle = {
-          left: tooltipX + "px",
-          top: tooltipY + "px",
-          opacity: 1,
-        };
-
-        this.setState({
-          toolTipStyle: toolTipLocStyle,
-        });
+      if (tooltipX + tooltipWidth > screenWidth) {
+        tooltipX = Math.max(lastLine.left - tooltipWidth, 0);
       }
+
+      if (tooltipY + tooltipHeight > screenHeight) {
+        tooltipY = Math.max(lastLine.top - tooltipHeight, 0);
+      }
+
+      const toolTipLocStyle = {
+        left: tooltipX + "px",
+        top: tooltipY + "px",
+        opacity: 1,
+      };
+
+      this.setState({
+        toolTipStyle: toolTipLocStyle,
+      });
     } else {
       let toolTipLocStyle = {
         opacity: 0,
@@ -343,45 +340,39 @@ class Highlighter extends React.Component {
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
 
     if (highlightInSelection[0] !== undefined) {
-      // console.log(highlightInSelection);
-      // console.log(this.serializedHls);
-      return;
-    }
-
-    let sr = rangy.serializeSelection();
-    this.highlighter.highlightSelection(hlcolor);
-    highlightInSelection = this.highlighter.getHighlightsInSelection();
-
-    try {
-      this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
-    } catch (error) {
-      console.error(
-        "An error occurred while storing serialized highlights:",
-        error
-      );
+      console.log(highlightInSelection);
+      console.log(this.serializedHls);
+    } else {
+      let sr = rangy.serializeSelection();
+      this.highlighter.highlightSelection(hlcolor);
+      highlightInSelection = this.highlighter.getHighlightsInSelection();
+      try {
+        this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+      } catch (error) {
+        // console.error(
+        //   "An error occurred while storing serialized highlights:",
+        //   error
+        // );
+      }
     }
 
     try {
-      const [firstHighlight] = highlightInSelection;
-      const { id } = firstHighlight;
-      this.setState({ activeHighlight: id }, () => {
+      this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
         return 0;
       });
     } catch (error) {
-      console.error("An error occurred while saving the state:", error);
+      // console.error("An error occurred while saving the state:", error);
     }
 
     try {
-      const [firstHighlight] = highlightInSelection;
-      const { id } = firstHighlight;
-      const currentNote = window.localStorage.getItem(id) || "";
+      let currentNote = window.localStorage.getItem(highlightInSelection[0].id);
       if (currentNote !== undefined) {
         this.props.updated(currentNote);
       } else {
-        window.localStorage.setItem(id, " ");
+        window.localStorage.setItem(highlightInSelection[0].id, " ");
       }
     } catch (error) {
-      console.error("An error occurred while accessing local storage:", error);
+      // console.error("An error occurred while accessing local storage:", error);
     }
 
     this.noteDisplay();
