@@ -29,6 +29,7 @@ class Highlighter extends React.Component {
       middleY: 100,
       noteList: {},
       activeHighlight: null,
+      isNoteOpened: false,
     };
     this.showToolTip = this.showToolTip.bind(this);
     this.handleAddNote = this.handleAddNote.bind(this);
@@ -318,6 +319,7 @@ class Highlighter extends React.Component {
         display: "none",
         opacity: 0,
       },
+      isNoteOpened: false,
     });
     this.props.clearNote();
   };
@@ -349,19 +351,23 @@ class Highlighter extends React.Component {
       try {
         this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
       } catch (error) {
-        // console.error(
-        //   "An error occurred while storing serialized highlights:",
-        //   error
-        // );
+        console.error(
+          "An error occurred while storing serialized highlights:",
+          error
+        );
       }
     }
 
     try {
-      this.setState({ activeHighlight: highlightInSelection[0].id }, () => {
-        return 0;
-      });
+      this.setState(
+        { activeHighlight: highlightInSelection[0].id, isNoteOpened: true },
+        () => {
+          console.log(this.state.isNoteOpened);
+          return 0;
+        }
+      );
     } catch (error) {
-      // console.error("An error occurred while saving the state:", error);
+      console.error("An error occurred while saving the state:", error);
     }
 
     try {
@@ -372,7 +378,7 @@ class Highlighter extends React.Component {
         window.localStorage.setItem(highlightInSelection[0].id, " ");
       }
     } catch (error) {
-      // console.error("An error occurred while accessing local storage:", error);
+      console.error("An error occurred while accessing local storage:", error);
     }
 
     this.noteDisplay();
@@ -389,7 +395,6 @@ class Highlighter extends React.Component {
       if (
         window.confirm("Delete this highlight (ID " + currentHighlight + ")?")
       ) {
-        // window.localStorage.clear();
         if (this.serializedHls !== null) {
           for (let i in this.serializedHls) {
             try {
