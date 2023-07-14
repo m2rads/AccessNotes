@@ -12,6 +12,9 @@
 }
 
 .note-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   height: 30px;
   border-radius: 10px 10px 0 0;
   background-color: #cbf6e3;
@@ -25,13 +28,10 @@
 }
 
 .close-butt {
-  border-radius: 0 10px 0 0;
-  height: 20px;
-  padding: 5px;
+  padding-right: 5px;
   border: none;
   opacity: 0.5;
   background-color: #cbf6e3;
-  float: right;
 }
 
 .save-butt {
@@ -53,8 +53,8 @@
 .note-content {
   padding: 15px;
   color: black;
-  height: 200px;
-  width: 400px;
+  height: 150px;
+  width: 300px;
   border: none;
   background-color: hsla(0, 0%, 100%, 0.2);
 }
