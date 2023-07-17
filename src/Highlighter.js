@@ -360,7 +360,10 @@ class Highlighter extends React.Component {
 
     try {
       this.setState(
-        { activeHighlight: highlightInSelection[0].id, isNoteOpened: true },
+        {
+          activeHighlight: highlightInSelection[0].id,
+          isNoteOpened: true,
+        },
         () => {
           console.log(this.state.isNoteOpened);
           return 0;
@@ -382,6 +385,12 @@ class Highlighter extends React.Component {
     }
 
     this.noteDisplay();
+
+    // Disable the "Add Note" button
+    const addButton = document.getElementById("add-note-button");
+    if (addButton) {
+      addButton.disabled = true;
+    }
   };
 
   saveNote = (noteTxt) => {
