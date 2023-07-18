@@ -325,6 +325,7 @@ class Highlighter extends React.Component {
     const addButton = document.getElementById("add-note-button");
     if (addButton) {
       addButton.disabled = false;
+      addButton.classList.remove("disabled");
     }
   };
 
@@ -387,6 +388,7 @@ class Highlighter extends React.Component {
     const addButton = document.getElementById("add-note-button");
     if (addButton) {
       addButton.disabled = true;
+      addButton.classList.add("disabled");
     }
   };
 
