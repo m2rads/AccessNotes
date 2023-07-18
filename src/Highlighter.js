@@ -155,7 +155,7 @@ class Highlighter extends React.Component {
           stickyNoteStyle={this.state.stickyNoteStyle}
           onCloseNote={() => this.handleCloseNote()}
           onSave={(noteTxt) => this.saveNote(noteTxt)}
-          onDelete={() => this.deleteNote()}
+          onDelete={() => this.deleteNote(false)}
         />
       </div>
     );
@@ -197,14 +197,6 @@ class Highlighter extends React.Component {
 
   displaySerialized = () => {
     this.setState({ isSerialized: this.highlighter.serialize() });
-  };
-
-  removeHighlightSelection = () => {
-    // let highlight = this.highlighter.getHighlightsInSelection();
-    this.deleteNote(true);
-    this.highlighter.unhighlightSelection();
-    // if (window.confirm("Delete this highlight (ID " + highlight[0].id + ")?")) {
-    // }
   };
 
   handleMouseUp = (e) => {
@@ -397,34 +389,42 @@ class Highlighter extends React.Component {
     window.localStorage.setItem(currentHighlight, noteTxt);
   };
 
+  removeHighlightSelection = () => {
+    this.deleteNote(true);
+    this.highlighter.unhighlightSelection();
+  };
+
   deleteNote = (rmHl) => {
-    let currentHighlight = this.state.activeHighlight;
+    const currentHighlight = this.state.activeHighlight;
+
     if (rmHl) {
       if (
         window.confirm("Delete this highlight (ID " + currentHighlight + ")?")
       ) {
         if (this.serializedHls !== null) {
-          for (let i in this.serializedHls) {
-            try {
-              let highlightInSelection =
-                this.highlighter.getHighlightsInSelection();
-              if (this.serializedHls[i].id === highlightInSelection[0].id) {
-                this.serializedHls.splice(i, 1);
-                window.localStorage.setItem(
-                  "sr",
-                  JSON.stringify(this.serializedHls)
-                );
-                window.localStorage.removeItem(currentHighlight);
-                this.handleCloseNote();
-              }
-            } catch (exp) {}
-          }
+          const highlightInSelection =
+            this.highlighter.getHighlightsInSelection();
+          const selectedHighlightId = highlightInSelection[0].id;
+          axios
+            .delete(
+              `http://localhost:5000/api/annotations/${selectedHighlightId}`
+            )
+            .then((response) => {
+              console.log("Highlight removed from the database");
+              this.handleCloseNote();
+            })
+            .catch((error) => {
+              console.error(
+                "Error removing highlight from the database:",
+                error
+              );
+            });
         }
       }
     } else {
-      if (window.confirm("Delete this note (ID " + currentHighlight + ")?")) {
-        // window.localStorage.clear();
-        window.localStorage.removeItem(currentHighlight);
+      if (
+        window.confirm("Delete this note (ID " + selectedHighlightId + ")?")
+      ) {
         this.handleCloseNote();
       }
     }
