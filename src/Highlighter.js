@@ -322,6 +322,12 @@ class Highlighter extends React.Component {
       isNoteOpened: false,
     });
     this.props.clearNote();
+
+    // Re-enable the "Add Note" button
+    const addButton = document.getElementById("add-note-button");
+    if (addButton) {
+      addButton.disabled = false;
+    }
   };
 
   noteDisplay() {
