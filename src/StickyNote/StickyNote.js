@@ -21,6 +21,7 @@ function StickyNote(props) {
           value={note || ""}
           onChange={(e) => dispatch(updated(e.target.value))}
           type="text"
+          style={{ resize: "none" }}
         />
 
         <div className="note-footer">
