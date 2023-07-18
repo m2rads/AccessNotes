@@ -29,7 +29,6 @@ class Highlighter extends React.Component {
       middleY: 100,
       noteList: {},
       activeHighlight: null,
-      isNoteOpened: false,
     };
     this.showToolTip = this.showToolTip.bind(this);
     this.handleAddNote = this.handleAddNote.bind(this);
@@ -319,7 +318,6 @@ class Highlighter extends React.Component {
         display: "none",
         opacity: 0,
       },
-      isNoteOpened: false,
     });
     this.props.clearNote();
 
@@ -365,16 +363,9 @@ class Highlighter extends React.Component {
     }
 
     try {
-      this.setState(
-        {
-          activeHighlight: highlightInSelection[0].id,
-          isNoteOpened: true,
-        },
-        () => {
-          console.log(this.state.isNoteOpened);
-          return 0;
-        }
-      );
+      this.setState({
+        activeHighlight: highlightInSelection[0].id,
+      });
     } catch (error) {
       console.error("An error occurred while saving the state:", error);
     }
