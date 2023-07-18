@@ -405,6 +405,7 @@ class Highlighter extends React.Component {
           const highlightInSelection =
             this.highlighter.getHighlightsInSelection();
           const selectedHighlightId = highlightInSelection[0].id;
+          console.log(highlightInSelection);
           axios
             .delete(
               `http://localhost:5000/api/annotations/${selectedHighlightId}`
