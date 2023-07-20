@@ -64,7 +64,6 @@ class Highlighter extends React.Component {
                   this.serializedHls[i].color
                 );
                 highlight[0].id = this.serializedHls[i].highlightId;
-                console.log(highlight);
               } else {
                 console.error(
                   "Invalid serialized selection format:",
@@ -192,10 +191,8 @@ class Highlighter extends React.Component {
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
     highlightInSelection[0].id = uuidv4();
     const selectedHighlightId = highlightInSelection[0].id;
-    console.log("selected Highlight id: ", selectedHighlightId);
-    console.log("highlight in selection: ", highlightInSelection);
     try {
-      this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
+      this.storeSerializedHighlights(selectedHighlightId, color, sr);
     } catch (error) {
       console.error(
         "An error occurred while storing serialized highlights:",
@@ -354,8 +351,10 @@ class Highlighter extends React.Component {
       let sr = rangy.serializeSelection();
       this.highlighter.highlightSelection(hlcolor);
       highlightInSelection = this.highlighter.getHighlightsInSelection();
+      highlightInSelection[0].id = uuidv4();
+      const selectedHighlightId = highlightInSelection[0].id;
       try {
-        this.storeSerializedHighlights(highlightInSelection[0].id, hlcolor, sr);
+        this.storeSerializedHighlights(selectedHighlightId, hlcolor, sr);
       } catch (error) {
         console.error(
           "An error occurred while storing serialized highlights:",
