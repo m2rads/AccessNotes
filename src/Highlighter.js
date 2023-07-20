@@ -12,6 +12,7 @@ import Tootlip from "./Tooltip/Tooltip";
 import StickyNote from "./StickyNote/StickyNote";
 import { clearNote, updated } from "./features/noteTxt/noteTxt-slice";
 import { connect } from "react-redux";
+const { v4: uuidv4 } = require("uuid");
 
 class Highlighter extends React.Component {
   constructor(props) {
@@ -48,6 +49,7 @@ class Highlighter extends React.Component {
             delete annotation._id;
             delete annotation.__v;
             return {
+              highlightId: annotation.highlightId,
               sr: annotation.serializedSelection,
               color: annotation.color,
             };
@@ -58,9 +60,11 @@ class Highlighter extends React.Component {
               const serializedSelection = this.serializedHls[i].sr;
               if (typeof serializedSelection === "string") {
                 rangy.deserializeSelection(serializedSelection);
-                this.highlighter.highlightSelection(
+                const highlight = this.highlighter.highlightSelection(
                   this.serializedHls[i].color
                 );
+                highlight[0].id = this.serializedHls[i].highlightId;
+                console.log(highlight);
               } else {
                 console.error(
                   "Invalid serialized selection format:",
@@ -86,6 +90,7 @@ class Highlighter extends React.Component {
         elementProperties: {
           id: "highlight",
           onclick: (e) => {
+            console.log(this.highlighter.getHighlightsInSelection());
             this.activateTooltip(e);
           },
         },
@@ -185,6 +190,10 @@ class Highlighter extends React.Component {
     let sr = rangy.serializeSelection(selObj, true);
     this.highlighter.highlightSelection(color);
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
+    highlightInSelection[0].id = uuidv4();
+    const selectedHighlightId = highlightInSelection[0].id;
+    console.log("selected Highlight id: ", selectedHighlightId);
+    console.log("highlight in selection: ", highlightInSelection);
     try {
       this.storeSerializedHighlights(highlightInSelection[0].id, color, sr);
     } catch (error) {
