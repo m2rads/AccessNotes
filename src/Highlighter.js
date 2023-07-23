@@ -37,10 +37,12 @@ class Highlighter extends React.Component {
 
   componentDidMount() {
     document.addEventListener("mouseup", this.handleMouseUp);
+    const currentUrl = window.location.href;
+    const encodedUrl = encodeURIComponent(currentUrl);
 
     // Make an HTTP GET request using Axios to fetch the annotations from the server
     axios
-      .get("http://localhost:5000/api/annotations")
+      .get(`http://localhost:5000/api/annotations/${encodedUrl}`)
       .then((response) => {
         const data = response.data;
         if (data !== null && Array.isArray(data)) {
@@ -171,8 +173,10 @@ class Highlighter extends React.Component {
     color,
     serializedSelection
   ) => {
+    const url = window.location.href;
     try {
       await axios.post("http://localhost:5000/api/annotations", {
+        url,
         highlightId,
         color,
         serializedSelection,
