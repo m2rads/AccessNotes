@@ -106,6 +106,7 @@ class Highlighter extends React.Component {
           id: "highlight",
           onclick: (e) => {
             this.activateTooltip(e);
+            console.log(this.highlightSelectedText);
           },
         },
       })
