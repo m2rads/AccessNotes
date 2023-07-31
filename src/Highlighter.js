@@ -176,7 +176,7 @@ class Highlighter extends React.Component {
   ) => {
     const url = window.location.href;
     try {
-      await axios.post("http://localhost:5000/api/annotations", {
+      await axios.post("http://localhost:5000/api/highlights", {
         url,
         highlightId,
         color,
@@ -421,7 +421,7 @@ class Highlighter extends React.Component {
           console.log(highlightInSelection);
           axios
             .delete(
-              `http://localhost:5000/api/annotations/${selectedHighlightId}`
+              `http://localhost:5000/api/highlights/${selectedHighlightId}`
             )
             .then((response) => {
               console.log("Highlight removed from the database");
