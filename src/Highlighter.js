@@ -397,9 +397,21 @@ class Highlighter extends React.Component {
     }
   };
 
-  saveNote = (noteTxt) => {
+  saveNote = async (noteText) => {
     let currentHighlight = this.state.activeHighlight;
-    window.localStorage.setItem(currentHighlight, noteTxt);
+    window.localStorage.setItem(currentHighlight, noteText);
+    const url = window.location.href;
+    const highlightId = currentHighlight;
+    try {
+      await axios.post("http://localhost:5000/api/notes", {
+        url,
+        highlightId,
+        noteText,
+      });
+      console.log("Notes saved to the database");
+    } catch (error) {
+      console.error("Error saving notes to the database:", error);
+    }
   };
 
   removeHighlightSelection = () => {
@@ -436,9 +448,20 @@ class Highlighter extends React.Component {
         }
       }
     } else {
-      if (
-        window.confirm("Delete this note (ID " + selectedHighlightId + ")?")
-      ) {
+      let currentHighlight = this.state.activeHighlight;
+      console.log("current Highlight: ", currentHighlight);
+      if (window.confirm("Delete this note (ID " + currentHighlight + ")?")) {
+        axios
+          .delete(`http://localhost:5000/api/notes/${currentHighlight}`)
+          .then((response) => {
+            console.log("note removed from the database");
+            this.handleCloseNote();
+          })
+          .catch((error) => {
+            console.error("Error removing note from the database:", error);
+          });
+
+        localStorage.removeItem(currentHighlight);
         this.handleCloseNote();
       }
     }
