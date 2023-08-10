@@ -398,10 +398,10 @@ class Highlighter extends React.Component {
   };
 
   saveNote = async (noteText) => {
-    let currentHighlight = this.state.activeHighlight;
-    window.localStorage.setItem(currentHighlight, noteText);
+    let currentHighlightId = this.state.activeHighlight;
+    window.localStorage.setItem(currentHighlightId, noteText);
     const url = window.location.href;
-    const highlightId = currentHighlight;
+    const highlightId = currentHighlightId;
     try {
       await axios.post("http://localhost:5000/api/notes", {
         url,
