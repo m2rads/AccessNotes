@@ -45,40 +45,11 @@ class Highlighter extends React.Component {
       .get(`http://localhost:5000/api/annotations/${encodedUrl}`)
       .then((response) => {
         const data = response.data;
-        if (data !== null && Array.isArray(data)) {
-          this.serializedHls = data.map((annotation) => {
-            // Remove unwanted fields (_id and __v)
-            delete annotation._id;
-            delete annotation.__v;
-            return {
-              highlightId: annotation.highlightId,
-              sr: annotation.serializedSelection,
-              color: annotation.color,
-            };
-          });
-          // restore the highlights
-          for (let i in this.serializedHls) {
-            try {
-              const serializedSelection = this.serializedHls[i].sr;
-              if (typeof serializedSelection === "string") {
-                rangy.deserializeSelection(serializedSelection);
-                const highlight = this.highlighter.highlightSelection(
-                  this.serializedHls[i].color
-                );
-                highlight[0].id = this.serializedHls[i].highlightId;
-              } else {
-                console.error(
-                  "Invalid serialized selection format:",
-                  serializedSelection
-                );
-              }
-            } catch (exp) {
-              console.error("Error restoring highlights:", exp);
-            }
-          }
-        } else {
-          this.serializedHls = [];
-        }
+        console.log(data["highlights"]);
+        const highlights = data["highlights"];
+        const notes = data["notes"];
+        this.retrieveHighlights(highlights);
+        this.retrieveNotes(notes);
       })
       .catch((error) => {
         console.error("Error fetching annotations:", error);
@@ -167,6 +138,78 @@ class Highlighter extends React.Component {
       </div>
     );
   }
+
+  retrieveHighlights = (highlights) => {
+    if (highlights !== null && Array.isArray(highlights)) {
+      this.serializedHls = highlights.map((annotation) => {
+        // Remove unwanted fields (_id and __v)
+        delete annotation._id;
+        delete annotation.__v;
+        return {
+          highlightId: annotation.highlightId,
+          sr: annotation.serializedSelection,
+          color: annotation.color,
+        };
+      });
+      // restore the highlights
+      for (let i in this.serializedHls) {
+        try {
+          const serializedSelection = this.serializedHls[i].sr;
+          if (typeof serializedSelection === "string") {
+            rangy.deserializeSelection(serializedSelection);
+            const highlight = this.highlighter.highlightSelection(
+              this.serializedHls[i].color
+            );
+            highlight[0].id = this.serializedHls[i].highlightId;
+          } else {
+            console.error(
+              "Invalid serialized selection format:",
+              serializedSelection
+            );
+          }
+        } catch (exp) {
+          console.error("Error restoring highlights:", exp);
+        }
+      }
+    } else {
+      this.serializedHls = [];
+    }
+  };
+
+  retrieveNotes = (notes) => {
+    if (notes !== null && Array.isArray(notes)) {
+      let retrievedNotes = notes.map((annotation) => {
+        // Remove unwanted fields (_id and __v)
+        delete annotation._id;
+        delete annotation.__v;
+        return {
+          highlightId: annotation.highlightId,
+          url: annotation.url,
+          noteText: annotation.noteText,
+        };
+      });
+      // restore the highlights
+      for (let i in retrievedNotes) {
+        try {
+          const highlightId = retrievedNotes[i].highlightId;
+          const noteText = retrievedNotes[i].noteText;
+          if (typeof highlightId === "string") {
+            // cache the notes so that retreiving it won't e required everytime
+            window.localStorage.setItem(highlightId, noteText);
+          } else {
+            console.error(
+              "Invalid highlightId for the selected note:",
+              highlightId
+            );
+          }
+        } catch (exp) {
+          console.error("Error restoring notes:", exp);
+        }
+      }
+    } else {
+      this.serializedHls = [];
+    }
+  };
 
   // Save the annotation to the database
   storeSerializedHighlights = async (
@@ -348,6 +391,7 @@ class Highlighter extends React.Component {
 
   handleAddNote = (hlcolor) => {
     let highlightInSelection = this.highlighter.getHighlightsInSelection();
+    console.log("highlight in selection: ", highlightInSelection);
 
     if (highlightInSelection[0] !== undefined) {
       console.log(highlightInSelection);
