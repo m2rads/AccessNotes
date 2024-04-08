@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import Highlighter from './Highlighter'
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 // import { PopupComponent } from "./PopupComponent";
 
@@ -16,7 +18,9 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 !popupRoot &&
   ReactDOM.render(
     <React.StrictMode>
-      <Highlighter />
+      <Provider store={store} >
+        <Highlighter />
+      </Provider>
     </React.StrictMode>,
     document.getElementById("insertion-point")
   );
