@@ -1,10 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import "./index.css";
-import Highlighter from "./Highlighter";
 import * as serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
-import { store } from "./app/store";
+import Highlighter from './Highlighter'
+
+// import { PopupComponent } from "./PopupComponent";
 
 const popupRoot = document.getElementById("popup-root");
 
@@ -14,18 +14,20 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 
 // StickyNotes / content script
 !popupRoot &&
-  ReactDOM.createRoot(document.getElementById("insertion-point")).render(
-    <>
-      <Provider store={store}>
-        <Highlighter />
-      </Provider>
-    </>
+  ReactDOM.render(
+    <React.StrictMode>
+      <Highlighter />
+    </React.StrictMode>,
+    document.getElementById("insertion-point")
   );
 
 // PopupComponent / popup.html
 popupRoot && // to suppress minified react error 200
-  ReactDOM.createRoot(popupRoot).render(
-    <React.Fragment>{/* <PopupComponent /> */}</React.Fragment>
+  ReactDOM.render(
+    <React.Fragment>
+      {/* <PopupComponent /> */}
+    </React.Fragment>,
+    popupRoot
   );
 
 // If you want your app to work offline and load faster, you can change
