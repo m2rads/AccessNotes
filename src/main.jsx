@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 // import * as serviceWorker from "./serviceWorker";
-import StickyNotes from "./StickyNotes";
+import StickyNotes from "./StickyNotes/StickyNotes";
 import { PopupComponent } from "./PopupComponent";
 import "./App.css"
 

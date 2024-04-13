@@ -1,4 +1,4 @@
-import { ShadowRoot } from "./ShadowRoot"
+import { ShadowRoot } from "../ShadowRoot"
 
 export default function StickyNotes() {
     console.log("hello from sticky")
