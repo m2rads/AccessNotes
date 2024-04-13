@@ -1,8 +1,8 @@
 {
-    "name": "React Sticky Notes App",
-    "version": "1.0.0",
+    "name": "AccessNotes",
+    "version": "2.0.0",
     "manifest_version": 3,
-    "description": "Lets you annotate web pages and persists those annotations across page visits.",
+    "description": "Web annotation tool that lives in your pocket.",
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
