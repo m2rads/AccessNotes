@@ -3,26 +3,30 @@
     "version": "2.0.0",
     "manifest_version": 3,
     "description": "Web annotation tool that lives in your pocket.",
+    "permissions": [
+      "storage", "tabs", "sidePanel"
+    ],
+    "host_permissions": ["<all_urls>"],
     "icons": {
       "64": "icons/icon-64.png"
+    },
+    "background": {
+      "service_worker": "./background.js"
+    },
+    "side_panel": {
+      "default_path": "sidepanel.html"
     },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
         "js": ["./main.js"],
-        "css": ["/main.css"]
+        "css": ["./main.css"]
       }
-    ],
-    "permissions": [
-      "storage"
     ],
     "action": {
       "default_icon": {
         "64": "icons/icon-64.png"
       },
-      "default_popup": "./popup.html"
-    },
-    "host_permissions": [
-      "*://*/*"
-    ]
+      "default_title": "AccessNotes"
+    }
 }
