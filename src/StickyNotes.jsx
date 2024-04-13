@@ -1,6 +1,10 @@
+import { ShadowRoot } from "./ShadowRoot"
+
 export default function StickyNotes() {
     console.log("hello from sticky")
     return (
-        <p>sticket notes</p>
+        <ShadowRoot>
+            <p>sticket notes</p>
+        </ShadowRoot>
     )
 }
