@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 // import * as serviceWorker from "./serviceWorker";
 import StickyNotes from "./StickyNotes/StickyNotes";
-import { PopupComponent } from "./Popup/PopupComponent";
+import { PopupComponent } from "./SidePanel/SidePanel";
 import "./App.css"
 
 const popupRoot = document.getElementById("popup-root");
