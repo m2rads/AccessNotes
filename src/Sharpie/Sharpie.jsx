@@ -16,7 +16,6 @@ const Sharpie = () => {
       };
     } catch (error) {
       console.error('Error initializing Highlighter:', error);
-      // Handle the error, e.g., display a fallback UI or log the error
     }
   }, []);
 
