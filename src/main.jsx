@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 // import * as serviceWorker from "./serviceWorker";
-import StickyNotes from "./StickyNotes/StickyNotes";
-import { PopupComponent } from "./SidePanel/SidePanel";
+import Sharpie from "./Sharpie/Sharpie";
+import { SidePanel } from "./SidePanel/SidePanel";
 import "./App.css"
 
 const popupRoot = document.getElementById("popup-root");
@@ -15,7 +15,7 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <React.StrictMode>
-      <StickyNotes />
+      <Sharpie />
     </React.StrictMode>
   );
 
@@ -23,7 +23,7 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 popupRoot && // to suppress minified react error 200
   ReactDOM.createRoot(popupRoot).render(
     <React.Fragment>
-      <PopupComponent />
+      <SidePanel />
     </React.Fragment>
   );
 
