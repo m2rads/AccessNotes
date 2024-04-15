@@ -3,7 +3,8 @@ import ReactDOM from "react-dom/client";
 // import * as serviceWorker from "./serviceWorker";
 import Sharpie from "./Sharpie/Sharpie";
 import { SidePanel } from "./SidePanel/SidePanel";
-import "./App.css"
+import "./index.css"
+import { ShadowRoot } from "./ShadowRoot";
 
 const popupRoot = document.getElementById("popup-root");
 
@@ -15,7 +16,9 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <React.StrictMode>
-      <Sharpie />
+      <ShadowRoot>
+        <Sharpie />
+      </ShadowRoot>
     </React.StrictMode>
   );
 
