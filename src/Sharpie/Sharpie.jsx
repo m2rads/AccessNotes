@@ -22,11 +22,12 @@ const Sharpie = () => {
   useEffect(() => {
     if (highlighter) {
       highlighter.on('selection:create', ({ sources }) => {
+        console.log("tooltip")
         const newSources = sources.map((hs) => ({ hs }));
-        setHighlightedSources(newSources);
+        // setHighlightedSources(newSources);
 
         // Save highlighted sources to backend
-        saveHighlightedSources(newSources);
+        // saveHighlightedSources(newSources);
       });
 
       // Retrieve and display previously highlighted sources
