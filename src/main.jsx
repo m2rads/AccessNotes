@@ -5,6 +5,7 @@ import Sharpie from "./Sharpie/Sharpie";
 import { SidePanel } from "./SidePanel/SidePanel";
 import "./index.css"
 import { ShadowRoot } from "./ShadowRoot";
+import Tooltip from "./Tooltip/Tooltip";
 
 const popupRoot = document.getElementById("popup-root");
 
@@ -17,7 +18,8 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <React.StrictMode>
       <ShadowRoot>
-        <Sharpie />
+        {/* <Sharpie /> */}
+        <Tooltip />
       </ShadowRoot>
     </React.StrictMode>
   );
