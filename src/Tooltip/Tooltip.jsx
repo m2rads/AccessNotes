@@ -1,8 +1,8 @@
 export default function Tooltip() {
       
     return(
-        <h1 className="bg-zinc-300">
+        <div className="text-center text-xl text-gray-700 bg-gray-200 p-4">
             Hello world!
-        </h1>
+        </div>
     ) 
 }
