@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 // import * as serviceWorker from "./serviceWorker";
-import Sharpie from "./Sharpie/Sharpie";
+// import Sharpie from "./Sharpie/Sharpie";
 import { SidePanel } from "./SidePanel/SidePanel";
 import "./index.css"
 import { ShadowRoot } from "./ShadowRoot";
