@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import root from "react-shadow";
-import { css } from "@emotion/react";
 
 export const ShadowRoot = ({ children }) => {
   const [stylesNode, setStylesNode] = useState(null);
