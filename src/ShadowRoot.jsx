@@ -1,24 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import root from "react-shadow";
 
 export const ShadowRoot = ({ children }) => {
   const [stylesNode, setStylesNode] = useState(null);
 
-  useEffect(() => {
-    if (stylesNode) {
-      const styleElement = document.createElement("style");
-      styleElement.textContent = `
-        @import "tailwindcss/base";
-        @import "tailwindcss/components";
-        @import "tailwindcss/utilities";
-      `;
-      stylesNode.appendChild(styleElement);
-    }
-  }, [stylesNode]);
-
   return (
-    <root.div>
-      <div ref={(node) => setStylesNode(node)}>
+    <root.div ref={setStylesNode}>
+      <div>
         {stylesNode && children}
       </div>
     </root.div>

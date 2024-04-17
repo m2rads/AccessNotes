@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { SidePanel } from "./SidePanel/SidePanel";
 import "./index.css";
-import { ShadowRoot } from "./ShadowRoot";
+// import { ShadowRoot } from "./ShadowRoot";
 import Tooltip from "./Tooltip/Tooltip";
-import "tailwindcss/tailwind.css";
+import root from "react-shadow";
 
 const insertionPoint = document.createElement("div");
 insertionPoint.id = "insertion-point";
@@ -16,9 +16,9 @@ const popupRoot = document.getElementById("popup-root");
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <React.StrictMode>
-      <ShadowRoot>
+      {/* <root.div> */}
         <Tooltip />
-      </ShadowRoot>
+      {/* </root.div> */}
     </React.StrictMode>
   );
 
