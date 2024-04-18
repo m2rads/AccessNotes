@@ -2,9 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { SidePanel } from "./SidePanel/SidePanel";
 import "./index.css";
-// import { ShadowRoot } from "./ShadowRoot";
+import { ShadowRoot } from "./ShadowRoot";
 import Tooltip from "./Tooltip/Tooltip";
-import root from "react-shadow";
 
 const insertionPoint = document.createElement("div");
 insertionPoint.id = "insertion-point";
