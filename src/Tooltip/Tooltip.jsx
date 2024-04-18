@@ -4,12 +4,12 @@ import styled from 'styled-components';
 const TooltipContainer = styled.div`
   display: ${props => props.show ? 'block' : 'none'};
   position: absolute;
-  background-color: lightgray;
+  background-color: black;
   border: 1px solid black;
   padding: 8px;
   border-radius: 4px;
   z-index: 1000;
-  transform: ${props => props.position === 'above' ? 'translate(-50%, calc(-100% - 10px))' : 'translate(-50%, 10px)'};
+  transform: ${props => props.position === 'above' ? 'translate(-50%, calc(-100% - 12px))' : 'translate(-50%, 32px)'};
   
   &:after {
     content: '';
@@ -20,8 +20,8 @@ const TooltipContainer = styled.div`
     margin-left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: ${props => props.position === 'above' ? 'lightgray transparent transparent transparent' : 'transparent transparent lightgray transparent'};
-    transform: translateY(${props => props.position === 'above' ? '-10%' : '0'});
+    border-color: ${props => props.position === 'above' ? 'black transparent transparent transparent' : 'transparent transparent black transparent'};
+    transform: translateY(${props => props.position === 'above' ? '-0%' : '0'});
   }
 `;
 
