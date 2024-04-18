@@ -15,7 +15,6 @@
     "react-dom": "^18.2.0",
     "react-shadow": "^20.4.0",
     "rewire": "^7.0.0",
-    "twlit": "^0.0.1-alpha.37",
     "web-highlighter": "^0.7.4"
   },
   "devDependencies": {
