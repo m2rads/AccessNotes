@@ -2,26 +2,26 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const TooltipContainer = styled.div`
-  display: ${props => props.show ? 'block' : 'none'};
+  display: ${props => props.$show ? 'block' : 'none'};
   position: absolute;
   background-color: black;
   border: 1px solid black;
   padding: 8px;
   border-radius: 4px;
   z-index: 1000;
-  transform: ${props => props.position === 'above' ? 'translate(-50%, calc(-100% - 12px))' : 'translate(-50%, 32px)'};
+  transform: ${props => props.$position === 'above' ? 'translate(-50%, calc(-100% - 12px))' : 'translate(-50%, 32px)'};
   
   &:after {
     content: '';
     position: absolute;
-    top: ${props => props.position === 'above' ? '100%' : 'auto'};
-    bottom: ${props => props.position === 'above' ? 'auto' : '100%'};
+    top: ${props => props.$position === 'above' ? '100%' : 'auto'};
+    bottom: ${props => props.$position === 'above' ? 'auto' : '100%'};
     left: 50%;
     margin-left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: ${props => props.position === 'above' ? 'black transparent transparent transparent' : 'transparent transparent black transparent'};
-    transform: translateY(${props => props.position === 'above' ? '-0%' : '0'});
+    border-color: ${props => props.$position === 'above' ? 'black transparent transparent transparent' : 'transparent transparent black transparent'};
+    transform: translateY(${props => props.$position === 'above' ? '-0%' : '0'});
   }
 `;
 
@@ -38,7 +38,7 @@ const Button = styled.button`
   }
 `;
 
-const Tooltip = () => {
+const Tooltip = ({ onButtonClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState('above'); // Position can be 'above' or 'below'
@@ -79,8 +79,8 @@ const Tooltip = () => {
   }, []);
 
   return (
-    <TooltipContainer show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} position={position}>
-      <Button onClick={() => alert('Button clicked!')}>Click Me</Button>
+    <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
+      <Button onClick={onButtonClick}>Highlight</Button>
     </TooltipContainer>
   );
 };

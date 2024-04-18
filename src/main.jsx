@@ -2,8 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { SidePanel } from "./SidePanel/SidePanel";
 import "./index.css";
-import { ShadowRoot } from "./ShadowRoot";
-import Tooltip from "./Tooltip/Tooltip";
+import App from "./App";
 
 const insertionPoint = document.createElement("div");
 insertionPoint.id = "insertion-point";
@@ -15,9 +14,7 @@ const popupRoot = document.getElementById("popup-root");
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <React.StrictMode>
-      {/* <root.div> */}
-        <Tooltip />
-      {/* </root.div> */}
+      <App />
     </React.StrictMode>
   );
 
