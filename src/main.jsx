@@ -13,9 +13,9 @@ const popupRoot = document.getElementById("popup-root");
 // StickyNotes / content script
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
-    <React.StrictMode>
+    <>
       <App />
-    </React.StrictMode>
+    </>
   );
 
 // PopupComponent / popup.html

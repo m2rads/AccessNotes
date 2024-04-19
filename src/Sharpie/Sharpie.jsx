@@ -4,7 +4,6 @@ import Tooltip from '../Tooltip/Tooltip';
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
-  const [isHighlightingActive, setIsHighlightingActive] = useState(false);
 
   useEffect(() => {
     try {
