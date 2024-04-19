@@ -8,8 +8,8 @@ function App() {
 
   return (
     <ShadowRoot>
-      {/* <Sharpie onHighlight={setHighlightText} /> */}
-      <Tooltip onButtonClick={() => highlightText && highlightText()} />
+      <Sharpie />
+      {/* <Tooltip onButtonClick={() => highlightText && highlightText()} /> */}
     </ShadowRoot>
   );
 }

@@ -38,7 +38,7 @@ const Button = styled.button`
   }
 `;
 
-const Tooltip = ({ onButtonClick }) => {
+const Tooltip = ({ onButtonClick, isHighlightingActive }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState('above'); // Position can be 'above' or 'below'
@@ -80,8 +80,10 @@ const Tooltip = ({ onButtonClick }) => {
 
   return (
     <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
-      <Button onClick={onButtonClick}>Highlight</Button>
-    </TooltipContainer>
+      <Button onClick={onButtonClick}>
+        {isHighlightingActive ? 'Disable Highlighting' : 'Highlight'}
+      </Button>   
+     </TooltipContainer>
   );
 };
 

@@ -1,47 +1,36 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Highlighter from 'web-highlighter';
+import Tooltip from '../Tooltip/Tooltip';
 
-const Sharpie = ({ onHighlight }) => {
+const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
-  const [lastSelectionRange, setLastSelectionRange] = useState(null);
+  const [isHighlightingActive, setIsHighlightingActive] = useState(false);
 
   useEffect(() => {
-    const newHighlighter = new Highlighter();
-    newHighlighter.run();
-    setHighlighter(newHighlighter);
+    try {
+      const newHighlighter = new Highlighter();
+      // newHighlighter.run();
+      setHighlighter(newHighlighter);
 
-    return () => newHighlighter.dispose();
+      return () => {
+        newHighlighter.dispose();
+      };
+    } catch (error) {
+      console.error('Error initializing Highlighter:', error);
+    }
   }, []);
 
-  const highlightText = useCallback(() => {
-    if (lastSelectionRange) {
-      // Use the stored range to highlight text
-      highlighter.fromRange(lastSelectionRange);
-      // Reset the stored range after highlighting
-      setLastSelectionRange(null);
+  const handleHighlight = () => {
+    const selection = window.getSelection();
+    if (!selection.isCollapsed) {
+        highlighter.fromRange(selection.getRangeAt(0));
     }
-  }, [highlighter, lastSelectionRange]);
-
-  // Pass the highlightText function to the parent component
-  useEffect(() => {
-    if (onHighlight && highlighter) {
-      onHighlight(highlightText);
-    }
-  }, [highlightText, onHighlight, highlighter]);
-
-  // Save the selection range when text is selected
-  useEffect(() => {
-    if (highlighter) {
-      highlighter.on('selection:before', ({ selection }) => {
-        // Store the selection range in state
-        setLastSelectionRange(selection.getRangeAt(0));
-      });
-    }
-  }, [highlighter]);
+  };
 
   return (
     <div>
       {/* Your content that can be highlighted */}
+      <Tooltip onButtonClick={handleHighlight} />
     </div>
   );
 };
