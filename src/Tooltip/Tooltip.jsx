@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import NoteIcon from '../Icons/Note';
+import BookmarkIcon from '../Icons/BookmarkIcon';
 
 const TooltipContainer = styled.div`
-  display: ${props => props.$show ? 'block' : 'none'};
+  display: ${props => props.$show ? 'flex' : 'none'};
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  background-color: black;
-  border: 1px solid black;
-  padding: 8px;
-  border-radius: 4px;
+  background-color: #18181b;
+  border: 1px solid #18181b;
+  padding: 2px;
+  border-radius: 2px;
   z-index: 1000;
   transform: ${props => props.$position === 'above' ? 'translate(-50%, calc(-100% - 12px))' : 'translate(-50%, 32px)'};
   
@@ -20,23 +24,19 @@ const TooltipContainer = styled.div`
     margin-left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: ${props => props.$position === 'above' ? 'black transparent transparent transparent' : 'transparent transparent black transparent'};
+    border-color: ${props => props.$position === 'above' ? '#18181b transparent transparent transparent' : 'transparent transparent #18181b transparent'};
     transform: translateY(${props => props.$position === 'above' ? '-0%' : '0'});
   }
 `;
 
-const Button = styled.button`
-  padding: 5px 10px;
-  background-color: #007bff;
+const HighlightButton = styled.button`
+  padding: 10px; 
+  background-color: ${props => props.color || 'gray'};
+  margin: 5px;
   border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+  border-radius: 2px;
 `;
+
 
 const Tooltip = ({ onButtonClick, isHighlightingActive }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -80,9 +80,10 @@ const Tooltip = ({ onButtonClick, isHighlightingActive }) => {
 
   return (
     <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
-      <Button onClick={onButtonClick}>
-        {isHighlightingActive ? 'Disable Highlighting' : 'Highlight'}
-      </Button>   
+      <HighlightButton onClick={onButtonClick} color="#4F46E5" />
+      <HighlightButton onClick={onButtonClick} color="#EAB308" />
+      <NoteIcon />
+      <BookmarkIcon />
      </TooltipContainer>
   );
 };
