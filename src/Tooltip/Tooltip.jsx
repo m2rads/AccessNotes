@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import NoteIcon from '../Icons/Note';
+import NoteIcon from '../Icons/NoteIcon';
 import BookmarkIcon from '../Icons/BookmarkIcon';
+import MultiplicationIcon from '../Icons/MultiplicationIcon';
+import Devider from '../Icons/Devider'
 
 const TooltipContainer = styled.div`
   display: ${props => props.$show ? 'flex' : 'none'};
@@ -10,7 +12,7 @@ const TooltipContainer = styled.div`
   position: absolute;
   background-color: #18181b;
   border: 1px solid #18181b;
-  padding: 2px;
+  padding: 8px;
   border-radius: 2px;
   z-index: 1000;
   transform: ${props => props.$position === 'above' ? 'translate(-50%, calc(-100% - 12px))' : 'translate(-50%, 32px)'};
@@ -82,8 +84,11 @@ const Tooltip = ({ onButtonClick, isHighlightingActive }) => {
     <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
       <HighlightButton onClick={onButtonClick} color="#4F46E5" />
       <HighlightButton onClick={onButtonClick} color="#EAB308" />
+      <Devider />
       <NoteIcon />
       <BookmarkIcon />
+      <Devider />
+      <MultiplicationIcon />
      </TooltipContainer>
   );
 };
