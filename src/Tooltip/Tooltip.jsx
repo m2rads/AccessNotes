@@ -33,6 +33,7 @@ const TooltipContainer = styled.div`
 
 const HighlightButton = styled.button`
   padding: 10px; 
+  cursor: pointer;
   background-color: ${props => props.color || 'gray'};
   margin: 5px;
   border: none;
