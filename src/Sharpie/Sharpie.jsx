@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Highlighter from 'web-highlighter';
 import Tooltip from '../Tooltip/Tooltip';
+import './Sharpie.css'
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
@@ -8,9 +9,11 @@ const Sharpie = () => {
   useEffect(() => {
     try {
       const newHighlighter = new Highlighter({
-        exceptSelectors: ['table', 'tr', 'th']
+        exceptSelectors: ['table', 'tr', 'th'],
+        style: {
+          className: 'yello-highlight',
+        }
       });
-      // newHighlighter.run();
       setHighlighter(newHighlighter);
 
       return () => {
