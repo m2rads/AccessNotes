@@ -41,7 +41,7 @@ const HighlightButton = styled.button`
 `;
 
 
-const Tooltip = ({ onButtonClick, isHighlightingActive }) => {
+const Tooltip = ({onButtonClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState('above'); // Position can be 'above' or 'below'

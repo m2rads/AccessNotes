@@ -11,7 +11,7 @@ const Sharpie = () => {
       const newHighlighter = new Highlighter({
         exceptSelectors: ['table', 'tr', 'th'],
         style: {
-          className: 'yello-highlight',
+          className: 'yellow-highlight', // Use the prop or default to 'yellow-highlight'
         }
       });
       setHighlighter(newHighlighter);
