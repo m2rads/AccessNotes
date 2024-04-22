@@ -7,7 +7,9 @@ const Sharpie = () => {
 
   useEffect(() => {
     try {
-      const newHighlighter = new Highlighter();
+      const newHighlighter = new Highlighter({
+        exceptSelectors: ['table', 'tr', 'th']
+      });
       // newHighlighter.run();
       setHighlighter(newHighlighter);
 
