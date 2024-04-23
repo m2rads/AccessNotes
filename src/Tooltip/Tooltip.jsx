@@ -83,7 +83,7 @@ const Tooltip = ({ onButtonClick }) => {
 
   return (
     <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
-      <HighlightButton onClick={() => onButtonClick('blue-highlight')} color="#4F46E5" />
+      <HighlightButton onClick={() => onButtonClick('blue-highlight')} color="#93c5fd" />
       <HighlightButton onClick={() => onButtonClick('yellow-highlight')} color="#fde047" />
       <Devider />
       <NoteIcon />

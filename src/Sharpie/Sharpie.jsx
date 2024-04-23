@@ -35,7 +35,7 @@ const Sharpie = () => {
           }
         });
         highlighter.fromRange(range);
-        selection.removeAllRanges();
+        // selection.removeAllRanges();
       }
     }
   };
