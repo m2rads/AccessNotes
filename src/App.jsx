@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Sharpie from './Sharpie/Sharpie';
 import { ShadowRoot } from "./ShadowRoot";
 
@@ -6,7 +6,7 @@ function App() {
 
   return (
     <ShadowRoot>
-      <Sharpie />
+        <Sharpie />
     </ShadowRoot>
   );
 }

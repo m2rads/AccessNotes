@@ -23,11 +23,20 @@ const Sharpie = () => {
       console.error('Error initializing Highlighter:', error);
     }
   }, []);
-
-  const handleHighlight = () => {
+  
+  const handleHighlight = (color) => {
     const selection = window.getSelection();
-    if (!selection.isCollapsed) {
-        highlighter.fromRange(selection.getRangeAt(0));
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      if (!range.collapsed) {
+        highlighter.setOption({ 
+          style: {
+            className: color
+          }
+        });
+        highlighter.fromRange(range);
+        selection.removeAllRanges();
+      }
     }
   };
 

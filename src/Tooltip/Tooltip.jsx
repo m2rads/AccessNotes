@@ -44,7 +44,7 @@ const HighlightButton = styled.button`
 const Tooltip = ({ onButtonClick }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState('above'); // Position can be 'above' or 'below'
+  const [position, setPosition] = useState('above');
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -83,8 +83,8 @@ const Tooltip = ({ onButtonClick }) => {
 
   return (
     <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
-      <HighlightButton onClick={onButtonClick} color="#4F46E5" />
-      <HighlightButton onClick={onButtonClick} color="#fde047" />
+      <HighlightButton onClick={() => onButtonClick('blue-highlight')} color="#4F46E5" />
+      <HighlightButton onClick={() => onButtonClick('yellow-highlight')} color="#fde047" />
       <Devider />
       <NoteIcon />
       <BookmarkIcon />

@@ -3,3 +3,9 @@
     color: black;
     cursor: pointer;
 }
+
+.blue-highlight {
+    background-color: #60a5fa;
+    color: black;
+    cursor: pointer;
+}
