@@ -16,6 +16,15 @@ const Sharpie = () => {
           className: 'yellow-highlight'
         }
       });
+
+      newHighlighter
+        .on('selection:click', ({id}) => {
+            // display different bg color when hover
+            newHighlighter.remove(id)
+            localStore.remove(id)
+        })
+
+
       setHighlighter(newHighlighter);
 
       localStore.getAll().forEach(({ hs, color }) => {
