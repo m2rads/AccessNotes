@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Highlighter from 'web-highlighter';
 import Tooltip from '../Tooltip/Tooltip';
 import './Sharpie.css'
+import LocalStore from '../../Cache/LocalStore';
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
+  const localStore = new LocalStore('highlights');
 
   useEffect(() => {
     try {
@@ -15,6 +17,11 @@ const Sharpie = () => {
         }
       });
       setHighlighter(newHighlighter);
+
+      localStore.getAll().forEach(({ hs, color }) => {
+        newHighlighter.setOption({ style: { className: color } });
+        newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
+      });
 
       return () => {
         newHighlighter.dispose();
@@ -33,6 +40,13 @@ const Sharpie = () => {
           style: {
             className: color
           }
+        });       
+        highlighter
+        .on('selection:create', ({sources}) => {
+          sources = sources.map(hs => ({hs}));
+          // save to backend
+          console.log("sources, ", sources);
+          localStore.save(sources, color);
         });
         highlighter.fromRange(range);
         // selection.removeAllRanges();

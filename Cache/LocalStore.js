@@ -19,7 +19,7 @@ class LocalStore {
         localStorage.setItem(this.key, JSON.stringify(stores));
     }
 
-    save(data) {
+    save(data, color) { 
         const stores = this.storeToJson();
         const map = {};
         stores.forEach((store, idx) => map[store.hs.id] = idx);
@@ -29,12 +29,10 @@ class LocalStore {
         }
 
         data.forEach(store => {
-            // update
+            store.color = color; 
             if (map[store.hs.id] !== undefined) {
                 stores[map[store.hs.id]] = store;
-            }
-            // append
-            else {
+            } else {
                 stores.push(store);
             }
         })
