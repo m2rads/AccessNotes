@@ -9,7 +9,7 @@ const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
   const localStore = new LocalStore('highlights');
   const [highlightId, setHighlightId] = useState(null);
-  const { toggleShowToolTip, tooltipPos } = useToolTip()
+  const { toggleShowToolTip, tooltipPos, updateTooltipPos } = useToolTip()
 
   useEffect(() => {
     try {
@@ -23,9 +23,11 @@ const Sharpie = () => {
       newHighlighter
         .on('selection:click', ({id}) => {
           console.log("clicked, ", id)
+          // localStore.removeAll();
           const hId = localStore.get(id);
+          console.log("hid: ", hId);
           toggleShowToolTip(true);
-          setHighlightId(id)
+          updateTooltipPos(hId.tooltipPos)
         })
       
       setHighlighter(newHighlighter);
@@ -60,7 +62,7 @@ const Sharpie = () => {
           sources = sources.map(hs => ({hs}));
           // save to backend
           console.log("sources, ", sources);
-          localStore.save(sources, color);
+          localStore.save(sources, color, tooltipPos);
         });
         highlighter.fromRange(range);
         // selection.removeAllRanges();

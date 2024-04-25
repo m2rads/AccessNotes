@@ -45,8 +45,14 @@ const HighlightButton = styled.button`
 const Tooltip = ({ onCreateHighlight }) => {
   // const [showTooltip, setShowTooltip] = useState(false);
   // const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState('above');
-  const { showToolTip, toggleShowToolTip, tooltipPos, updateTooltipPos } = useToolTip();
+  const { 
+    showToolTip, 
+    toggleShowToolTip, 
+    tooltipPos,
+    updateTooltipPos,
+    location,
+    updateLocation
+  } = useToolTip();
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -61,11 +67,11 @@ const Tooltip = ({ onCreateHighlight }) => {
 
           // Check if there is enough space above for the tooltip
           if (rect.top < tooltipHeight) {
-            setPosition('below');
+            updateLocation('below');
           } else {
-            setPosition('above');
+            updateLocation('above');
           }
-          
+
           toggleShowToolTip(true);
           updateTooltipPos({ x: centerX, y: topY });
         }
@@ -84,7 +90,7 @@ const Tooltip = ({ onCreateHighlight }) => {
   }, []);
 
   return (
-    <TooltipContainer $show={showToolTip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
+    <TooltipContainer $show={showToolTip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={location}>
       <HighlightButton onClick={() => onCreateHighlight('blue-highlight')} color="#93c5fd" />
       <HighlightButton onClick={() => onCreateHighlight('yellow-highlight')} color="#fde047" />
       <Devider />

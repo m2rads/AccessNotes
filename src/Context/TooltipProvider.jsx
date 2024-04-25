@@ -7,6 +7,7 @@ export const useToolTip = () => useContext(ToolTipContext);
 export const ToolTipProvider = ({ children }) => {
     const [showToolTip, setShowToolTip] = useState(false);
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+    const [location, setLocation] = useState('above');
 
     const toggleShowToolTip = (state) => {
         setShowToolTip(state);
@@ -16,12 +17,18 @@ export const ToolTipProvider = ({ children }) => {
         setTooltipPos(pos);
     };
 
+    const updateLocation = (loc) => {
+        setLocation(loc);
+    }
+
     return (
         <ToolTipContext.Provider value={{ 
             showToolTip, 
             toggleShowToolTip, 
             tooltipPos, 
-            updateTooltipPos 
+            updateTooltipPos,
+            location,
+            updateLocation 
         }}>
             {children}
         </ToolTipContext.Provider>
