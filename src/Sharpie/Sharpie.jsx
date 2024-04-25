@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Highlighter from 'web-highlighter';
 import Tooltip from '../Tooltip/Tooltip';
 import './Sharpie.css'
-import LocalStore from '../../Cache/LocalStore';
+import LocalStore from '../../localStore/localStore';
+import { useToolTip } from '../Context/TooltipProvider';
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
   const localStore = new LocalStore('highlights');
+  const [highlightId, setHighlightId] = useState(null);
+  const { toggleShowToolTip, tooltipPos } = useToolTip()
 
   useEffect(() => {
     try {
@@ -19,12 +22,12 @@ const Sharpie = () => {
 
       newHighlighter
         .on('selection:click', ({id}) => {
-            // display different bg color when hover
-            newHighlighter.remove(id)
-            localStore.remove(id)
+          console.log("clicked, ", id)
+          const hId = localStore.get(id);
+          toggleShowToolTip(true);
+          setHighlightId(id)
         })
-
-
+      
       setHighlighter(newHighlighter);
 
       localStore.getAll().forEach(({ hs, color }) => {
@@ -38,9 +41,11 @@ const Sharpie = () => {
     } catch (error) {
       console.error('Error initializing Highlighter:', error);
     }
-  }, []);
+  }, [toggleShowToolTip, tooltipPos]);
+
   
-  const handleHighlight = (color) => {
+  
+  const handleCreateHighlight = (color) => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
@@ -66,7 +71,7 @@ const Sharpie = () => {
   return (
     <div>
       {/* Your content that can be highlighted */}
-      <Tooltip onButtonClick={handleHighlight} />
+      <Tooltip onCreateHighlight={handleCreateHighlight} />
     </div>
   );
 };

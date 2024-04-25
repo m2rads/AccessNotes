@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import NoteIcon from '../Icons/NoteIcon';
 import BookmarkIcon from '../Icons/BookmarkIcon';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import Devider from '../Icons/Devider'
+import { useToolTip } from '../Context/TooltipProvider';
 
 const TooltipContainer = styled.div`
   display: ${props => props.$show ? 'flex' : 'none'};
@@ -41,10 +42,11 @@ const HighlightButton = styled.button`
 `;
 
 
-const Tooltip = ({ onButtonClick }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+const Tooltip = ({ onCreateHighlight }) => {
+  // const [showTooltip, setShowTooltip] = useState(false);
+  // const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [position, setPosition] = useState('above');
+  const { showToolTip, toggleShowToolTip, tooltipPos, updateTooltipPos } = useToolTip();
 
   useEffect(() => {
     const handleSelectionChange = () => {
@@ -63,12 +65,12 @@ const Tooltip = ({ onButtonClick }) => {
           } else {
             setPosition('above');
           }
-
-          setShowTooltip(true);
-          setTooltipPos({ x: centerX, y: topY });
+          
+          toggleShowToolTip(true);
+          updateTooltipPos({ x: centerX, y: topY });
         }
       } else {
-        setShowTooltip(false);
+        toggleShowToolTip(false);
       }
     };
 
@@ -82,9 +84,9 @@ const Tooltip = ({ onButtonClick }) => {
   }, []);
 
   return (
-    <TooltipContainer $show={showTooltip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
-      <HighlightButton onClick={() => onButtonClick('blue-highlight')} color="#93c5fd" />
-      <HighlightButton onClick={() => onButtonClick('yellow-highlight')} color="#fde047" />
+    <TooltipContainer $show={showToolTip} style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y}px` }} $position={position}>
+      <HighlightButton onClick={() => onCreateHighlight('blue-highlight')} color="#93c5fd" />
+      <HighlightButton onClick={() => onCreateHighlight('yellow-highlight')} color="#fde047" />
       <Devider />
       <NoteIcon />
       <BookmarkIcon />

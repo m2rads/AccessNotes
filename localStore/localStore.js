@@ -58,6 +58,12 @@ class LocalStore {
         this.jsonToStore(stores);
     }
 
+    get(id) {
+        const stores = this.storeToJson();
+        const found = stores.find(store => store.hs.id === id);
+        return found || null;
+    }
+
     getAll() {
         return this.storeToJson();
     }
