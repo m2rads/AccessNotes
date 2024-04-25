@@ -41,8 +41,24 @@ const HighlightButton = styled.button`
   border-radius: 2px;
 `;
 
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover, &:focus {
+    background-color: rgba(0, 0, 0, 0.1);  // Example hover and focus background
+    outline: none;  // Remove focus outline or define a custom focus style
+  }
+`;
 
-const Tooltip = ({ onCreateHighlight }) => {
+
+const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
   // const [showTooltip, setShowTooltip] = useState(false);
   // const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const { 
@@ -97,7 +113,9 @@ const Tooltip = ({ onCreateHighlight }) => {
       <NoteIcon />
       <BookmarkIcon />
       <Devider />
+      <IconButton onClick={onRemoveHighlight} aria-label="Close">
       <MultiplicationIcon />
+    </IconButton>
      </TooltipContainer>
   );
 };

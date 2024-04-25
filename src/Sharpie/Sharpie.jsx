@@ -29,9 +29,12 @@ const Sharpie = () => {
 
       newHighlighter
         .on('selection:click', ({id}) => {
-          const hId = localStore.get(id);
-          updateLocation(hId.tooltipLoc);
-          updateTooltipPos(hId.tooltipPos);
+          // localStore.removeAll()
+          // newHighlighter.removeAll()
+          setHighlightId(id)
+          const storedId = localStore.get(id);
+          updateLocation(storedId.tooltipLoc);
+          updateTooltipPos(storedId.tooltipPos);
           toggleShowToolTip(true);
         })
       
@@ -48,7 +51,7 @@ const Sharpie = () => {
     } catch (error) {
       console.error('Error initializing Highlighter:', error);
     }
-  }, [toggleShowToolTip, tooltipPos]);
+  }, []);
 
   
   
@@ -75,10 +78,16 @@ const Sharpie = () => {
     }
   };
 
+  const handleRemoveHighlight = () => {
+    localStore.remove(highlightId);
+    highlighter.remove(highlightId);
+    setHighlightId(null)
+  }
+
   return (
     <div>
       {/* Your content that can be highlighted */}
-      <Tooltip onCreateHighlight={handleCreateHighlight} />
+      <Tooltip onCreateHighlight={handleCreateHighlight} onRemoveHighlight={handleRemoveHighlight} />
     </div>
   );
 };
