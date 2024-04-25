@@ -19,7 +19,7 @@ class LocalStore {
         localStorage.setItem(this.key, JSON.stringify(stores));
     }
 
-    save(data, color, tooltipPos) {  
+    save(data, color, tooltipPos, tooltipLoc) {  
         const stores = this.storeToJson();
         const map = {};
         stores.forEach((store, idx) => map[store.hs.id] = idx);
@@ -30,7 +30,8 @@ class LocalStore {
 
         data.forEach(store => {
             store.color = color; 
-            store.tooltipPos = tooltipPos;  
+            store.tooltipPos = tooltipPos; 
+            store.tooltipLoc = tooltipLoc;
             if (map[store.hs.id] !== undefined) {
                 stores[map[store.hs.id]] = store;
             } else {
@@ -40,9 +41,10 @@ class LocalStore {
         this.jsonToStore(stores);
     }
 
-    forceSave(store, tooltipPos) {  
+    forceSave(store, tooltipPos, tooltipLoc) { 
         const stores = this.storeToJson();
         store.tooltipPos = tooltipPos;  
+        store.tooltipLoc = tooltipLoc;
         stores.push(store);
         this.jsonToStore(stores);
     }
