@@ -114,8 +114,8 @@ const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
       <BookmarkIcon />
       <Devider />
       <IconButton onClick={onRemoveHighlight} aria-label="Close">
-      <MultiplicationIcon />
-    </IconButton>
+        <MultiplicationIcon />
+      </IconButton>
      </TooltipContainer>
   );
 };
