@@ -58,25 +58,48 @@ const Sharpie = () => {
   const handleCreateHighlight = (color) => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      if (!range.collapsed) {
-        highlighter.setOption({ 
-          style: {
-            className: color
-          }
-        });       
-        highlighter
-        .on('selection:create', ({sources}) => {
-          sources = sources.map(hs => ({hs}));
-          // save to backend
-          console.log("sources, ", sources);
-          localStore.save(sources, color, tooltipPos, location);
-        });
-        highlighter.fromRange(range);
-        // selection.removeAllRanges();
-      }
+        const range = selection.getRangeAt(0);
+        if (!range.collapsed) {
+            // Check if the current selection overlaps with any existing highlights
+            if (!isOverlapping(range)) {
+                highlighter.setOption({ 
+                    style: {
+                        className: color
+                    }
+                });       
+                highlighter.on('selection:create', ({sources}) => {
+                    sources = sources.map(hs => ({hs, tooltipPos, location}));
+                    console.log("sources, ", sources);
+                    localStore.save(sources, color, tooltipPos, location);
+                });
+                highlighter.fromRange(range);
+            } else {
+                console.log("Selection overlaps with existing highlight.");
+            }
+        }
     }
-  };
+};
+
+const isOverlapping = (newRange) => {
+  const highlights = localStore.getAll(); // Assuming this retrieves all highlights
+  return highlights.some(({ hs }) => {
+      const existingRange = document.createRange();
+      try {
+          const startNode = document.querySelector(`[data-highlight-id="${hs.id}"]`);
+          const endNode = document.querySelector(`[data-highlight-id="${hs.id}"]`);
+
+          if (startNode && endNode) {
+              existingRange.setStart(startNode, 0);
+              existingRange.setEnd(endNode, endNode.length);
+              return existingRange.intersectsNode(newRange.commonAncestorContainer);
+          }
+      } catch (error) {
+          console.error('Failed to set range for highlight comparison:', error);
+      }
+      return false;
+  });
+};
+
 
   const handleRemoveHighlight = () => {
     localStore.remove(highlightId);
