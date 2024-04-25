@@ -29,10 +29,7 @@ const Sharpie = () => {
 
       newHighlighter
         .on('selection:click', ({id}) => {
-          console.log("clicked, ", id)
-          // localStore.removeAll();
           const hId = localStore.get(id);
-          console.log("hid: ", hId);
           updateLocation(hId.tooltipLoc);
           updateTooltipPos(hId.tooltipPos);
           toggleShowToolTip(true);
