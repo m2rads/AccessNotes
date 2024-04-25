@@ -19,7 +19,7 @@ class LocalStore {
         localStorage.setItem(this.key, JSON.stringify(stores));
     }
 
-    save(data, color) { 
+    save(data, color, tooltipPos) {  
         const stores = this.storeToJson();
         const map = {};
         stores.forEach((store, idx) => map[store.hs.id] = idx);
@@ -30,17 +30,19 @@ class LocalStore {
 
         data.forEach(store => {
             store.color = color; 
+            store.tooltipPos = tooltipPos;  
             if (map[store.hs.id] !== undefined) {
                 stores[map[store.hs.id]] = store;
             } else {
                 stores.push(store);
             }
-        })
+        });
         this.jsonToStore(stores);
     }
 
-    forceSave(store) {
+    forceSave(store, tooltipPos) {  
         const stores = this.storeToJson();
+        store.tooltipPos = tooltipPos;  
         stores.push(store);
         this.jsonToStore(stores);
     }
@@ -54,7 +56,9 @@ class LocalStore {
                 break;
             }
         }
-        stores.splice(index, 1);
+        if (index !== null) {
+            stores.splice(index, 1);
+        }
         this.jsonToStore(stores);
     }
 
