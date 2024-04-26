@@ -24,6 +24,7 @@ const NoteHeader = styled.div`
   line-height: 3rem;
   border-radius: 4px 4px 0 0;
   background-color: #09090b;
+  cursor: move;
 `;
 
 const NoteContent = styled.textarea`
@@ -85,18 +86,18 @@ function StickyNote({id, content}) {
   const {removeStickyNote} = useToolTip();
 
   return (
-    <Draggable>
-        <NoteContainer>
-            <NoteHeader>
-                <IconButton onClick={() => removeStickyNote(id)}>
-                    <MultiplicationIcon color="#f4f4f5" />
-                </IconButton>
-            </NoteHeader>
-            <NoteContent
-            id="noteTextArea"
-            style={{ resize: "none" }}
-            />
-        </NoteContainer>
+    <Draggable handle=".note-header">
+      <NoteContainer>
+        <NoteHeader className="note-header">
+          <IconButton onClick={() => removeStickyNote(id)}>
+            <MultiplicationIcon color="#f4f4f5" />
+          </IconButton>
+        </NoteHeader>
+        <NoteContent
+          id="noteTextArea"
+          style={{ resize: "none" }}
+        />
+      </NoteContainer>
     </Draggable>
   );
 }
