@@ -4,6 +4,7 @@ import Tooltip from '../Tooltip/Tooltip';
 import './Sharpie.css'
 import LocalStore from '../../localStore/localStore';
 import { useToolTip } from '../Context/TooltipProvider';
+import StickyNote from '../StickyNotes/StickyNotes';
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
@@ -15,7 +16,8 @@ const Sharpie = () => {
     tooltipPos, 
     updateTooltipPos , 
     location,
-    updateLocation
+    updateLocation,
+    stickyNotes
     }   = useToolTip()
 
   useEffect(() => {
@@ -111,6 +113,13 @@ const isOverlapping = (newRange) => {
     <div>
       {/* Your content that can be highlighted */}
       <Tooltip onCreateHighlight={handleCreateHighlight} onRemoveHighlight={handleRemoveHighlight} />
+      {stickyNotes.map(note => (
+        <StickyNote
+          key={note.id}
+          id={note.id}
+          content={note.content}
+        />
+      ))}
     </div>
   );
 };

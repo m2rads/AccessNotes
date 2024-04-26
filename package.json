@@ -17,6 +17,7 @@
     "react-shadow": "^20.4.0",
     "rewire": "^7.0.0",
     "styled-components": "^6.1.8",
+    "uuid": "^9.0.1",
     "web-highlighter": "^0.7.4"
   },
   "devDependencies": {

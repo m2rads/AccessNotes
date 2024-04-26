@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 const ToolTipContext = createContext(null);
 
@@ -8,7 +9,7 @@ export const ToolTipProvider = ({ children }) => {
     const [showToolTip, setShowToolTip] = useState(false);
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
     const [location, setLocation] = useState('above');
-    const [showNote, setShowNote] = useState("false");
+    const [stickyNotes, setStickyNotes] = useState([]);
 
     const toggleShowToolTip = (state) => {
         setShowToolTip(state);
@@ -22,6 +23,18 @@ export const ToolTipProvider = ({ children }) => {
         setLocation(loc);
     }
 
+    const addStickyNote = () => {
+        const newNote = {
+          id: uuidv4(),
+          content: '',
+        };
+        setStickyNotes([...stickyNotes, newNote]);
+      };
+    
+    const removeStickyNote = (id) => {
+        setStickyNotes(stickyNotes.filter(note => note.id !== id));
+    };
+
     return (
         <ToolTipContext.Provider value={{ 
             showToolTip, 
@@ -29,7 +42,10 @@ export const ToolTipProvider = ({ children }) => {
             tooltipPos, 
             updateTooltipPos,
             location,
-            updateLocation 
+            updateLocation,
+            stickyNotes,
+            addStickyNote,
+            removeStickyNote
         }}>
             {children}
         </ToolTipContext.Provider>

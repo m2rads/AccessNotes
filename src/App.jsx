@@ -9,7 +9,6 @@ function App() {
   return (
     <ShadowRoot>
       <ToolTipProvider>
-        <StickyNote />
         <Sharpie />
       </ToolTipProvider>
     </ShadowRoot>

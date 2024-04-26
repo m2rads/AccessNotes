@@ -67,27 +67,28 @@ const DeleteButton = styled(Button)`
 `;
 
 const IconButton = styled.button`
-  background: white;
-  padding: 0;
+  background: none;
+  padding: 0 5px;
   cursor: pointer;
   outline: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100%;
+  border: none;
   
   &:hover, &:focus {
     outline: none;  // Remove focus outline or define a custom focus style
   }
 `;
 
-function StickyNote() {
+function StickyNote({id, content}) {
+  const {removeStickyNote} = useToolTip();
 
   return (
     <Draggable>
         <NoteContainer>
             <NoteHeader>
-                <IconButton>
+                <IconButton onClick={() => removeStickyNote(id)}>
                     <MultiplicationIcon color="#f4f4f5" />
                 </IconButton>
             </NoteHeader>

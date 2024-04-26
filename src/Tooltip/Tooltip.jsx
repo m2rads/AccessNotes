@@ -52,7 +52,10 @@ const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
     tooltipPos,
     updateTooltipPos,
     location,
-    updateLocation
+    updateLocation,
+    stickyNotes,
+    addStickyNote,
+    removeStickNote
   } = useToolTip();
 
   useEffect(() => {
@@ -95,7 +98,9 @@ const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
       <HighlightButton onClick={() => onCreateHighlight('blue-highlight')} color="#93c5fd" />
       <HighlightButton onClick={() => onCreateHighlight('yellow-highlight')} color="#fde047" />
       <Devider />
-      <NoteIcon />
+      <IconButton onClick={addStickyNote} aria-label="Close">
+        <NoteIcon />
+      </IconButton>
       <BookmarkIcon />
       <Devider />
       <IconButton onClick={onRemoveHighlight} aria-label="Close">
