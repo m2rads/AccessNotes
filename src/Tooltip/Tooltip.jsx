@@ -5,6 +5,7 @@ import BookmarkIcon from '../Icons/BookmarkIcon';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import Devider from '../Icons/Devider'
 import { useToolTip } from '../Context/TooltipProvider';
+import { IconButton } from '../StyledComponents/StyledComponents';
 
 const TooltipContainer = styled.div`
   display: ${props => props.$show ? 'flex' : 'none'};
@@ -39,22 +40,6 @@ const HighlightButton = styled.button`
   margin: 5px;
   border: none;
   border-radius: 2px;
-`;
-
-const IconButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  outline: inherit;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  &:hover, &:focus {
-    background-color: rgba(0, 0, 0, 0.1);  // Example hover and focus background
-    outline: none;  // Remove focus outline or define a custom focus style
-  }
 `;
 
 
@@ -114,7 +99,7 @@ const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
       <BookmarkIcon />
       <Devider />
       <IconButton onClick={onRemoveHighlight} aria-label="Close">
-        <MultiplicationIcon />
+        <MultiplicationIcon color="#f4f4f5" />
       </IconButton>
      </TooltipContainer>
   );
