@@ -8,6 +8,7 @@ export const ToolTipProvider = ({ children }) => {
     const [showToolTip, setShowToolTip] = useState(false);
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
     const [location, setLocation] = useState('above');
+    const [showNote, setShowNote] = useState("false");
 
     const toggleShowToolTip = (state) => {
         setShowToolTip(state);

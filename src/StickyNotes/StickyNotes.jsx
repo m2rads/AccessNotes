@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import { IconButton } from '../StyledComponents/StyledComponents';
+import { useToolTip } from '../Context/TooltipProvider';
 
 const NoteContainer = styled.div`
   z-index: 10;

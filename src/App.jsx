@@ -8,8 +8,8 @@ function App() {
 
   return (
     <ShadowRoot>
-      <StickyNote />
       <ToolTipProvider>
+        <StickyNote />
         <Sharpie />
       </ToolTipProvider>
     </ShadowRoot>
