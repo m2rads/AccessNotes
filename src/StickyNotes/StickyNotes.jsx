@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import { IconButton } from '../StyledComponents/StyledComponents';
 import { useToolTip } from '../Context/TooltipProvider';
+import Draggable from 'react-draggable';
 
 const NoteContainer = styled.div`
   z-index: 10;
@@ -68,19 +69,22 @@ const DeleteButton = styled(Button)`
 function StickyNote() {
 
   return (
+    <Draggable>
+
     <NoteContainer>
-      <NoteHeader>
+        <NoteHeader>
         <IconButton>
             <MultiplicationIcon color="#f4f4f5" />
         </IconButton>
-      </NoteHeader>
-      <NoteContent
+        </NoteHeader>
+        <NoteContent
         id="noteTextArea"
         style={{ resize: "none" }}
-      />
-      {/* <NoteFooter>
-      </NoteFooter> */}
+        />
+        {/* <NoteFooter>
+        </NoteFooter> */}
     </NoteContainer>
+    </Draggable>
   );
 }
 
