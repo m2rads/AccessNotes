@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
-import { IconButton } from '../StyledComponents/StyledComponents';
 import { useToolTip } from '../Context/TooltipProvider';
 import Draggable from 'react-draggable';
 
@@ -22,6 +21,7 @@ const NoteHeader = styled.div`
   justify-content: flex-end;
   align-items: center;
   height: 30px;
+  line-height: 3rem;
   border-radius: 4px 4px 0 0;
   background-color: #09090b;
 `;
@@ -66,24 +66,36 @@ const DeleteButton = styled(Button)`
   background-color: white;
 `;
 
+const IconButton = styled.button`
+  background: white;
+  padding: 0;
+  cursor: pointer;
+  outline: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  
+  &:hover, &:focus {
+    outline: none;  // Remove focus outline or define a custom focus style
+  }
+`;
+
 function StickyNote() {
 
   return (
     <Draggable>
-
-    <NoteContainer>
-        <NoteHeader>
-        <IconButton>
-            <MultiplicationIcon color="#f4f4f5" />
-        </IconButton>
-        </NoteHeader>
-        <NoteContent
-        id="noteTextArea"
-        style={{ resize: "none" }}
-        />
-        {/* <NoteFooter>
-        </NoteFooter> */}
-    </NoteContainer>
+        <NoteContainer>
+            <NoteHeader>
+                <IconButton>
+                    <MultiplicationIcon color="#f4f4f5" />
+                </IconButton>
+            </NoteHeader>
+            <NoteContent
+            id="noteTextArea"
+            style={{ resize: "none" }}
+            />
+        </NoteContainer>
     </Draggable>
   );
 }
