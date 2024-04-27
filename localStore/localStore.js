@@ -41,6 +41,18 @@ class LocalStore {
         this.jsonToStore(stores);
     }
 
+    saveNote(note) {
+        const notes = this.storeToJson();
+        const index = notes.findIndex(n => n.id === note.id);
+        if (index !== -1) {
+            notes[index] = note;
+        } else {
+            notes.push(note);
+        }
+        this.jsonToStore(notes);
+    }
+
+
     forceSave(store, tooltipPos, tooltipLoc) { 
         const stores = this.storeToJson();
         store.tooltipPos = tooltipPos;  

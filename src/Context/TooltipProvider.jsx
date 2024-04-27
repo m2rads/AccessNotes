@@ -23,11 +23,12 @@ export const ToolTipProvider = ({ children }) => {
         setLocation(loc);
     }
 
-    const addStickyNote = () => {
+    const addStickyNote = (id) => {
         const newNote = {
-          id: uuidv4(),
+          id: id,
           content: '',
         };
+        console.log("newNote: ", newNote);
         setStickyNotes([...stickyNotes, newNote]);
       };
     

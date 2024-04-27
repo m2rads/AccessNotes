@@ -17,7 +17,8 @@ const Sharpie = () => {
     updateTooltipPos , 
     location,
     updateLocation,
-    stickyNotes
+    stickyNotes,
+    addStickyNote
     }   = useToolTip()
 
   useEffect(() => {
@@ -82,44 +83,72 @@ const Sharpie = () => {
     }
 };
 
-const isOverlapping = (newRange) => {
-  const highlights = localStore.getAll(); // Assuming this retrieves all highlights
-  return highlights.some(({ hs }) => {
-      const existingRange = document.createRange();
-      try {
-          const startNode = document.querySelector(`[data-highlight-id="${hs.id}"]`);
-          const endNode = document.querySelector(`[data-highlight-id="${hs.id}"]`);
-
-          if (startNode && endNode) {
-              existingRange.setStart(startNode, 0);
-              existingRange.setEnd(endNode, endNode.length);
-              return existingRange.intersectsNode(newRange.commonAncestorContainer);
-          }
-      } catch (error) {
-          console.error('Failed to set range for highlight comparison:', error);
-      }
-      return false;
-  });
-};
-
-
   const handleRemoveHighlight = () => {
     localStore.remove(highlightId);
     highlighter.remove(highlightId);
     setHighlightId(null)
   }
 
+  const handleCreateStickyNote = () => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        if (!range.collapsed) {
+            if (!isOverlapping(range)) {
+                highlighter.setOption({ 
+                    style: {
+                        className: "stickyNote"
+                    }
+                });       
+                highlighter.on('selection:create', ({sources}) => {
+                    sources = sources.map(hs => ({hs, tooltipPos, location}));
+                    let noteId = sources[0].hs.id
+                    addStickyNote(noteId)
+                    console.log("sources, ", sources);
+                    localStore.save(sources, "stickyNote", tooltipPos, location);
+                });
+                highlighter.fromRange(range);
+            } else {
+                console.log("note overlaps with existing note.");
+            }
+        }
+    }
+  }
+
+  const isOverlapping = (newRange) => {
+    const highlights = localStore.getAll(); // Assuming this retrieves all highlights
+    return highlights.some(({ hs }) => {
+        const existingRange = document.createRange();
+        try {
+            const startNode = document.querySelector(`[data-highlight-id="${hs.id}"]`);
+            const endNode = document.querySelector(`[data-highlight-id="${hs.id}"]`);
+  
+            if (startNode && endNode) {
+                existingRange.setStart(startNode, 0);
+                existingRange.setEnd(endNode, endNode.length);
+                return existingRange.intersectsNode(newRange.commonAncestorContainer);
+            }
+        } catch (error) {
+            console.error('Failed to set range for highlight comparison:', error);
+        }
+        return false;
+    });
+  };
+
   return (
     <div>
       {/* Your content that can be highlighted */}
-      <Tooltip onCreateHighlight={handleCreateHighlight} onRemoveHighlight={handleRemoveHighlight} />
-      {stickyNotes.map(note => (
-        <StickyNote
-          key={note.id}
-          id={note.id}
-          content={note.content}
-        />
-      ))}
+      <Tooltip 
+        onCreateHighlight={handleCreateHighlight} 
+        onRemoveHighlight={handleRemoveHighlight} 
+        onCreateStickyNote={handleCreateStickyNote} />
+        {stickyNotes.map(note => (
+          <StickyNote
+            key={note.id}
+            id={note.id}
+            content={note.content}
+          />
+        ))}
     </div>
   );
 };
