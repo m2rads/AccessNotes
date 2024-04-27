@@ -103,7 +103,6 @@ const Sharpie = () => {
                 highlighter.on('selection:create', ({sources}) => {
                     sources = sources.map(hs => ({hs, tooltipPos, location}));
                     let noteId = sources[0].hs.id
-                    addStickyNote(noteId)
                     console.log("sources, ", sources);
                     localStore.save(sources, "stickyNote", tooltipPos, location);
                 });
@@ -114,6 +113,7 @@ const Sharpie = () => {
         }
     }
   }
+
 
   const isOverlapping = (newRange) => {
     const highlights = localStore.getAll(); // Assuming this retrieves all highlights
@@ -134,6 +134,7 @@ const Sharpie = () => {
         return false;
     });
   };
+
 
   return (
     <div>

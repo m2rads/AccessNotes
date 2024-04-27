@@ -11,7 +11,28 @@
 }
 
 .stickyNote {
+    position: relative;
     background-color: aliceblue;
     color: black;
     cursor: pointer;
+}
+
+
+.stickyNote::before {
+    content: 'Note'; /* Text displayed in the tip */
+    position: absolute;
+    top: -25px; /* Adjust this value based on your needs */
+    left: 50%;
+    transform: translateX(-50%); /* Center the tip above the highlight */
+    width: 40px;
+    height: 20px;
+    line-height: 20px; /* To vertically center text */
+    text-align: center;
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 12px;
 }
