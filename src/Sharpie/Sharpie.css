@@ -20,6 +20,7 @@
 
 .stickyNote::before {
     content: 'Note'; /* Text displayed in the tip */
+    display: none;
     position: absolute;
     top: -25px; /* Adjust this value based on your needs */
     left: 50%;
@@ -35,8 +36,4 @@
     box-sizing: border-box;
     cursor: pointer;
     font-size: 12px;
-}
-
-.stickyNote:hover {
-    background-color: #93c5fd;
 }
