@@ -86,34 +86,10 @@ const Sharpie = () => {
   const handleRemoveHighlight = () => {
     localStore.remove(highlightId);
     highlighter.remove(highlightId);
+    // localStore.removeAll();
+    // highlighter.removeAll();
     setHighlightId(null)
   }
-
-  const handleCreateStickyNote = () => {
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        if (!range.collapsed) {
-            if (!isOverlapping(range)) {
-                highlighter.setOption({ 
-                    style: {
-                        className: "stickyNote"
-                    }
-                });       
-                highlighter.on('selection:create', ({sources}) => {
-                    sources = sources.map(hs => ({hs, tooltipPos, location}));
-                    let noteId = sources[0].hs.id
-                    console.log("sources, ", sources);
-                    localStore.save(sources, "stickyNote", tooltipPos, location);
-                });
-                highlighter.fromRange(range);
-            } else {
-                console.log("note overlaps with existing note.");
-            }
-        }
-    }
-  }
-
 
   const isOverlapping = (newRange) => {
     const highlights = localStore.getAll(); // Assuming this retrieves all highlights
@@ -134,6 +110,56 @@ const Sharpie = () => {
         return false;
     });
   };
+
+
+    const handleCreateStickyNote = () => {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          if (!range.collapsed) {
+              if (!isOverlapping(range)) {
+                  highlighter.setOption({ 
+                      style: {
+                          className: "stickyNote"
+                      }
+                  });       
+                  highlighter.on('selection:create', ({sources}) => {
+                      sources.forEach(source => {
+                          const position = getPosition(highlighter.getDoms(source.id)[0]);
+                          createDeleteTip(position.top, position.left, source.id);
+                      });
+                      console.log("sources, ", sources);
+                      sources = sources.map(hs => ({hs, tooltipPos, location}));
+                      localStore.save(sources, "stickyNote", tooltipPos, location);
+                  });
+                  highlighter.fromRange(range);
+              } else {
+                  console.log("note overlaps with existing note.");
+              }
+          }
+      }
+    }
+
+  const createDeleteTip = (top, left, id) => {
+      const span = document.createElement('span');
+      span.style.left = `${left - 20}px`;
+      span.style.top = `${top - 25}px`;
+      span.dataset.id = id;
+      span.textContent = 'delete';
+      span.classList.add('my-remove-tip');
+      document.body.appendChild(span);
+  };
+
+  function getPosition(element) {
+      let x = 0;
+      let y = 0;
+      while (element) {
+          x += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+          y += (element.offsetTop - element.scrollTop + element.clientTop);
+          element = element.offsetParent;
+      }
+      return { top: y, left: x };
+  }
 
 
   return (
