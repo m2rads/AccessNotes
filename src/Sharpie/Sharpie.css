@@ -36,3 +36,7 @@
     cursor: pointer;
     font-size: 12px;
 }
+
+.stickyNote:hover {
+    background-color: #93c5fd;
+}
