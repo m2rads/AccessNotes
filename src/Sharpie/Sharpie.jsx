@@ -90,6 +90,8 @@ const Sharpie = () => {
 const handleRemoveHighlight = () => {
   localStore.remove(highlightId);
   highlighter.remove(highlightId);
+  localStore.removeAll();
+  highlighter.removeAll();
 
   // Find and remove the corresponding delete tip
   const deleteTip = document.querySelector(`.my-remove-tip[data-id="${highlightId}"]`);
@@ -138,9 +140,10 @@ const handleRemoveHighlight = () => {
                           const position = getPosition(highlighter.getDoms(source.id)[0]);
                           createDeleteTip(position.top, position.left, source.id);
                       });
-                      console.log("sources, ", sources);
                       sources = sources.map(hs => ({hs, tooltipPos, location}));
+                      console.log("sources, ", sources.id);
                       localStore.save(sources, "stickyNote", tooltipPos, location);
+                      addStickyNote(sources[0].hs.id)
                   });
                   highlighter.fromRange(range);
               } else {
