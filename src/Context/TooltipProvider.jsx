@@ -28,7 +28,6 @@ export const ToolTipProvider = ({ children }) => {
           id: id,
           content: '',
         };
-        console.log("newNote: ", newNote);
         setStickyNotes([...stickyNotes, newNote]);
       };
     

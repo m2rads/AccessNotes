@@ -76,7 +76,6 @@ const Sharpie = () => {
                 });       
                 highlighter.on('selection:create', ({sources}) => {
                     sources = sources.map(hs => ({hs, tooltipPos, location}));
-                    console.log("sources, ", sources);
                     localStore.save(sources, color, tooltipPos, location);
                 });
                 highlighter.fromRange(range);
@@ -141,9 +140,8 @@ const handleRemoveHighlight = () => {
                           createDeleteTip(position.top, position.left, source.id);
                       });
                       sources = sources.map(hs => ({hs, tooltipPos, location}));
-                      console.log("sources, ", sources.id);
-                      localStore.save(sources, "stickyNote", tooltipPos, location);
                       addStickyNote(sources[0].hs.id)
+                      localStore.save(sources, "stickyNote", tooltipPos, location);
                   });
                   highlighter.fromRange(range);
               } else {
