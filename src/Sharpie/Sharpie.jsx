@@ -46,6 +46,10 @@ const Sharpie = () => {
       localStore.getAll().forEach(({ hs, color }) => {
         newHighlighter.setOption({ style: { className: color } });
         newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
+        if (color == "stickyNote") {
+          const position = getPosition(newHighlighter.getDoms(hs.id)[0]);
+          createDeleteTip(position.top, position.left, hs.id);
+        }
       });
 
       return () => {
@@ -83,13 +87,19 @@ const Sharpie = () => {
     }
 };
 
-  const handleRemoveHighlight = () => {
-    localStore.remove(highlightId);
-    highlighter.remove(highlightId);
-    // localStore.removeAll();
-    // highlighter.removeAll();
-    setHighlightId(null)
+const handleRemoveHighlight = () => {
+  localStore.remove(highlightId);
+  highlighter.remove(highlightId);
+
+  // Find and remove the corresponding delete tip
+  const deleteTip = document.querySelector(`.my-remove-tip[data-id="${highlightId}"]`);
+  if (deleteTip) {
+      deleteTip.parentNode.removeChild(deleteTip);
   }
+  // Reset the highlight ID state
+  setHighlightId(null);
+};
+
 
   const isOverlapping = (newRange) => {
     const highlights = localStore.getAll(); // Assuming this retrieves all highlights
