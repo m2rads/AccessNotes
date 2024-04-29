@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import { useToolTip } from '../Context/TooltipProvider';
@@ -24,6 +24,7 @@ const NoteHeader = styled.div`
   line-height: 3rem;
   border-radius: 4px 4px 0 0;
   background-color: #09090b;
+  cursor: move;
 `;
 
 const NoteContent = styled.textarea`
@@ -67,37 +68,48 @@ const DeleteButton = styled(Button)`
 `;
 
 const IconButton = styled.button`
-  background: white;
-  padding: 0;
+  background: none;
+  padding: 0 5px;
   cursor: pointer;
   outline: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100%;
+  border: none;
   
   &:hover, &:focus {
     outline: none;  // Remove focus outline or define a custom focus style
   }
 `;
 
-function StickyNote() {
+function StickyNote({ id, content }) {
+  const { removeStickyNote, localStore } = useToolTip();
+  const [noteContent, setNoteContent] = useState(content);
+
+  // Update the state with the new content
+  const handleContentChange = (event) => {
+    setNoteContent(event.target.value);
+    localStore.saveNote(id, event.target.value);
+  };
 
   return (
-    <Draggable>
-        <NoteContainer>
-            <NoteHeader>
-                <IconButton>
-                    <MultiplicationIcon color="#f4f4f5" />
-                </IconButton>
-            </NoteHeader>
-            <NoteContent
-            id="noteTextArea"
-            style={{ resize: "none" }}
-            />
-        </NoteContainer>
+    <Draggable handle=".note-header">
+      <NoteContainer>
+        <NoteHeader className="note-header">
+          <IconButton onClick={() => removeStickyNote(id)}>
+            <MultiplicationIcon color="#f4f4f5" />
+          </IconButton>
+        </NoteHeader>
+        <NoteContent
+          id="noteTextArea"
+          style={{ resize: "none" }}
+          value={noteContent}
+          onChange={handleContentChange}
+        />
+      </NoteContainer>
     </Draggable>
   );
 }
 
 export default StickyNote;
+

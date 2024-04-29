@@ -43,16 +43,15 @@ const HighlightButton = styled.button`
 `;
 
 
-const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
-  // const [showTooltip, setShowTooltip] = useState(false);
-  // const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+const Tooltip = ({ onCreateHighlight, onCreateStickyNote, onRemoveHighlight }) => {
+
   const { 
     showToolTip, 
     toggleShowToolTip, 
     tooltipPos,
     updateTooltipPos,
     location,
-    updateLocation
+    updateLocation,
   } = useToolTip();
 
   useEffect(() => {
@@ -95,7 +94,9 @@ const Tooltip = ({ onCreateHighlight, onRemoveHighlight }) => {
       <HighlightButton onClick={() => onCreateHighlight('blue-highlight')} color="#93c5fd" />
       <HighlightButton onClick={() => onCreateHighlight('yellow-highlight')} color="#fde047" />
       <Devider />
-      <NoteIcon />
+      <IconButton onClick={onCreateStickyNote} aria-label="Close">
+        <NoteIcon />
+      </IconButton>
       <BookmarkIcon />
       <Devider />
       <IconButton onClick={onRemoveHighlight} aria-label="Close">
