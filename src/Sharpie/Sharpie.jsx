@@ -156,6 +156,8 @@ const Sharpie = () => {
               } else {
                   console.log("note overlaps with existing note.");
               }
+          } else if (highlightId) {
+            addStickyNote(highlightId);
           }
       }
     }
