@@ -53,7 +53,6 @@ const Sharpie = () => {
 
       localStore.getAllNotes().forEach(({ id, content }) => {
         console.log("note id: ", id)
-        console.log("note contents: ", content)
       });
 
       return () => {
@@ -145,7 +144,6 @@ const Sharpie = () => {
                       highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                   });
                   highlighter.fromRange(range);
-                  console.log("then here: " )
                   addStickyNote(highlightSources[0].hs.id)
                   localStore.save(highlightSources, "stickyNote", tooltipPos, location);
               } else {
