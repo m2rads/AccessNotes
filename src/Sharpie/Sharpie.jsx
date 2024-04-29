@@ -46,10 +46,10 @@ const Sharpie = () => {
       localStore.getAll().forEach(({ hs, color }) => {
         newHighlighter.setOption({ style: { className: color } });
         newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
-        if (color == "stickyNote") {
-          const position = getPosition(newHighlighter.getDoms(hs.id)[0]);
-          createDeleteTip(position.top, position.left, hs.id);
-        }
+        // if (color == "stickyNote") {
+        //   const position = getPosition(newHighlighter.getDoms(hs.id)[0]);
+        //   createDeleteTip(position.top, position.left, hs.id);
+        // }
       });
 
       return () => {

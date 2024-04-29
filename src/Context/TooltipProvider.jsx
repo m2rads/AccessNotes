@@ -26,7 +26,7 @@ export const ToolTipProvider = ({ children }) => {
     const addStickyNote = (id) => {
         const newNote = {
           id: id,
-          content: '',
+          content: 'hello world',
         };
         setStickyNotes([...stickyNotes, newNote]);
       };

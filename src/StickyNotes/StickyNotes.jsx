@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import { useToolTip } from '../Context/TooltipProvider';
@@ -82,8 +82,15 @@ const IconButton = styled.button`
   }
 `;
 
-function StickyNote({id, content}) {
-  const {removeStickyNote} = useToolTip();
+function StickyNote({ id, content }) {
+  const { removeStickyNote } = useToolTip();
+  const [noteContent, setNoteContent] = useState(content);
+  console.log("note content: ", noteContent);
+
+  // Update the state with the new content
+  const handleContentChange = (event) => {
+    setNoteContent(event.target.value);
+  };
 
   return (
     <Draggable handle=".note-header">
@@ -96,6 +103,8 @@ function StickyNote({id, content}) {
         <NoteContent
           id="noteTextArea"
           style={{ resize: "none" }}
+          value={noteContent}
+          onChange={handleContentChange}
         />
       </NoteContainer>
     </Draggable>
@@ -103,3 +112,4 @@ function StickyNote({id, content}) {
 }
 
 export default StickyNote;
+
