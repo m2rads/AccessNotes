@@ -10,7 +10,7 @@ document.body.parentNode.insertBefore(insertionPoint, document.body);
 
 const popupRoot = document.getElementById("popup-root");
 
-// StickyNotes / content script
+// Highlighter and StickyNotes / content script
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <>
@@ -18,7 +18,7 @@ const popupRoot = document.getElementById("popup-root");
     </>
   );
 
-// PopupComponent / popup.html
+// Side Panel / sidePanel.html
 popupRoot &&
   ReactDOM.createRoot(popupRoot).render(
     <React.Fragment>
