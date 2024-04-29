@@ -86,20 +86,20 @@ const Sharpie = () => {
     }
 };
 
-const handleRemoveHighlight = () => {
-  localStore.remove(highlightId);
-  highlighter.remove(highlightId);
-  localStore.removeAll();
-  highlighter.removeAll();
+  const handleRemoveHighlight = () => {
+    localStore.remove(highlightId);
+    highlighter.remove(highlightId);
+    localStore.removeAll();
+    highlighter.removeAll();
 
-  // Find and remove the corresponding delete tip
-  const deleteTip = document.querySelector(`.my-remove-tip[data-id="${highlightId}"]`);
-  if (deleteTip) {
-      deleteTip.parentNode.removeChild(deleteTip);
-  }
-  // Reset the highlight ID state
-  setHighlightId(null);
-};
+    // Find and remove the corresponding delete tip
+    const deleteTip = document.querySelector(`.my-remove-tip[data-id="${highlightId}"]`);
+    if (deleteTip) {
+        deleteTip.parentNode.removeChild(deleteTip);
+    }
+    // Reset the highlight ID state
+    setHighlightId(null);
+  };
 
 
   const isOverlapping = (newRange) => {
@@ -122,7 +122,6 @@ const handleRemoveHighlight = () => {
     });
   };
 
-
     const handleCreateStickyNote = () => {
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
@@ -135,10 +134,11 @@ const handleRemoveHighlight = () => {
                       }
                   });       
                   highlighter.on('selection:create', ({sources}) => {
-                      sources.forEach(source => {
-                          const position = getPosition(highlighter.getDoms(source.id)[0]);
-                          createDeleteTip(position.top, position.left, source.id);
-                      });
+                      // TODP: firgure out the bug in issue #10
+                      // sources.forEach(source => {
+                      //     const position = getPosition(highlighter.getDoms(source.id)[0]);
+                      //     createDeleteTip(position.top, position.left, source.id);
+                      // });
                       sources = sources.map(hs => ({hs, tooltipPos, location}));
                       addStickyNote(sources[0].hs.id)
                       localStore.save(sources, "stickyNote", tooltipPos, location);
