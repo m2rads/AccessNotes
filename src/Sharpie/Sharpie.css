@@ -13,7 +13,6 @@
 .stickyNote {
     position: relative;
     text-decoration: underline;
-    color: black;
     cursor: pointer;
 }
 
