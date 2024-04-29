@@ -5,7 +5,7 @@ import { useToolTip } from '../Context/TooltipProvider';
 import Draggable from 'react-draggable';
 
 const NoteContainer = styled.div`
-  z-index: 10;
+  z-index: 1000;
   border-radius: 4px;
   opacity: 1;
   position: fixed;
