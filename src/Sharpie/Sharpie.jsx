@@ -59,8 +59,6 @@ const Sharpie = () => {
       console.error('Error initializing Highlighter:', error);
     }
   }, []);
-
-  
   
   const handleCreateHighlight = (color) => {
     const selection = window.getSelection();
