@@ -18,7 +18,7 @@
 }
 
 
-.my-remove-tip {
+.highlight-tip {
     box-sizing: border-box;
     position: absolute;
     border: 1px solid #fff;
@@ -34,7 +34,7 @@
     overflow: visible;
 }
 
-.my-remove-tip::after {
+.highlight-tip::after {
     content: '';
     position: absolute;
     left: 16px;

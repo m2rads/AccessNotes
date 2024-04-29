@@ -45,10 +45,10 @@ const Sharpie = () => {
       localStore.getAll().forEach(({ hs, color }) => {
         newHighlighter.setOption({ style: { className: color } });
         newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
-        // if (color == "stickyNote") {
-        //   const position = getPosition(newHighlighter.getDoms(hs.id)[0]);
-        //   createDeleteTip(position.top, position.left, hs.id);
-        // }
+        if (color == "stickyNote") {
+          const position = getPosition(newHighlighter.getDoms(hs.id)[0]);
+          createHighlightTip(position.top, position.left, hs.id);
+        }
       });
 
       localStore.getAllNotes().forEach(({ id, content }) => {
@@ -89,15 +89,17 @@ const Sharpie = () => {
 };
 
   const handleRemoveHighlight = () => {
+    // Find and remove the corresponding delete tip
+    const deleteTip = document.querySelector(`.highlight-tip[data-id="${highlightId}"]`);
+    console.log("delteTip: ", deleteTip)
+    if (deleteTip) {
+      deleteTip.parentNode.removeChild(deleteTip);
+    }
+
     localStore.remove(highlightId);
     localStore.removeNoteById(highlightId);
     highlighter.remove(highlightId);
-
-    // Find and remove the corresponding delete tip
-    const deleteTip = document.querySelector(`.my-remove-tip[data-id="${highlightId}"]`);
-    if (deleteTip) {
-        deleteTip.parentNode.removeChild(deleteTip);
-    }
+    
     // Reset the highlight ID state
     setHighlightId(null);
   };
@@ -136,14 +138,13 @@ const Sharpie = () => {
                   });    
                   let highlightSources;   
                   highlighter.on('selection:create', ({sources}) => {
-                      // TODP: firgure out the bug in issue #10
-                      // sources.forEach(source => {
-                      //     const position = getPosition(highlighter.getDoms(source.id)[0]);
-                      //     createDeleteTip(position.top, position.left, source.id);
-                      // });
                       highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                   });
                   highlighter.fromRange(range);
+                  highlightSources.forEach(source => {
+                      const position = getPosition(highlighter.getDoms(source.id)[0]);
+                      createHighlightTip(position.top, position.left, source.id);
+                  });
                   addStickyNote(highlightSources[0].hs.id)
                   localStore.save(highlightSources, "stickyNote", tooltipPos, location);
               } else {
@@ -155,13 +156,13 @@ const Sharpie = () => {
       }
     }
 
-  const createDeleteTip = (top, left, id) => {
+  const createHighlightTip = (top, left, id) => {
       const span = document.createElement('span');
       span.style.left = `${left - 20}px`;
       span.style.top = `${top - 25}px`;
       span.dataset.id = id;
-      span.textContent = 'delete';
-      span.classList.add('my-remove-tip');
+      span.textContent = 'Note';
+      span.classList.add('highlight-tip');
       document.body.appendChild(span);
   };
 
