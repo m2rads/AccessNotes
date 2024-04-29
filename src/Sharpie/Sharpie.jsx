@@ -91,9 +91,13 @@ const Sharpie = () => {
 
   const handleRemoveHighlight = () => {
     localStore.remove(highlightId);
+    localStore.removeNoteById(highlightId);
     highlighter.remove(highlightId);
+
+    // TODD: delete
     localStore.removeAll();
     highlighter.removeAll();
+    localStore.removeAllNotes();
 
     // Find and remove the corresponding delete tip
     const deleteTip = document.querySelector(`.my-remove-tip[data-id="${highlightId}"]`);
