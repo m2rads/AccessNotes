@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Highlighter from 'web-highlighter';
 import Tooltip from '../Tooltip/Tooltip';
 import './Sharpie.css'
-import LocalStore from '../../localStore/localStore';
 import { useToolTip } from '../Context/TooltipProvider';
 import StickyNote from '../StickyNotes/StickyNotes';
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
-  const localStore = new LocalStore('highlights');
   const [highlightId, setHighlightId] = useState(null);
 
   const { 
@@ -18,7 +16,8 @@ const Sharpie = () => {
     location,
     updateLocation,
     stickyNotes,
-    addStickyNote
+    addStickyNote,
+    localStore
     }   = useToolTip()
 
   useEffect(() => {
@@ -40,7 +39,7 @@ const Sharpie = () => {
           updateTooltipPos(storedId.tooltipPos);
           toggleShowToolTip(true);
         })
-      
+
       setHighlighter(newHighlighter);
 
       localStore.getAll().forEach(({ hs, color }) => {
@@ -72,11 +71,12 @@ const Sharpie = () => {
                         className: color
                     }
                 });       
+                let highlightSources;
                 highlighter.on('selection:create', ({sources}) => {
-                    sources = sources.map(hs => ({hs, tooltipPos, location}));
-                    localStore.save(sources, color, tooltipPos, location);
+                  highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                 });
                 highlighter.fromRange(range);
+                localStore.save(highlightSources, color, tooltipPos, location);
             } else {
                 console.log("Selection overlaps with existing highlight.");
             }
@@ -130,18 +130,20 @@ const Sharpie = () => {
                       style: {
                           className: "stickyNote"
                       }
-                  });       
+                  });    
+                  let highlightSources;   
                   highlighter.on('selection:create', ({sources}) => {
                       // TODP: firgure out the bug in issue #10
                       // sources.forEach(source => {
                       //     const position = getPosition(highlighter.getDoms(source.id)[0]);
                       //     createDeleteTip(position.top, position.left, source.id);
                       // });
-                      sources = sources.map(hs => ({hs, tooltipPos, location}));
-                      addStickyNote(sources[0].hs.id)
-                      localStore.save(sources, "stickyNote", tooltipPos, location);
+                      highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                   });
                   highlighter.fromRange(range);
+                  console.log("then here: " )
+                  addStickyNote(highlightSources[0].hs.id)
+                  localStore.save(highlightSources, "stickyNote", tooltipPos, location);
               } else {
                   console.log("note overlaps with existing note.");
               }
