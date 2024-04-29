@@ -12,7 +12,7 @@
 
 .stickyNote {
     position: relative;
-    background-color: aliceblue;
+    text-decoration: underline;
     color: black;
     cursor: pointer;
 }
