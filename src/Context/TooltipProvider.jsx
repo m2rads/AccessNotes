@@ -26,18 +26,30 @@ export const ToolTipProvider = ({ children }) => {
 
     const addStickyNote = (id) => {
         const existingNote = localStore.getNoteById(id);
-        console.log("existingNote, ", existingNote)
     
-        if (existingNote) {
-            setStickyNotes(prevNotes => [...prevNotes, existingNote]);
-        } else {
-            const newNote = {
-                id: id,
-                content: '',
-            };
-            setStickyNotes(prevNotes => [...prevNotes, newNote]);
-        }
-    };    
+        // Update the state only if the note does not already exist
+        setStickyNotes(prevNotes => {
+            const noteIndex = prevNotes.findIndex(note => note.id === id);
+    
+            // If the note does not exist in the current state, add it
+            if (noteIndex === -1) {
+                if (existingNote) {
+                    // If found in local storage, add that
+                    return [...prevNotes, existingNote];
+                } else {
+                    // If not found, create a new note
+                    const newNote = {
+                        id: id,
+                        content: '', // Default content is empty
+                    };
+                    return [...prevNotes, newNote];
+                }
+            }
+            // If the note already exists in the state, just return the current state
+            return prevNotes;
+        });
+    };
+    
     
     const removeStickyNote = (id) => {
         setStickyNotes(stickyNotes.filter(note => note.id !== id));

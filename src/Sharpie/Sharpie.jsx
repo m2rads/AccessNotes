@@ -191,12 +191,14 @@ const Sharpie = () => {
         onCreateHighlight={handleCreateHighlight} 
         onRemoveHighlight={handleRemoveHighlight} 
         onCreateStickyNote={handleCreateStickyNote} />
-        {stickyNotes.map(note => (
-          <StickyNote
-            key={note.id}
-            id={note.id}
-            content={note.content}
-          />
+       {stickyNotes.map(note => (
+          note.id ? (
+            <StickyNote
+              key={note.id}
+              id={note.id}
+              content={note.content}
+            />
+          ) : null
         ))}
     </div>
   );
