@@ -41,53 +41,37 @@ class LocalStore {
         this.jsonToStore(stores);
     }
 
-    saveNote(note) {
-        const notes = this.storeToJson();
-        const index = notes.findIndex(n => n.id === note.id);
-        if (index !== -1) {
-            notes[index] = note;
+    // Note management functions
+    saveNote(id, content) {
+        const notes = this.getAllNotes();
+        const noteIndex = notes.findIndex(note => note.id === id);
+
+        if (noteIndex !== -1) {
+            notes[noteIndex].content = content;
         } else {
-            notes.push(note);
+            notes.push({ id, content });
         }
+
         this.jsonToStore(notes);
     }
 
-
-    forceSave(store, tooltipPos, tooltipLoc) { 
-        const stores = this.storeToJson();
-        store.tooltipPos = tooltipPos;  
-        store.tooltipLoc = tooltipLoc;
-        stores.push(store);
-        this.jsonToStore(stores);
+    getNoteById(id) {
+        const notes = this.getAllNotes();
+        return notes.find(note => note.id === id) || null;
     }
 
-    remove(id) {
-        const stores = this.storeToJson();
-        let index = null;
-        for (let i = 0; i < stores.length; i++) {
-            if (stores[i].hs.id === id) {
-                index = i;
-                break;
-            }
-        }
-        if (index !== null) {
-            stores.splice(index, 1);
-        }
-        this.jsonToStore(stores);
+    removeNoteById(id) {
+        const notes = this.getAllNotes();
+        const filteredNotes = notes.filter(note => note.id !== id);
+        this.jsonToStore(filteredNotes);
     }
 
-    get(id) {
-        const stores = this.storeToJson();
-        const found = stores.find(store => store.hs.id === id);
-        return found || null;
-    }
-
-    getAll() {
-        return this.storeToJson();
-    }
-
-    removeAll() {
+    removeAllNotes() {
         this.jsonToStore([]);
+    }
+
+    getAllNotes() {
+        return this.storeToJson();
     }
 }
 
