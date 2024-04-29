@@ -97,7 +97,7 @@ const Tooltip = ({ onCreateHighlight, onCreateStickyNote, onRemoveHighlight }) =
       <IconButton onClick={onCreateStickyNote} aria-label="Close">
         <NoteIcon />
       </IconButton>
-      <BookmarkIcon />
+      {/* <BookmarkIcon /> */}
       <Devider />
       <IconButton onClick={onRemoveHighlight} aria-label="Close">
         <MultiplicationIcon color="#f4f4f5" />
