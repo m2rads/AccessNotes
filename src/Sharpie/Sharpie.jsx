@@ -45,14 +45,12 @@ const Sharpie = () => {
       localStore.getAll().forEach(({ hs, color }) => {
         newHighlighter.setOption({ style: { className: color } });
         newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
-        if (color == "stickyNote") {
-          const position = getPosition(newHighlighter.getDoms(hs.id)[0]);
-          createHighlightTip(position.top, position.left, hs.id);
-        }
       });
 
       localStore.getAllNotes().forEach(({ id, content }) => {
         console.log("note id: ", id)
+        const position = getPosition(newHighlighter.getDoms(id)[0]);
+        createHighlightTip(position.top, position.left, id);
       });
 
       return () => {
