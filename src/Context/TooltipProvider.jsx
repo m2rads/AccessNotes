@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import LocalStore from '../../localStore/localStore';
 
 const ToolTipContext = createContext(null);
 
@@ -8,7 +9,8 @@ export const ToolTipProvider = ({ children }) => {
     const [showToolTip, setShowToolTip] = useState(false);
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
     const [location, setLocation] = useState('above');
-    const [showNote, setShowNote] = useState("false");
+    const [stickyNotes, setStickyNotes] = useState([]);
+    const localStore = new LocalStore('highlights');
 
     const toggleShowToolTip = (state) => {
         setShowToolTip(state);
@@ -22,6 +24,37 @@ export const ToolTipProvider = ({ children }) => {
         setLocation(loc);
     }
 
+    const addStickyNote = (id) => {
+        const existingNote = localStore.getNoteById(id);
+    
+        // Update the state only if the note does not already exist
+        setStickyNotes(prevNotes => {
+            const noteIndex = prevNotes.findIndex(note => note.id === id);
+    
+            // If the note does not exist in the current state, add it
+            if (noteIndex === -1) {
+                if (existingNote) {
+                    // If found in local storage, add that
+                    return [...prevNotes, existingNote];
+                } else {
+                    // If not found, create a new note
+                    const newNote = {
+                        id: id,
+                        content: '', // Default content is empty
+                    };
+                    return [...prevNotes, newNote];
+                }
+            }
+            // If the note already exists in the state, just return the current state
+            return prevNotes;
+        });
+    };
+    
+    
+    const removeStickyNote = (id) => {
+        setStickyNotes(stickyNotes.filter(note => note.id !== id));
+    };
+
     return (
         <ToolTipContext.Provider value={{ 
             showToolTip, 
@@ -29,7 +62,11 @@ export const ToolTipProvider = ({ children }) => {
             tooltipPos, 
             updateTooltipPos,
             location,
-            updateLocation 
+            updateLocation,
+            stickyNotes,
+            addStickyNote,
+            removeStickyNote,
+            localStore
         }}>
             {children}
         </ToolTipContext.Provider>
