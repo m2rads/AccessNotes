@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import LocalStore from '../../localStore/localStore';
 
 const ToolTipContext = createContext(null);
 
@@ -10,6 +10,7 @@ export const ToolTipProvider = ({ children }) => {
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
     const [location, setLocation] = useState('above');
     const [stickyNotes, setStickyNotes] = useState([]);
+    const localStore = new LocalStore('highlights');
 
     const toggleShowToolTip = (state) => {
         setShowToolTip(state);
@@ -24,12 +25,13 @@ export const ToolTipProvider = ({ children }) => {
     }
 
     const addStickyNote = (id) => {
+        console.log("called")
         const newNote = {
           id: id,
           content: 'hello world',
         };
         setStickyNotes([...stickyNotes, newNote]);
-      };
+    };
     
     const removeStickyNote = (id) => {
         setStickyNotes(stickyNotes.filter(note => note.id !== id));
@@ -45,7 +47,8 @@ export const ToolTipProvider = ({ children }) => {
             updateLocation,
             stickyNotes,
             addStickyNote,
-            removeStickyNote
+            removeStickyNote,
+            localStore
         }}>
             {children}
         </ToolTipContext.Provider>
