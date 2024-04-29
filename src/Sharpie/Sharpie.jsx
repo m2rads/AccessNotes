@@ -51,6 +51,11 @@ const Sharpie = () => {
         // }
       });
 
+      localStore.getAllNotes().forEach(({ id, content }) => {
+        console.log("note id: ", id)
+        console.log("note contents: ", content)
+      });
+
       return () => {
         newHighlighter.dispose();
       };

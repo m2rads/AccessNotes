@@ -25,13 +25,20 @@ export const ToolTipProvider = ({ children }) => {
     }
 
     const addStickyNote = (id) => {
-        console.log("called")
-        const newNote = {
-          id: id,
-          content: 'hello world',
-        };
-        setStickyNotes([...stickyNotes, newNote]);
-    };
+        const existingNote = localStore.getNoteById(id);
+    
+        if (existingNote) {
+            setStickyNotes(prevNotes => [...prevNotes, existingNote]);
+        } else {
+            const newNote = {
+                id: id,
+                content: '',
+            };
+    
+            localStore.saveNote(id, '');
+            setStickyNotes(prevNotes => [...prevNotes, newNote]);
+        }
+    };    
     
     const removeStickyNote = (id) => {
         setStickyNotes(stickyNotes.filter(note => note.id !== id));
