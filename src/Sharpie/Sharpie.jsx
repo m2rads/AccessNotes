@@ -91,7 +91,7 @@ const Sharpie = () => {
   const handleRemoveHighlight = () => {
     // Find and remove the corresponding delete tip
     const deleteTip = document.querySelector(`.highlight-tip[data-id="${highlightId}"]`);
-    console.log("delteTip: ", deleteTip)
+    console.log("delteTip: ", highlightId)
     if (deleteTip) {
       deleteTip.parentNode.removeChild(deleteTip);
     }
@@ -141,16 +141,23 @@ const Sharpie = () => {
                       highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                   });
                   highlighter.fromRange(range);
-                  highlightSources.forEach(source => {
-                      const position = getPosition(highlighter.getDoms(source.id)[0]);
-                      createHighlightTip(position.top, position.left, source.id);
-                  });
+                  // highlightSources.forEach(source => {
+                  //   console.log(source.hs.id)
+                      
+                  // });
+                  const position = getPosition(highlighter.getDoms(highlightSources[0].hs.id)[0]);
+                  createHighlightTip(position.top, position.left, highlightSources[0].hs.id);
                   addStickyNote(highlightSources[0].hs.id)
                   localStore.save(highlightSources, "stickyNote", tooltipPos, location);
               } else {
                   console.log("note overlaps with existing note.");
               }
           } else if (highlightId) {
+            // add highlight tip
+            console.log(highlightId)
+            const position = getPosition(highlighter.getDoms(highlightId)[0]);
+            createHighlightTip(position.top, position.left, highlightId);
+
             addStickyNote(highlightId);
           }
       }
