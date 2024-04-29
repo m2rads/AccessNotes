@@ -85,7 +85,6 @@ const IconButton = styled.button`
 function StickyNote({ id, content }) {
   const { removeStickyNote } = useToolTip();
   const [noteContent, setNoteContent] = useState(content);
-  console.log("note content: ", noteContent);
 
   // Update the state with the new content
   const handleContentChange = (event) => {

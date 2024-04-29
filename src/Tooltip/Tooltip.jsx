@@ -44,8 +44,7 @@ const HighlightButton = styled.button`
 
 
 const Tooltip = ({ onCreateHighlight, onCreateStickyNote, onRemoveHighlight }) => {
-  // const [showTooltip, setShowTooltip] = useState(false);
-  // const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
   const { 
     showToolTip, 
     toggleShowToolTip, 
@@ -53,9 +52,6 @@ const Tooltip = ({ onCreateHighlight, onCreateStickyNote, onRemoveHighlight }) =
     updateTooltipPos,
     location,
     updateLocation,
-    stickyNotes,
-    addStickyNote,
-    removeStickNote
   } = useToolTip();
 
   useEffect(() => {
