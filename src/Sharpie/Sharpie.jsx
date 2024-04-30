@@ -21,6 +21,8 @@ const Sharpie = () => {
     }   = useToolTip()
 
   useEffect(() => {
+    const currentUrl = window.location.href;
+
     try {
       const newHighlighter = new Highlighter({
         exceptSelectors: ['table', 'tr', 'th'],
@@ -42,16 +44,23 @@ const Sharpie = () => {
 
       setHighlighter(newHighlighter);
 
-      localStore.getAll().forEach(({ hs, color }) => {
-        newHighlighter.setOption({ style: { className: color } });
-        newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
-      });
-
-      localStore.getAllNotes().forEach(({ id, content }) => {
-        console.log("note id: ", id)
-        const position = getPosition(newHighlighter.getDoms(id)[0]);
-        createHighlightTip(position.top, position.left, id);
-      });
+      localStore.getAll().forEach(({ hs, color, url }) => {
+        if (url === currentUrl) {
+            newHighlighter.setOption({ style: { className: color } });
+            newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
+        }
+    });
+    
+    localStore.getAllNotes().forEach(({ id, content, url }) => {
+        if (url === currentUrl) {
+            console.log("note id: ", id);
+            const doms = newHighlighter.getDoms(id);
+            if (doms && doms.length > 0) {
+                const position = getPosition(doms[0]);
+                createHighlightTip(position.top, position.left, id);
+            }
+        }
+    });    
 
       return () => {
         newHighlighter.dispose();
