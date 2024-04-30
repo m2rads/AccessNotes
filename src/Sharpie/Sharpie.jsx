@@ -33,6 +33,12 @@ const Sharpie = () => {
 
   // Function to reload annotations
   const reloadAnnotations = () => {
+    // TODO: comming back to you later
+    const deleteTip = document.querySelector(`.highlight-tip`);
+    console.log("delteTip: ", highlightId)
+    if (deleteTip) {
+      deleteTip.parentNode.removeChild(deleteTip);
+    }
     if (highlighter) {
       const url = window.location.href;
       localStore.getAll().forEach(({ hs, color, url: storedUrl }) => {
@@ -41,6 +47,19 @@ const Sharpie = () => {
           highlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
         }
       });
+
+      localStore.getAllNotes().forEach(({ id, content, url }) => {
+        if (url === currentUrl) {
+          console.log("url: ", url)
+          console.log("content: ", content)
+            console.log("note id: ", id);
+            const doms = highlighter.getDoms(id);
+            if (doms && doms.length > 0) {
+                const position = getPosition(doms[0]);
+                createHighlightTip(position.top, position.left, id);
+            }
+        }
+    });
     }
   };
 
