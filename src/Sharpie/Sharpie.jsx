@@ -8,6 +8,7 @@ import StickyNote from '../StickyNotes/StickyNotes';
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
   const [highlightId, setHighlightId] = useState(null);
+  const [currentUrl, setCurrentUrl] = useState(window.location.href)
 
   const { 
     toggleShowToolTip, 
@@ -20,7 +21,38 @@ const Sharpie = () => {
     localStore
     }   = useToolTip()
 
+    // Function to check URL and reload if necessary
+  const checkForUrlChange = () => {
+    const url = window.location.href;
+    if (url !== currentUrl) {
+      console.log("URL changed from", currentUrl, "to", url);
+      setCurrentUrl(url);
+      reloadAnnotations();
+    }
+  };
+
+  // Function to reload annotations
+  const reloadAnnotations = () => {
+    if (highlighter) {
+      const url = window.location.href;
+      localStore.getAll().forEach(({ hs, color, url: storedUrl }) => {
+        if (storedUrl === url) {
+          highlighter.setOption({ style: { className: color } });
+          highlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
+        }
+      });
+    }
+  };
+
+  // Set up polling
   useEffect(() => {
+    const interval = setInterval(checkForUrlChange, 1000); // Check every second
+    return () => clearInterval(interval);
+  }, [currentUrl]);
+  
+  
+  useEffect(() => {
+    // setCurrentUrl(window.location.href);
     try {
       const newHighlighter = new Highlighter({
         exceptSelectors: ['table', 'tr', 'th'],
@@ -33,6 +65,7 @@ const Sharpie = () => {
         .on('selection:click', ({id}) => {
           // localStore.removeAll()
           // newHighlighter.removeAll()
+          // localStore.removeAllNotes()
           setHighlightId(id)
           const storedId = localStore.get(id);
           updateLocation(storedId.tooltipLoc);
@@ -42,16 +75,28 @@ const Sharpie = () => {
 
       setHighlighter(newHighlighter);
 
-      localStore.getAll().forEach(({ hs, color }) => {
-        newHighlighter.setOption({ style: { className: color } });
-        newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
-      });
+      localStore.getAll().forEach(({ hs, color, url }) => {
+        if (url === currentUrl) {
+          console.log("url: ", url)
+          console.log("hs: ", hs)
+          newHighlighter.setOption({ style: { className: color } });
+          newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
+        }
+    });
+    
+    localStore.getAllNotes().forEach(({ id, content, url }) => {
+        if (url === currentUrl) {
+          console.log("url: ", url)
+          console.log("content: ", content)
+            console.log("note id: ", id);
+            const doms = newHighlighter.getDoms(id);
+            if (doms && doms.length > 0) {
+                const position = getPosition(doms[0]);
+                createHighlightTip(position.top, position.left, id);
+            }
+        }
+    });
 
-      localStore.getAllNotes().forEach(({ id, content }) => {
-        console.log("note id: ", id)
-        const position = getPosition(newHighlighter.getDoms(id)[0]);
-        createHighlightTip(position.top, position.left, id);
-      });
 
       return () => {
         newHighlighter.dispose();
@@ -62,6 +107,7 @@ const Sharpie = () => {
   }, []);
   
   const handleCreateHighlight = (color) => {
+    // const currentUrl = window.location.href;
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
@@ -78,7 +124,7 @@ const Sharpie = () => {
                   highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                 });
                 highlighter.fromRange(range);
-                localStore.save(highlightSources, color, tooltipPos, location);
+                localStore.save(highlightSources, color, tooltipPos, location, currentUrl);
             } else {
                 console.log("Selection overlaps with existing highlight.");
             }
@@ -124,6 +170,7 @@ const Sharpie = () => {
   };
 
     const handleCreateStickyNote = () => {
+      // const currentUrl = window.location.href;
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
@@ -146,7 +193,7 @@ const Sharpie = () => {
                   const position = getPosition(highlighter.getDoms(highlightSources[0].hs.id)[0]);
                   createHighlightTip(position.top, position.left, highlightSources[0].hs.id);
                   addStickyNote(highlightSources[0].hs.id)
-                  localStore.save(highlightSources, "stickyNote", tooltipPos, location);
+                  localStore.save(highlightSources, "stickyNote", tooltipPos, location, currentUrl);
               } else {
                   console.log("note overlaps with existing note.");
               }

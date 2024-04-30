@@ -88,8 +88,9 @@ function StickyNote({ id, content }) {
 
   // Update the state with the new content
   const handleContentChange = (event) => {
+    const currentUrl = window.location.href;
     setNoteContent(event.target.value);
-    localStore.saveNote(id, event.target.value);
+    localStore.saveNote(id, event.target.value, currentUrl);
   };
 
   return (
