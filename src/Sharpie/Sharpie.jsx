@@ -71,6 +71,7 @@ const Sharpie = () => {
   }, []);
   
   const handleCreateHighlight = (color) => {
+    const currentUrl = window.location.href;
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
@@ -87,7 +88,7 @@ const Sharpie = () => {
                   highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                 });
                 highlighter.fromRange(range);
-                localStore.save(highlightSources, color, tooltipPos, location);
+                localStore.save(highlightSources, color, tooltipPos, location, currentUrl);
             } else {
                 console.log("Selection overlaps with existing highlight.");
             }
@@ -133,6 +134,7 @@ const Sharpie = () => {
   };
 
     const handleCreateStickyNote = () => {
+      const currentUrl = window.location.href;
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
@@ -155,7 +157,7 @@ const Sharpie = () => {
                   const position = getPosition(highlighter.getDoms(highlightSources[0].hs.id)[0]);
                   createHighlightTip(position.top, position.left, highlightSources[0].hs.id);
                   addStickyNote(highlightSources[0].hs.id)
-                  localStore.save(highlightSources, "stickyNote", tooltipPos, location);
+                  localStore.save(highlightSources, "stickyNote", tooltipPos, location, currentUrl);
               } else {
                   console.log("note overlaps with existing note.");
               }
