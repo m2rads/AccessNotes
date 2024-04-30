@@ -4,7 +4,6 @@ import Tooltip from '../Tooltip/Tooltip';
 import './Sharpie.css'
 import { useToolTip } from '../Context/TooltipProvider';
 import StickyNote from '../StickyNotes/StickyNotes';
-import useDetectHistoryChange from '../Utility/DetectHistoryChange';
 
 const Sharpie = () => {
   const [highlighter, setHighlighter] = useState(null);
