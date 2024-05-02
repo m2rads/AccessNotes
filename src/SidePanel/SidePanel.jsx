@@ -1,8 +1,11 @@
+import { Folder } from "./Folder";
+
 export function SidePanel() {
 
     return (
         <>
-            <p>Popup Component</p>
+        <Folder />
+        <p>Popup Component</p>
         </>
     )
 }

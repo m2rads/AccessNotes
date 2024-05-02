@@ -1,20 +1,26 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+// You might need to manually set this during build or load from .env files
+const localMode = process.env.REACT_APP_LOCAL === 'true';
 
 export default defineConfig({
   plugins: [
-    react(),     
+    react(),
   ],
+  define: {
+    __LOCAL_MODE__: localMode,
+  },
   build: {
-    target: 'es2018', // Set your target if needed
-    assetsInlineLimit: 0, // Inline all assets
-    cssCodeSplit: false, // Disable CSS code splitting
+    target: 'es2018',
+    assetsInlineLimit: 0,
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
-        entryFileNames: 'main.js', // Output JavaScript bundle as main.js
-        chunkFileNames: '', // Disable chunk file names
-        assetFileNames: 'main.css', // Output CSS bundle as main.css
+        entryFileNames: 'main.js',
+        chunkFileNames: '',
+        assetFileNames: 'main.css',
       },
     },
   },
-})
+});
