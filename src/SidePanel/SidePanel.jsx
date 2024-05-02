@@ -4,7 +4,7 @@ export function SidePanel() {
 
     return (
         <>
-        <P>Folders</P>
+        <p>Folders</p>
         <Folder />
         </>
     )
