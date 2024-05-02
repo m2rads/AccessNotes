@@ -4,8 +4,8 @@ export function SidePanel() {
 
     return (
         <>
+        <P>Folders</P>
         <Folder />
-        <p>Popup Component</p>
         </>
     )
 }
