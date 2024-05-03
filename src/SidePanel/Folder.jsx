@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { localStore } from '../localStore/localStore';
+import {SidebarContainer, FolderTitle, FolderItem } from './FolderStyledComponents'
+import { FolderIcon } from '../Icons/FolderIcon';
+import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
+
 
 export function Folder() {
   const [organizedNotes, setOrganizedNotes] = useState({});
 
   useEffect(() => {
-    const organizeNotes = async () => {  // Mark function as async
+    const organizeNotes = async () => {
       try {
         const notes = await localStore.getAllNotes(); // Now handled asynchronously
         const highlights = await localStore.getAll(); // Now handled asynchronously
@@ -45,25 +49,27 @@ export function Folder() {
   // Render function to display notes and highlights
   const renderFolders = () => {
     return Object.entries(organizedNotes).map(([domain, paths]) => (
-      <div key={domain}>
-        <h3>{domain}</h3>
-        {Object.entries(paths).map(([path, items]) => (
+      <FolderItem key={domain}>
+        <ArrowRightIcon />
+        <FolderIcon />
+        <FolderTitle>{domain}</FolderTitle>
+        {/* {Object.entries(paths).map(([path, items]) => (
           <div key={path}>
             <h4>{path}</h4>
             <ul>
               {items.map(item => (
-                <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
+                  <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
               ))}
             </ul>
           </div>
-        ))}
-      </div>
+        ))} */}
+      </FolderItem>
     ));
   };
 
   return (
-    <div className="sidebar">
+    <SidebarContainer className="folder-container">
       {renderFolders()}
-    </div>
+    </SidebarContainer>
   );
 }
