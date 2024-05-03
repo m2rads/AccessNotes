@@ -78,7 +78,9 @@ export function Folder() {
                 <FileContainer>
                     {Object.entries(paths).map(([path, items]) => (
                         <FileItem key={path}>
-                          <FileIcon />
+                          <div style={{flexShrink: "0"}}> 
+                            <FileIcon />
+                          </div>
                           <h4 style={{marginLeft: "10px"}} >{path}</h4>
                             {/* <ul>
                                 {items.map(item => (
