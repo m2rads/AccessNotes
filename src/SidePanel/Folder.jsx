@@ -77,17 +77,19 @@ export function Folder() {
             {openFolders[domain] && (
                 <FileContainer>
                     {Object.entries(paths).map(([path, items]) => (
-                        <FileItem key={path}>
-                          <FileIcon />
-                          <h4 style={{marginLeft: "10px"}} >{path}</h4>
-                            {/* <ul>
-                                {items.map(item => (
-                                    <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
-                                ))}
-                            </ul> */}
-                        </FileItem>
+                        <div key={path}>
+                          <FileItem >
+                            <FileIcon />
+                            <h4 style={{marginLeft: "10px"}} >{path}</h4>
+                              {/* <ul>
+                                  {items.map(item => (
+                                      <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
+                                  ))}
+                              </ul> */}
+                          </FileItem>
+                          <LineSeparator />
+                        </div>
                       ))}
-                      <LineSeparator />
                   </FileContainer>
               )}
           </div>

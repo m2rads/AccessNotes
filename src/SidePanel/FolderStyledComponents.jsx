@@ -35,6 +35,7 @@ export const FileItem = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  color: black;
 `;
 
 export const LineSeparator = styled.div`
