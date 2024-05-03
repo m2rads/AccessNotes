@@ -6,8 +6,7 @@ import {
   FolderItem, 
   AnimatedIconContainer, 
   FileContainer, 
-  FileItem,
-  LineSeparator } from './FolderStyledComponents'
+  FileItem } from './FolderStyledComponents'
 import { FolderIcon } from '../Icons/FolderIcon';
 import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
 import { ArrowDownIcon } from '../Icons/ArrowDownIcon';
@@ -68,30 +67,30 @@ export function Folder() {
     return Object.entries(organizedNotes).map(([domain, paths]) => (
         <div key={domain}>
             <FolderItem onClick={() => toggleFolder(domain)}>
-                <AnimatedIconContainer className={openFolders[domain] ? 'open' : ''}>
-                    {openFolders[domain] ? <ArrowDownIcon /> : <ArrowRightIcon />}
-                </AnimatedIconContainer>
-                <FolderIcon />
-                <FolderTitle>{domain}</FolderTitle>
-            </FolderItem>
-            {openFolders[domain] && (
+                <div style={{display: "flex", alignItems: "center"}}>
+                  <AnimatedIconContainer className={openFolders[domain] ? 'open' : ''}>
+                      {openFolders[domain] ? <ArrowDownIcon /> : <ArrowRightIcon />}
+                  </AnimatedIconContainer>
+                  <FolderIcon />
+                  <FolderTitle>{domain}</FolderTitle>
+                </div>
+                {openFolders[domain] && (
                 <FileContainer>
                     {Object.entries(paths).map(([path, items]) => (
-                        <div key={path}>
-                          <FileItem >
-                            <FileIcon />
-                            <h4 style={{marginLeft: "10px"}} >{path}</h4>
-                              {/* <ul>
-                                  {items.map(item => (
-                                      <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
-                                  ))}
-                              </ul> */}
-                          </FileItem>
-                          <LineSeparator />
-                        </div>
+                        <FileItem key={path}>
+                          <FileIcon />
+                          <h4 style={{marginLeft: "10px"}} >{path}</h4>
+                            {/* <ul>
+                                {items.map(item => (
+                                    <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
+                                ))}
+                            </ul> */}
+                        </FileItem>
                       ))}
                   </FileContainer>
               )}
+            </FolderItem>
+            
           </div>
       ));
   };

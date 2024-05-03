@@ -13,8 +13,6 @@ export const FolderItem = styled.div`
     padding: 10px 15px;
     margin: 15px 0;
     border-radius: 5px;
-    display: flex;
-    align-items: center;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
 `;
@@ -26,7 +24,7 @@ export const FolderTitle = styled.span`
 `;
 
 export const FileContainer = styled.div`
-  margin: 0 auto;
+  margin-left: 20px;
   padding: 20px;
 `;
 
@@ -36,13 +34,6 @@ export const FileItem = styled.div`
   justify-content: flex-start;
   align-items: center;
   color: black;
-`;
-
-export const LineSeparator = styled.div`
-  height: 1px;
-  background-color: #d1d5db; 
-  width: 50%;
-  margin: 10px auto;
 `;
 
 
