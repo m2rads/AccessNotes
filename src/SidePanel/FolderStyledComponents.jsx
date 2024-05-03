@@ -24,3 +24,32 @@ export const FolderTitle = styled.span`
   color: #333333;
   margin-left: 10px; 
 `;
+
+export const FileContainer = styled.div`
+  margin: 0 auto;
+  padding: 20px;
+`;
+
+
+export const FileItem = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+export const LineSeparator = styled.div`
+  height: 1px;
+  background-color: #d1d5db; 
+  width: 50%;
+  margin: 10px auto;
+`;
+
+
+export const AnimatedIconContainer = styled.div`
+  margin-right: 3px;
+  transition: transform 0.5s ease;
+
+  &.open {
+    transform: rotate(1deg);
+  }
+`;

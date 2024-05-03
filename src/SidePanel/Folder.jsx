@@ -1,12 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { localStore } from '../localStore/localStore';
-import {SidebarContainer, FolderTitle, FolderItem } from './FolderStyledComponents'
+import {
+  SidebarContainer, 
+  FolderTitle, 
+  FolderItem, 
+  AnimatedIconContainer, 
+  FileContainer, 
+  FileItem,
+  LineSeparator } from './FolderStyledComponents'
 import { FolderIcon } from '../Icons/FolderIcon';
 import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
+import { ArrowDownIcon } from '../Icons/ArrowDownIcon';
+import { FileIcon } from '../Icons/FileIcon';
 
 
 export function Folder() {
   const [organizedNotes, setOrganizedNotes] = useState({});
+  const [openFolders, setOpenFolders] = useState({});
+
+  const toggleFolder = (domain) => {
+    setOpenFolders(prevState => ({
+        ...prevState,
+        [domain]: !prevState[domain] 
+    }));
+};
 
   useEffect(() => {
     const organizeNotes = async () => {
@@ -44,28 +61,39 @@ export function Folder() {
     };
 
     organizeNotes();
-  }, []); // Dependency array remains empty as this runs once on mount
+  }, []); 
 
   // Render function to display notes and highlights
   const renderFolders = () => {
     return Object.entries(organizedNotes).map(([domain, paths]) => (
-      <FolderItem key={domain}>
-        <ArrowRightIcon />
-        <FolderIcon />
-        <FolderTitle>{domain}</FolderTitle>
-        {/* {Object.entries(paths).map(([path, items]) => (
-          <div key={path}>
-            <h4>{path}</h4>
-            <ul>
-              {items.map(item => (
-                  <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
-              ))}
-            </ul>
+        <div key={domain}>
+            <FolderItem onClick={() => toggleFolder(domain)}>
+                <AnimatedIconContainer className={openFolders[domain] ? 'open' : ''}>
+                    {openFolders[domain] ? <ArrowDownIcon /> : <ArrowRightIcon />}
+                </AnimatedIconContainer>
+                <FolderIcon />
+                <FolderTitle>{domain}</FolderTitle>
+            </FolderItem>
+            {openFolders[domain] && (
+                <FileContainer>
+                    {Object.entries(paths).map(([path, items]) => (
+                        <FileItem key={path}>
+                          <FileIcon />
+                          <h4 style={{marginLeft: "10px"}} >{path}</h4>
+                            {/* <ul>
+                                {items.map(item => (
+                                    <li key={item.id}>{item.title || item.text || 'Untitled'}</li>
+                                ))}
+                            </ul> */}
+                        </FileItem>
+                      ))}
+                      <LineSeparator />
+                  </FileContainer>
+              )}
           </div>
-        ))} */}
-      </FolderItem>
-    ));
+      ));
   };
+
 
   return (
     <SidebarContainer className="folder-container">
