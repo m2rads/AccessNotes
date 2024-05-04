@@ -43,11 +43,14 @@ export function Folder() {
   useEffect(() => {
     const organizeNotes = async () => {
       try {
-        const notes = await localStore.getAllNotes();
         const highlights = await localStore.getAll();
+        const notes = await Promise.all(highlights.map(async highlight => {
+          const note = await localStore.getNoteById(highlight.hs.id);
+          return { ...highlight, note };
+        }));
         const organized = {};
 
-        [...notes, ...highlights].forEach(item => {
+        notes.forEach(item => {
           try {
             const url = new URL(item.url);
             const domain = url.hostname;
@@ -56,11 +59,9 @@ export function Folder() {
             if (!organized[domain]) {
               organized[domain] = {};
             }
-
             if (!organized[domain][path]) {
               organized[domain][path] = [];
             }
-
             organized[domain][path].push(item);
           } catch (e) {
             console.error("Error processing item", item, e);
@@ -80,42 +81,34 @@ export function Folder() {
     if (!activeFile) return null;
 
     const annotations = organizedNotes[activeFile.domain][activeFile.path];
-    console.log("annotations: ", annotations);
-
+    
     return (
       <motion.div
-          key="annotations"
-          variants={variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          style={{ padding: '20px', backgroundColor: '#f3f4f6', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+        key="annotations"
+        variants={variants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
       >
-          <button onClick={handleBack} style={{ marginBottom: '20px', padding: '10px', borderRadius: '5px', backgroundColor: '#d1d5db', border: 'none', cursor: 'pointer' }}>
-              Back to Folders
-          </button>
-          <h1 style={{ borderBottom: '2px solid #cbd5e1', paddingBottom: '10px' }}>Annotations for {activeFile.path}</h1>
-          {annotations.map((item) => (
-              <div key={item.hs ? `highlight-${item.hs.id}` : `note-${item.id}`} style={{ marginTop: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                  {item.hs && (
-                      <>
-                          <h2 style={{ color: '#4b5563' }}>{item.hs.text || "Highlight without text"}</h2>
-                          {item.notes && item.notes.map(note => (
-                              <p key={`note-${note.id}`} style={{ backgroundColor: '#e5e7eb', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>{note.content}</p>
-                          ))}
-                      </>
-                  )}
-                  {!item.hs && (
-                      <div>
-                          <h2 style={{ color: '#4b5563' }}>Note:</h2>
-                          <p style={{ backgroundColor: '#e5e7eb', padding: '10px', borderRadius: '5px' }}>{item.content || "Empty Note"}</p>
-                      </div>
-                  )}
-              </div>
-                ))}
-            </motion.div>
-        );
-      };
+        <button onClick={handleBack} style={{ marginBottom: '20px', borderRadius: '5px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
+          <ArrowLeftIcon />
+          <p style={{marginLeft: "5px", color: "#6b7280"}}>Back</p>
+        </button>
+        <h1 style={{ borderBottom: '2px solid #cbd5e1', paddingBottom: '10px' }}>Annotations for {activeFile.path}</h1>        {annotations.map((item) => (
+          <div key={item.hs ? `highlight-${item.hs.id}` : `note-${item.id}`} style={{ marginTop: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            {item.hs && (
+              <>
+                <h2 style={{ color: '#4b5563' }}>{item.hs.text || "Highlight without text"}</h2>                
+                {item.note && (
+                    <p key={`note-${item.note.id}`} style={{ backgroundColor: '#e5e7eb', padding: '10px', borderRadius: '5px', marginTop: '10px' }}>{item.note.content}</p>
+                )}
+              </>
+            )}
+          </div>
+        ))}
+      </motion.div>
+    );
+  };
 
     const renderFolders = () => {
       return Object.entries(organizedNotes).map(([domain, paths]) => (
