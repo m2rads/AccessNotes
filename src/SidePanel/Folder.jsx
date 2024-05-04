@@ -11,7 +11,7 @@ import { FolderIcon } from '../Icons/FolderIcon';
 import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
 import { ArrowDownIcon } from '../Icons/ArrowDownIcon';
 import { FileIcon } from '../Icons/FileIcon';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export function Folder() {
   const [organizedNotes, setOrganizedNotes] = useState({});
@@ -75,31 +75,43 @@ export function Folder() {
     organizeNotes();
   }, []);
 
-  const renderFileDetails = () => {
+  const renderFileAnnotations = () => {
     if (!activeFile) return null;
 
-    const details = organizedNotes[activeFile.domain][activeFile.path];
+    const annotations = organizedNotes[activeFile.domain][activeFile.path];
+    console.log("annotations: ", annotations);
+
     return (
-      <motion.div
-        key="details"
-        variants={variants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        <button onClick={handleBack}>Back to Folders</button>
-        <h1>Details for {activeFile.path}</h1>
-        {details.map((item) => (
-          <div key={item.hs.id}>
-            <h2>{item.hs.text}</h2>
-            {item.notes && item.notes.map(note => (
-              <p key={note.id}>{note.content}</p>
+        <motion.div
+            key="annotations"
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+        >
+            <button onClick={handleBack}>Back to Folders</button>
+            <h1>Annotations for {activeFile.path}</h1>
+            {annotations.map((item, index) => (
+                <div key={item.hs ? `highlight-${item.hs.id}` : `note-${item.id}`}>
+                    {item.hs ? (
+                        <>
+                            <h2>{item.hs.text || "Highlight without text"}</h2>
+                            {item.notes && item.notes.map(note => (
+                                <p key={`note-${note.id}`}>{note.content}</p>
+                            ))}
+                        </>
+                    ) : (
+                        <div>
+                            <h2>Note:</h2>
+                            <p>{item.content || "Empty Note"}</p>
+                        </div>
+                    )}
+                </div>
             ))}
-          </div>
-        ))}
-      </motion.div>
+        </motion.div>
     );
-  };
+};
+
 
   const renderFolders = () => {
     return Object.entries(organizedNotes).map(([domain, paths]) => (
@@ -139,7 +151,7 @@ export function Folder() {
   return (
     <SidebarContainer className="folder-container">
       {/* <AnimatePresence> */}
-        {activeFile ? renderFileDetails() : renderFolders()}
+        {activeFile ? renderFileAnnotations() : renderFolders()}
       {/* </AnimatePresence> */}
     </SidebarContainer>
   );
