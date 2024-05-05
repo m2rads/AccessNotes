@@ -1,4 +1,4 @@
-/* global Chrome */
+/* global chrome */
 class LocalStore {
     constructor(id) {
         if (LocalStore.instance) {
@@ -7,8 +7,8 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.localMode = true;  // Use the defined variable
-        console.log("__LOCAL_MODE__", this.localMode)
+        this.localMode = false;  // Assuming you will configure this correctly
+        console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;
     }
@@ -49,7 +49,6 @@ class LocalStore {
     async save(data, color, tooltipPos, tooltipLoc, url) {
         const stores = await this.fetchFromStorage(this.baseKey);
         const map = {};
-
         stores.forEach((store, idx) => map[store.hs.id] = idx);
         data.forEach(store => {
             store.color = color;
@@ -63,6 +62,7 @@ class LocalStore {
             }
         });
         await this.saveToStorage(this.baseKey, stores);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
     }
 
     async remove(id) {
@@ -71,6 +71,7 @@ class LocalStore {
         if (index !== -1) {
             stores.splice(index, 1);
             await this.saveToStorage(this.baseKey, stores);
+            chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
         }
     }
 
@@ -85,6 +86,7 @@ class LocalStore {
 
     async removeAll() {
         await this.saveToStorage(this.baseKey, []);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
     }
 
     async saveNote(id, content, url) {
@@ -96,6 +98,7 @@ class LocalStore {
             notes.push({ id, content, url });
         }
         await this.saveToStorage(this.notesKey, notes);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
     }
 
     async getNoteById(id) {
@@ -107,10 +110,12 @@ class LocalStore {
         const notes = await this.fetchFromStorage(this.notesKey);
         const filteredNotes = notes.filter(note => note.id !== id);
         await this.saveToStorage(this.notesKey, filteredNotes);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
     }
 
     async removeAllNotes() {
         await this.saveToStorage(this.notesKey, []);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
     }
 
     async getAllNotes() {
