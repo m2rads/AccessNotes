@@ -42,42 +42,75 @@ export function Folder() {
     setActiveFile(null);
   };
 
-  useEffect(() => {
-    const organizeNotes = async () => {
-      try {
+  const fetchDataAgain = async () => {
+    try {
+        const notes = await localStore.getAllNotes();
         const highlights = await localStore.getAll();
-        const notes = await Promise.all(highlights.map(async highlight => {
-          const note = await localStore.getNoteById(highlight.hs.id);
-          return { ...highlight, note };
-        }));
-        const organized = {};
+        organizeNotes(notes, highlights);
+    } catch (error) {
+        console.error("Failed to refresh data", error);
+    }
+  }
 
-        notes.forEach(item => {
-          try {
-            const url = new URL(item.url);
-            const domain = url.hostname;
-            const path = url.pathname;
+  const organizeNotes = async () => {
+    try {
+      const highlights = await localStore.getAll();
+      const notes = await Promise.all(highlights.map(async highlight => {
+        const note = await localStore.getNoteById(highlight.hs.id);
+        return { ...highlight, note };
+      }));
+      const organized = {};
 
-            if (!organized[domain]) {
-              organized[domain] = {};
-            }
-            if (!organized[domain][path]) {
-              organized[domain][path] = [];
-            }
-            organized[domain][path].push(item);
-          } catch (e) {
-            console.error("Error processing item", item, e);
+      notes.forEach(item => {
+        try {
+          const url = new URL(item.url);
+          const domain = url.hostname;
+          const path = url.pathname;
+
+          if (!organized[domain]) {
+            organized[domain] = {};
           }
-        });
+          if (!organized[domain][path]) {
+            organized[domain][path] = [];
+          }
+          organized[domain][path].push(item);
+        } catch (e) {
+          console.error("Error processing item", item, e);
+        }
+      });
 
-        setOrganizedNotes(organized);
-      } catch (error) {
-        console.error("Failed to organize notes and highlights", error);
-      }
-    };
+      setOrganizedNotes(organized);
+    } catch (error) {
+      console.error("Failed to organize notes and highlights", error);
+    }
+  };
 
+  useEffect(() => {
     organizeNotes();
   }, []);
+
+  // This is for handling and rerendering the notes
+  useEffect(() => {
+    if (typeof chrome?.runtime?.onMessage !== 'undefined') {
+        const handleMessage = (message) => {
+            if (message.action === 'annotationsUpdated') {
+                console.log('Annotations updated, refetching...');
+                organizeNotes();
+            }
+        };
+
+        chrome.runtime.onMessage.addListener(handleMessage);
+
+        return () => {
+            if (typeof chrome?.runtime?.onMessage?.removeListener !== 'undefined') {
+                chrome.runtime.onMessage.removeListener(handleMessage);
+            }
+        };
+    } else {
+        console.warn('Chrome runtime API not available.');
+    }
+  }, []);
+
 
   const handleNoteChange = (event) => {
     setEditNote(prev => ({ ...prev, content: event.target.value }));
