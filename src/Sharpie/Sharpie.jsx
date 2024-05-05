@@ -197,7 +197,7 @@ const Sharpie = () => {
   };
   
 
-    const handleCreateStickyNote = async () => {
+  const handleCreateStickyNote = async () => {
       // const currentUrl = window.location.href;
       const selection = window.getSelection();
       if (selection.rangeCount > 0) {
@@ -215,10 +215,6 @@ const Sharpie = () => {
                       highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
                   });
                   highlighter.fromRange(range);
-                  // highlightSources.forEach(source => {
-                  //   console.log(source.hs.id)
-                      
-                  // });
                   const position = getPosition(highlighter.getDoms(highlightSources[0].hs.id)[0]);
                   createHighlightTip(position.top, position.left, highlightSources[0].hs.id);
                   addStickyNote(highlightSources[0].hs.id)
@@ -230,6 +226,7 @@ const Sharpie = () => {
             // add highlight tip
             console.log(highlightId)
             const position = getPosition(highlighter.getDoms(highlightId)[0]);
+            removeHighlightTip(highlightId)
             createHighlightTip(position.top, position.left, highlightId);
 
             addStickyNote(highlightId);
@@ -257,6 +254,14 @@ const Sharpie = () => {
       }
       return { top: y, left: x };
   }
+
+  const removeHighlightTip = (id) => {
+    const tipElement = document.querySelector(`.highlight-tip[data-id="${id}"]`);
+    if (tipElement) {
+        tipElement.parentNode.removeChild(tipElement);
+    }
+  };
+
 
 
   return (
