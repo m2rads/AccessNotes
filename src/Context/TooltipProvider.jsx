@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import LocalStore from '../../localStore/localStore';
+import { localStore } from "../localStore/localStore";
 
 const ToolTipContext = createContext(null);
 
@@ -10,7 +10,6 @@ export const ToolTipProvider = ({ children }) => {
     const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
     const [location, setLocation] = useState('above');
     const [stickyNotes, setStickyNotes] = useState([]);
-    const localStore = new LocalStore('highlights');
 
     const toggleShowToolTip = (state) => {
         setShowToolTip(state);
@@ -24,8 +23,8 @@ export const ToolTipProvider = ({ children }) => {
         setLocation(loc);
     }
 
-    const addStickyNote = (id) => {
-        const existingNote = localStore.getNoteById(id);
+    const addStickyNote = async (id) => {
+        const existingNote = await localStore.getNoteById(id);
     
         // Update the state only if the note does not already exist
         setStickyNotes(prevNotes => {
@@ -66,7 +65,6 @@ export const ToolTipProvider = ({ children }) => {
             stickyNotes,
             addStickyNote,
             removeStickyNote,
-            localStore
         }}>
             {children}
         </ToolTipContext.Provider>
