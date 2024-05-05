@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import MultiplicationIcon from '../Icons/MultiplicationIcon';
 import { useToolTip } from '../Context/TooltipProvider';
 import Draggable from 'react-draggable';
+import { localStore } from '../localStore/localStore';
 
 const NoteContainer = styled.div`
   z-index: 1000;
@@ -83,7 +84,7 @@ const IconButton = styled.button`
 `;
 
 function StickyNote({ id, content }) {
-  const { removeStickyNote, localStore } = useToolTip();
+  const { removeStickyNote } = useToolTip();
   const [noteContent, setNoteContent] = useState(content);
 
   // Update the state with the new content
