@@ -7,7 +7,7 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.localMode = false;  // Assuming you will configure this correctly
+        this.localMode = true; 
         console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;

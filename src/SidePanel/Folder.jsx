@@ -5,7 +5,9 @@ import {
   FolderTitle, 
   FolderItem, 
   AnimatedIconContainer, 
-  FileItem 
+  FileItem,
+  EditNoteArea,
+  SaveButton
 } from './FolderStyledComponents';
 import { FolderIcon } from '../Icons/FolderIcon';
 import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
@@ -41,16 +43,6 @@ export function Folder() {
   const handleBack = () => {
     setActiveFile(null);
   };
-
-  const fetchDataAgain = async () => {
-    try {
-        const notes = await localStore.getAllNotes();
-        const highlights = await localStore.getAll();
-        organizeNotes(notes, highlights);
-    } catch (error) {
-        console.error("Failed to refresh data", error);
-    }
-  }
 
   const organizeNotes = async () => {
     try {
@@ -142,27 +134,26 @@ export function Folder() {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
       >
-        <button onClick={handleBack} style={{ marginBottom: '20px', borderRadius: '5px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
+        <button onClick={handleBack} style={{ backgroundColor: "#09090b", marginBottom: '20px', borderRadius: '4px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
           <ArrowLeftIcon />
-          <p style={{marginLeft: "5px", color: "#6b7280"}}>Back</p>
+          <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>
-        <h1>Annotations for {activeFile.path}</h1>
+        <h1 style={{ color: '#e5e7eb' }}>Annotations for {activeFile.path}</h1>
         {annotations.map((item) => (
-          <div key={`highlight-${item.hs.id}`} style={{ marginTop: '20px', padding: '15px', backgroundColor: 'white', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ color: '#4b5563' }}>{item.hs.text || "Highlight without text"}</h2>
+          <div key={`highlight-${item.hs.id}`} style={{ marginTop: '20px', padding: '15px', backgroundColor: '#171717', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+            <h2 style={{ color: '#e5e7eb' }}>{item.hs.text || "Highlight without text"}</h2>
             {item.note && (
               <div>
                 {item.note.id === editNote.id ? (
                   <div>
-                    <textarea
+                    <EditNoteArea
                       value={editNote.content}
                       onChange={handleNoteChange}
-                      style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
                     />
-                    <button onClick={handleNoteSave}>Save</button>
+                    <SaveButton onClick={handleNoteSave}>Save</SaveButton>
                   </div>
                 ) : (
-                  <p onClick={() => handleEditMode(item.note)} style={{ backgroundColor: '#e5e7eb', padding: '10px', borderRadius: '5px', marginTop: '10px', cursor: "pointer" }}>
+                  <p onClick={() => handleEditMode(item.note)} style={{ backgroundColor: '#27272a', color: "#e5e7eb", padding: '10px', borderRadius: '5px', marginTop: '10px', cursor: "pointer" }}>
                     {item.note.content}
                   </p>
                 )}

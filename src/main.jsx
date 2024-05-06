@@ -14,14 +14,14 @@ const popupRoot = document.getElementById("popup-root");
 !popupRoot &&
   ReactDOM.createRoot(document.getElementById("insertion-point")).render(
     <>
-      <App />
+      <SidePanel />
     </>
   );
 
 // Side Panel / sidePanel.html
 popupRoot &&
   ReactDOM.createRoot(popupRoot).render(
-    <React.Fragment>
+    <>
       <SidePanel />
-    </React.Fragment>
+    </>
   );
