@@ -17,6 +17,7 @@ import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
 import { ArrowLeftIcon } from '../Icons/ArrowLeftIcon';
 import { ArrowDownIcon } from '../Icons/ArrowDownIcon';
 import { FileIcon } from '../Icons/FileIcon';
+import { EmptyState } from '../Icons/EmptyState';
 import { motion } from 'framer-motion';
 
 export function Folder() {
@@ -206,9 +207,7 @@ export function Folder() {
 
   return (
     <SidebarContainer className="folder-container">
-      {/* <AnimatePresence> */}
         {activeFile ? renderFileAnnotations() : renderFolders()}
-      {/* </AnimatePresence> */}
     </SidebarContainer>
   );
 }
