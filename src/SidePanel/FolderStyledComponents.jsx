@@ -19,6 +19,7 @@ export const FolderItem = styled.div`
 
 export const FolderTitle = styled.span`
   font-weight: 600;
+  letter-spacing: 1px;
   color: #e4e4e7;
   margin-left: 10px; 
 `;
@@ -47,7 +48,7 @@ export const AnimatedIconContainer = styled.div`
 `;
 
 export const EditNoteArea = styled.textarea`
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border-radius: 5px;
   margin-top: 10px;
@@ -97,3 +98,22 @@ export const SaveButton = styled.button`
   }
 `;
 
+export const FileTitle = styled.p`
+  font-size: 16px;
+  font-weight: 400;
+  color: #9ca3af;
+`
+
+export const HighlightContentArea = styled.p`
+  font-weight: 400;
+  font-size: 19px;
+  color: #e5e7eb;
+`
+
+export const AnnotationsContainer = styled.div`
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #171717;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+`

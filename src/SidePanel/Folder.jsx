@@ -7,7 +7,10 @@ import {
   AnimatedIconContainer, 
   FileItem,
   EditNoteArea,
-  SaveButton
+  SaveButton,
+  FileTitle,
+  HighlightContentArea,
+  AnnotationsContainer
 } from './FolderStyledComponents';
 import { FolderIcon } from '../Icons/FolderIcon';
 import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
@@ -138,10 +141,10 @@ export function Folder() {
           <ArrowLeftIcon />
           <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>
-        <h1 style={{ color: '#e5e7eb' }}>Annotations for {activeFile.path}</h1>
+        <FileTitle>Annotations: {activeFile.path}</FileTitle>
         {annotations.map((item) => (
-          <div key={`highlight-${item.hs.id}`} style={{ marginTop: '20px', padding: '15px', backgroundColor: '#171717', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-            <h2 style={{ color: '#e5e7eb' }}>{item.hs.text || "Highlight without text"}</h2>
+          <AnnotationsContainer key={`highlight-${item.hs.id}`}>
+            <HighlightContentArea>{item.hs.text || "Highlight without text"}</HighlightContentArea>
             {item.note && (
               <div>
                 {item.note.id === editNote.id ? (
@@ -159,7 +162,7 @@ export function Folder() {
                 )}
               </div>
             )}
-          </div>
+          </AnnotationsContainer>
         ))}
       </motion.div>
     );
