@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { localStore } from '../localStore/localStore';
+import { localStore } from '../../localStore/localStore';
 import {
   SidebarContainer, 
   FolderTitle, 
@@ -12,12 +12,12 @@ import {
   HighlightContentArea,
   AnnotationsContainer
 } from './FolderStyledComponents';
-import { FolderIcon } from '../Icons/FolderIcon';
-import { ArrowRightIcon } from '../Icons/ArrowRightIcon';
-import { ArrowLeftIcon } from '../Icons/ArrowLeftIcon';
-import { ArrowDownIcon } from '../Icons/ArrowDownIcon';
-import { FileIcon } from '../Icons/FileIcon';
-import { EmptyState } from '../Icons/EmptyState';
+import { FolderIcon } from '../../Icons/FolderIcon';
+import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
+import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
+import { ArrowDownIcon } from '../../Icons/ArrowDownIcon';
+import { FileIcon } from '../../Icons/FileIcon';
+import { EmptyState } from './EmptyState';
 import { motion } from 'framer-motion';
 
 export function Folder() {
@@ -26,6 +26,7 @@ export function Folder() {
   const [activeFile, setActiveFile] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
   const [editMode, setEditMode] = useState(false);
+  const [isThereHighlights, setIsThereHighlights] = useState(null)
 
   const variants = {
     initial: { opacity: 0, x: 100 },
@@ -207,7 +208,8 @@ export function Folder() {
 
   return (
     <SidebarContainer className="folder-container">
-        {activeFile ? renderFileAnnotations() : renderFolders()}
+        {/* {activeFile ? renderFileAnnotations() : renderFolders()} */}
+        {isThereHighlights ? (activeFile ? renderFileAnnotations() : renderFolders()) : <EmptyState />}
     </SidebarContainer>
   );
 }

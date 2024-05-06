@@ -150,6 +150,10 @@ const Sharpie = () => {
     await localStore.remove(highlightId);
     await localStore.removeNoteById(highlightId);
     highlighter.remove(highlightId);
+
+    await localStore.removeAll();
+    await localStore.removeAllNotes();
+    highlighter.removeAll();
     
     // Reset the highlight ID state
     setHighlightId(null);
