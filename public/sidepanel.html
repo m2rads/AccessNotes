@@ -9,12 +9,20 @@
         background-color: #09090b;
       }
       /* change this to work only for side panel - right now it gets injected onto the web page */
-      ::-webkit-scrollbar {
-          width: 3px;
+      /* ::-webkit-scrollbar {
+          width: 10px;
+      } */
+      .sidepanel {
+        font-family: "Inter", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-variation-settings: "slnt" 0;
+        /* scrollbar-color: #ffffff #09090b; */
+        overflow-x: hidden;
       }
     </style>
   </head>
-  <body>
+  <body class="sidepanel">
     <div id="popup-root"></div>
   </body>
   <script src="./main.js"></script>

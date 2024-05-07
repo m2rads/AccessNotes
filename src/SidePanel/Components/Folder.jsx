@@ -10,7 +10,8 @@ import {
   SaveButton,
   FileTitle,
   HighlightContentArea,
-  AnnotationsContainer
+  AnnotationsContainer,
+  FileHeader
 } from './FolderStyledComponents';
 import { FolderIcon } from '../../Icons/FolderIcon';
 import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
@@ -18,6 +19,7 @@ import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { ArrowDownIcon } from '../../Icons/ArrowDownIcon';
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
+import { ExternalLinkIcon } from '../../Icons/ExternalLinkIcon';
 import { motion } from 'framer-motion';
 
 export function Folder() {
@@ -132,6 +134,7 @@ export function Folder() {
     if (!activeFile) return null;
 
     const annotations = organizedNotes[activeFile.domain][activeFile.path];
+    const fileUrl = annotations[0].url
     
     return (
       <motion.div
@@ -144,7 +147,10 @@ export function Folder() {
           <ArrowLeftIcon />
           <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>
-        <FileTitle>Annotations: {activeFile.path}</FileTitle>
+        <FileHeader>
+        <a href={fileUrl} target="_blank" rel="noopener noreferrer"> <FileTitle>Annotations: <br/>{activeFile.path}</FileTitle></a>
+          {/* <a href={fileUrl} target="_blank" rel="noopener noreferrer"><ExternalLinkIcon /></a> */}
+        </FileHeader>
         {annotations.map((item) => (
           <AnnotationsContainer key={`highlight-${item.hs.id}`}>
             <HighlightContentArea>{item.hs.text || "Highlight without text"}</HighlightContentArea>

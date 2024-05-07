@@ -103,6 +103,11 @@ export const FileTitle = styled.p`
   font-weight: 400;
   color: #9ca3af;
 `
+export const FileHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+`
 
 export const HighlightContentArea = styled.p`
   font-weight: 400;
