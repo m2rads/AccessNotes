@@ -26,7 +26,7 @@ export function Folder() {
   const [activeFile, setActiveFile] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
   const [editMode, setEditMode] = useState(false);
-  const [isThereHighlights, setIsThereHighlights] = useState(null)
+  const [isThereHighlights, setIsThereHighlights] = useState(false)
 
   const variants = {
     initial: { opacity: 0, x: 100 },
@@ -60,6 +60,7 @@ export function Folder() {
 
       notes.forEach(item => {
         try {
+          setIsThereHighlights(true)
           const url = new URL(item.url);
           const domain = url.hostname;
           const path = url.pathname;
