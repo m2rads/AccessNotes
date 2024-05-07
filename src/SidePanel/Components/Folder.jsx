@@ -171,8 +171,7 @@ export function Folder() {
     );
   };
 
-
-    const renderFolders = () => {
+  const renderFolders = () => {
       return Object.entries(organizedNotes).map(([domain, paths]) => (
         <div key={domain}>
           <FolderItem onClick={() => toggleFolder(domain)}>
