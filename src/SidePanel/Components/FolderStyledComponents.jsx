@@ -4,7 +4,7 @@ export const SidebarContainer = styled.div`
   margin: 0 auto;
   max-width: 500px;
   background-color: #09090b;
-  padding: 20px;
+  padding: 24px;
   overflow-y: auto;
   overflow-x: hidden;
 `;
@@ -53,13 +53,15 @@ export const AnimatedIconContainer = styled.div`
 
 export const EditNoteArea = styled.textarea`
   width: 90%;
+  margin: 10px auto;
   padding: 10px;
   border-radius: 5px;
-  margin-top: 10px;
   border: 1px solid #4b5563; 
   background-color: #27272a;
   color: #e5e7eb; 
   resize: vertical; 
+  font-size: 1.25rem;
+  overflow-x: disabled;
   overflow-y: auto;
   
   &::-webkit-scrollbar {
@@ -67,13 +69,13 @@ export const EditNoteArea = styled.textarea`
   }
 
   &::-webkit-scrollbar-track {
-    background: #374151; 
+    background: #171717; 
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #6b7280; 
+    background-color: #171717; 
     border-radius: 10px;
-    border: 2px solid #374151;
+    border: 2px solid #171717;
   }
 `;
 
@@ -125,13 +127,13 @@ export const FileHeader = styled.div`
 
 export const HighlightContentArea = styled.p`
   font-weight: 400;
-  font-size: 19px;
+  font-size: 18px;
   color: #e5e7eb;
 `
 
 export const AnnotationsContainer = styled.div`
-  margin: 20px 0;
-  padding: 15px;
+  margin: 16px 0;
+  padding: 24px;
   background-color: #171717;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -141,15 +143,16 @@ export const StyledLink = styled.a`
   text-decoration: none;
 
   &:hover .link-wrapper {
-    color: #737373;
+    color: #e7e5e4;
   }
 `;
 
 export const NotePreview = styled.p`
-  backgroundColor: #27272a; 
+  background-color: #27272a; 
   color: #e5e7eb;
   padding: 10px; 
-  borderRadius: 5px;
-  marginTop: 10px; 
+  border-radius: 5px;
+  margin-top: 10px; 
   cursor: pointer;
+  font-size: 1.25rem;
 `
