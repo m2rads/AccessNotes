@@ -5,7 +5,7 @@ export const SidebarContainer = styled.div`
   max-width: 500px;
   background-color: #09090b;
   padding: 20px;
-  height: 100vh;
+  overflow-y: auto;
 `;
 
 export const FolderItem = styled.div`
@@ -17,13 +17,12 @@ export const FolderItem = styled.div`
   cursor: pointer;
 `;
 
-export const FolderTitle = styled.h3`
+export const FolderTitle = styled.h2`
   max-width: 100%;     
   overflow-wrap: break-word; 
   word-wrap: break-word;  
   hyphens: auto;       
 
-  font-weight: 600;
   letter-spacing: 1px;
   color: #e4e4e7;
   margin-left: 10px; 
@@ -33,7 +32,6 @@ export const FileContainer = styled.div`
   margin-left: 20px;
   padding: 20px;
 `;
-
 
 export const FileItem = styled.div`
   display: flex;
@@ -103,16 +101,23 @@ export const SaveButton = styled.button`
   }
 `;
 
-export const FileTitle = styled.p`
+export const FileTitle = styled.h4`
   max-width: 100%;     
   overflow-wrap: break-word; 
   word-wrap: break-word;  
   hyphens: auto;    
 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 400;
-  color: #9ca3af;
+  color: #a3a3a3;
 `
+
+export const SubTitle = styled.span`
+  color: #e5e5e5;
+  font-size: 20px;
+  font-weight: 500;
+`
+
 export const FileHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -132,3 +137,13 @@ export const AnnotationsContainer = styled.div`
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 `
+
+export const StyledLink = styled.a`
+  text-decoration: none;
+
+  &:hover {
+    color: #737373;
+  }
+`;
+
+

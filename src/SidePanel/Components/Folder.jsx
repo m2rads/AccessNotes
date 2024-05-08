@@ -11,7 +11,9 @@ import {
   FileTitle,
   HighlightContentArea,
   AnnotationsContainer,
-  FileHeader
+  FileHeader,
+  SubTitle,
+  StyledLink
 } from './FolderStyledComponents';
 import { FolderIcon } from '../../Icons/FolderIcon';
 import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
@@ -148,8 +150,11 @@ export function Folder() {
           <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>
         <FileHeader>
-        <a href={fileUrl} target="_blank" rel="noopener noreferrer"> <FileTitle>Annotations: <br/>{activeFile.path}</FileTitle></a>
-          {/* <a href={fileUrl} target="_blank" rel="noopener noreferrer"><ExternalLinkIcon /></a> */}
+          <StyledLink href={fileUrl} target="_blank" rel="noopener noreferrer"> 
+            <FileTitle>Annotations:</FileTitle>
+            <SubTitle><br/>{activeFile.path}</SubTitle>
+          </StyledLink>
+          {/* <a href={fileUrl} target="_blank" rel="noopener noreferrer"></a> */}
         </FileHeader>
         {annotations.map((item) => (
           <AnnotationsContainer key={`highlight-${item.hs.id}`}>
@@ -202,7 +207,7 @@ export function Folder() {
                     <div style={{ flexShrink: "0" }}>
                       <FileIcon />
                     </div>
-                    <h4 style={{ marginLeft: "10px" }}>{path}</h4>
+                    <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>{path}</h3>
                   </FileItem>
                 ))}
               </motion.div>
