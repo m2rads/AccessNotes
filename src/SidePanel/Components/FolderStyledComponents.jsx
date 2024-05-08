@@ -17,7 +17,12 @@ export const FolderItem = styled.div`
   cursor: pointer;
 `;
 
-export const FolderTitle = styled.span`
+export const FolderTitle = styled.h3`
+  max-width: 100%;     
+  overflow-wrap: break-word; 
+  word-wrap: break-word;  
+  hyphens: auto;       
+
   font-weight: 600;
   letter-spacing: 1px;
   color: #e4e4e7;
@@ -99,6 +104,11 @@ export const SaveButton = styled.button`
 `;
 
 export const FileTitle = styled.p`
+  max-width: 100%;     
+  overflow-wrap: break-word; 
+  word-wrap: break-word;  
+  hyphens: auto;    
+
   font-size: 16px;
   font-weight: 400;
   color: #9ca3af;
