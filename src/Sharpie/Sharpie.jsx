@@ -25,7 +25,6 @@ const Sharpie = () => {
   const checkForUrlChange = () => {
     const url = window.location.href;
     if (url !== currentUrl) {
-      console.log("URL changed from", currentUrl, "to", url);
       setCurrentUrl(url);
       reloadAnnotations();
     }
@@ -55,8 +54,6 @@ const Sharpie = () => {
 
             notes.forEach(({ id, content, url: storedUrl }) => {
                 if (storedUrl === url) {
-                    console.log("url: ", url);
-                    console.log("content: ", content);
                     const doms = highlighter.getDoms(id);
                     if (doms && doms.length > 0) {
                         const position = getPosition(doms[0]);
@@ -102,8 +99,6 @@ const Sharpie = () => {
         const highlights = await localStore.getAll();
         highlights.forEach(({ hs, color, url }) => {
           if (url === currentUrl) {
-            console.log("url: ", url);
-            console.log("hs: ", hs);
             newHighlighter.setOption({ style: { className: color } });
             newHighlighter.fromStore(hs.startMeta, hs.endMeta, hs.text, hs.id);
           }
@@ -112,9 +107,6 @@ const Sharpie = () => {
         const notes = await localStore.getAllNotes();
         notes.forEach(({ id, content, url }) => {
           if (url === currentUrl) {
-            console.log("url: ", url);
-            console.log("content: ", content);
-            console.log("note id: ", id);
             const doms = newHighlighter.getDoms(id);
             if (doms && doms.length > 0) {
               const position = getPosition(doms[0]);
@@ -142,7 +134,6 @@ const Sharpie = () => {
   const handleRemoveHighlight = async () => {
     // Find and remove the corresponding delete tip
     const deleteTip = document.querySelector(`.highlight-tip[data-id="${highlightId}"]`);
-    console.log("delteTip: ", highlightId)
     if (deleteTip) {
       deleteTip.parentNode.removeChild(deleteTip);
     }
@@ -150,10 +141,6 @@ const Sharpie = () => {
     await localStore.remove(highlightId);
     await localStore.removeNoteById(highlightId);
     highlighter.remove(highlightId);
-
-    await localStore.removeAll();
-    await localStore.removeAllNotes();
-    highlighter.removeAll();
     
     // Reset the highlight ID state
     setHighlightId(null);
@@ -228,7 +215,6 @@ const Sharpie = () => {
               }
           } else if (highlightId) {
             // add highlight tip
-            console.log(highlightId)
             const position = getPosition(highlighter.getDoms(highlightId)[0]);
             removeHighlightTip(highlightId)
             createHighlightTip(position.top, position.left, highlightId);

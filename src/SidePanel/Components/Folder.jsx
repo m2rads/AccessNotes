@@ -121,7 +121,6 @@ export function Folder() {
 
   const handleNoteSave = async (event) => {
     await localStore.saveNote(editNote.id, editNote.content);
-    // Optionally clear the input field or close edit mode
     setEditNote({ id: null, content: '' });
     setEditMode(false);
     event.preventDefault();
