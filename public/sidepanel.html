@@ -5,30 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sticky Notes</title>
     <style>
-      /* Import the Roboto font from Google Fonts */
+     /* Import the Roboto font from Google Fonts */
       @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
       /* Set global font settings */
       body, html {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Roboto', sans-serif; /* Set Roboto as the default font for all text */
         background-color: #09090b;
       }
 
       h1, h2, h3, h4 {
-        font-family: 'Helvetica', 'Arial', sans-serif;
+        font-family: 'Helvetica', 'Arial', sans-serif; /* Set Helvetica as the font for all headings, fallback to Arial */
+        margin: 0; /* Removes default margin from headings */
       }
 
+      h1 {
+        font-size: 2em; /* Set size for h1 */
+      }
+
+      h2 {
+        font-size: 1.5em; /* Set size for h2 */
+      }
+
+      h3 {
+        font-size: 1.17em; /* Set size for h3 */
+      }
+
+      h4 {
+        font-size: 1em; /* Set size for h4 */
+      }
+
+      /* You can customize the weight and spacing as needed */
+      h1, h2, h3, h4 {
+        font-weight: normal; /* Helvetica looks good in normal weight but adjust as needed */
+        letter-spacing: -0.5px; /* Optional: adjust letter spacing for aesthetics */
+      }
       /* ::-webkit-scrollbar {
           width: 10px;
       } */
-      .sidepanel {
-        font-family: "Inter", sans-serif;
-        font-optical-sizing: auto;
-        font-style: normal;
-        font-variation-settings: "slnt" 0;
-        /* scrollbar-color: #ffffff #09090b; */
-        overflow-x: hidden;
-      }
+      /* .sidepanel {
+        scrollbar-color: #ffffff #09090b;
+      } */
     </style>
   </head>
   <body class="sidepanel">

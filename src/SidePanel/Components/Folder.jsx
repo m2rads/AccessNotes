@@ -13,7 +13,8 @@ import {
   AnnotationsContainer,
   FileHeader,
   SubTitle,
-  StyledLink
+  StyledLink,
+  NotePreview
 } from './FolderStyledComponents';
 import { FolderIcon } from '../../Icons/FolderIcon';
 import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
@@ -152,7 +153,7 @@ export function Folder() {
         <FileHeader>
           <StyledLink href={fileUrl} target="_blank" rel="noopener noreferrer"> 
             <FileTitle>Annotations:</FileTitle>
-            <SubTitle><br/>{activeFile.path}</SubTitle>
+            <SubTitle className='link-wrapper'>{activeFile.path}</SubTitle>
           </StyledLink>
           {/* <a href={fileUrl} target="_blank" rel="noopener noreferrer"></a> */}
         </FileHeader>
@@ -170,9 +171,9 @@ export function Folder() {
                     <SaveButton onClick={handleNoteSave}>Save</SaveButton>
                   </div>
                 ) : (
-                  <p onClick={() => handleEditMode(item.note)} style={{ backgroundColor: '#27272a', color: "#e5e7eb", padding: '10px', borderRadius: '5px', marginTop: '10px', cursor: "pointer" }}>
+                  <NotePreview onClick={() => handleEditMode(item.note)}>
                     {item.note.content}
-                  </p>
+                  </NotePreview>
                 )}
               </div>
             )}

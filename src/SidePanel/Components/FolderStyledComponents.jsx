@@ -6,6 +6,7 @@ export const SidebarContainer = styled.div`
   background-color: #09090b;
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 export const FolderItem = styled.div`
@@ -107,7 +108,7 @@ export const FileTitle = styled.h4`
   word-wrap: break-word;  
   hyphens: auto;    
 
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
   color: #a3a3a3;
 `
@@ -119,9 +120,7 @@ export const SubTitle = styled.span`
 `
 
 export const FileHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
+  padding: 10px;
 `
 
 export const HighlightContentArea = styled.p`
@@ -141,9 +140,16 @@ export const AnnotationsContainer = styled.div`
 export const StyledLink = styled.a`
   text-decoration: none;
 
-  &:hover {
+  &:hover .link-wrapper {
     color: #737373;
   }
 `;
 
-
+export const NotePreview = styled.p`
+  backgroundColor: #27272a; 
+  color: #e5e7eb;
+  padding: 10px; 
+  borderRadius: 5px;
+  marginTop: 10px; 
+  cursor: pointer;
+`
