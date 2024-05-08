@@ -123,12 +123,11 @@ const Sharpie = () => {
     setupHighlighter();
   
     return () => {
-      // Assuming newHighlighter is part of the component's state or ref
       if (highlighter) {
         highlighter.dispose();
       }
     };
-  }, [currentUrl]); // Ensure that currentUrl is part of the dependency array if it's meant to trigger re-runs
+  }, [currentUrl]);
 
 
   const handleRemoveHighlight = async () => {
