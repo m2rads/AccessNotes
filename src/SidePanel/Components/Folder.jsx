@@ -30,7 +30,6 @@ export function Folder() {
   const [openFolders, setOpenFolders] = useState({});
   const [activeFile, setActiveFile] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
-  const [editMode, setEditMode] = useState(false);
   const [isThereHighlights, setIsThereHighlights] = useState(false)
 
   const variants = {
@@ -97,7 +96,6 @@ export function Folder() {
     if (typeof chrome?.runtime?.onMessage !== 'undefined') {
         const handleMessage = (message) => {
             if (message.action === 'annotationsUpdated') {
-                console.log('Annotations updated, refetching...');
                 organizeNotes();
             }
         };
@@ -122,13 +120,10 @@ export function Folder() {
   const handleNoteSave = async (event) => {
     await localStore.saveNote(editNote.id, editNote.content);
     setEditNote({ id: null, content: '' });
-    setEditMode(false);
     event.preventDefault();
   };
 
   const handleEditMode = (note) => {
-    console.log(editMode)
-    setEditMode(true);
     setEditNote({ id: note.id, content: note.content})
   }
 
