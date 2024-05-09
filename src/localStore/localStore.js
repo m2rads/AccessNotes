@@ -7,7 +7,7 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.localMode = false; 
+        this.localMode = true; 
         console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;
@@ -46,14 +46,12 @@ class LocalStore {
         }
     }
 
-    async save(data, color, tooltipPos, tooltipLoc, url) {
+    async save(data, color, url) {
         const stores = await this.fetchFromStorage(this.baseKey);
         const map = {};
         stores.forEach((store, idx) => map[store.hs.id] = idx);
         data.forEach(store => {
             store.color = color;
-            store.tooltipPos = tooltipPos;
-            store.tooltipLoc = tooltipLoc;
             store.url = url;
             if (map[store.hs.id] !== undefined) {
                 stores[map[store.hs.id]] = store;

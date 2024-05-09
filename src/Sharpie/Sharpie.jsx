@@ -87,14 +87,14 @@ const Sharpie = () => {
         newHighlighter.on('selection:click', async ({id}) => {
           const storedId = await localStore.get(id);
           if (storedId) {
-            updateLocation(storedId.tooltipLoc);
-            updateTooltipPos(storedId.tooltipPos);
+            // updateLocation(storedId.tooltipLoc);
+            // updateTooltipPos(storedId.tooltipPos);
+            setHighlighter(newHighlighter);
+            handleTooltipPosition(newHighlighter,id);
             toggleShowToolTip(true);
           }
           setHighlightId(id);
         });
-  
-        setHighlighter(newHighlighter);
   
         const highlights = await localStore.getAll();
         highlights.forEach(({ hs, color, url }) => {
@@ -104,16 +104,26 @@ const Sharpie = () => {
           }
         });
   
-        const notes = await localStore.getAllNotes();
-        notes.forEach(({ id, content, url }) => {
-          if (url === currentUrl) {
-            const doms = newHighlighter.getDoms(id);
-            if (doms && doms.length > 0) {
-              const position = getPosition(doms[0]);
-              createHighlightTip(position.top, position.left, id);
+        const updateHighlightTips = async () => {
+          // Remove existing highlight tips if needed
+          document.querySelectorAll('.highlight-tip').forEach(tip => tip.parentNode.removeChild(tip));
+          const notes = await localStore.getAllNotes();
+          notes.forEach(({ id, content, url }) => {
+            if (url === currentUrl) {
+              const doms = newHighlighter.getDoms(id);
+              if (doms && doms.length > 0) {
+                const position = getPosition(doms[0]);
+                createHighlightTip(position.top, position.left, id);
+              }
             }
-          }
-        });
+          });
+        }
+
+        updateHighlightTips();
+        setHighlighter(newHighlighter);
+
+        window.addEventListener('resize', updateHighlightTips);
+
   
       } catch (error) {
         console.error('Error initializing Highlighter:', error);
@@ -128,6 +138,41 @@ const Sharpie = () => {
       }
     };
   }, [currentUrl]);
+
+  const handleTooltipPosition = (highlighter, id) => {
+    const highlightElements = highlighter.getDoms(id);
+    if (highlightElements.length > 0) {
+      // Calculate the bounding box for all parts of the highlight
+      let combinedRect = highlightElements[0].getBoundingClientRect();
+      for (let i = 1; i < highlightElements.length; i++) {
+        const rect = highlightElements[i].getBoundingClientRect();
+        combinedRect = {
+          top: Math.min(combinedRect.top, rect.top),
+          bottom: Math.max(combinedRect.bottom, rect.bottom),
+          left: Math.min(combinedRect.left, rect.left),
+          right: Math.max(combinedRect.right, rect.right)
+        };
+      }
+  
+      // Calculate the center point
+      const centerX = combinedRect.left + (combinedRect.right - combinedRect.left) / 2 + window.scrollX;
+      const centerY = combinedRect.top + window.scrollY;
+      const tooltipHeight = 40; // Example tooltip height
+  
+      // Check if there is enough space above for the tooltip
+      if (combinedRect.top < tooltipHeight) {
+        updateLocation('below');
+      } else {
+        updateLocation('above');
+      }
+  
+      toggleShowToolTip(true);
+      updateTooltipPos({ x: centerX, y: centerY });
+    } else {
+      toggleShowToolTip(false);
+    }
+  };
+  
 
 
   const handleRemoveHighlight = async () => {
@@ -176,7 +221,7 @@ const Sharpie = () => {
           highlighter.setOption({ style: { className: color } });
           highlighter.on('selection:create', ({sources}) => {
             const highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
-            localStore.save(highlightSources, color, tooltipPos, location, currentUrl);
+            localStore.save(highlightSources, color, currentUrl);
           });
           highlighter.fromRange(range);
         } else {
@@ -208,7 +253,7 @@ const Sharpie = () => {
                   const position = getPosition(highlighter.getDoms(highlightSources[0].hs.id)[0]);
                   createHighlightTip(position.top, position.left, highlightSources[0].hs.id);
                   addStickyNote(highlightSources[0].hs.id)
-                  await localStore.save(highlightSources, "stickyNote", tooltipPos, location, currentUrl);
+                  await localStore.save(highlightSources, "stickyNote", currentUrl);
               } else {
                   console.log("note overlaps with existing note.");
               }
