@@ -219,7 +219,7 @@ const Sharpie = () => {
           highlighter.setOption({ style: { className: color } });
           highlighter.on('selection:create', ({sources}) => {
             const highlightSources = sources.map(hs => ({hs, tooltipPos, location}));
-            localStore.save(highlightSources, color, currentUrl);
+            localStore.save(highlightSources, color, currentUrl, currentUrl);
           });
           highlighter.fromRange(range);
         } else {
@@ -250,7 +250,7 @@ const Sharpie = () => {
                 const position = getPosition(highlighter.getDoms(highlightSources[0].hs.id)[0]);
                 createHighlightTip(position.top, position.left, highlightSources[0].hs.id);
                 addStickyNote(highlightSources[0].hs.id)
-                await localStore.save(highlightSources, "stickyNote", currentUrl);
+                await localStore.save(highlightSources, "stickyNote", currentUrl, currentUrl);
             } else {
                 console.log("note overlaps with existing note.");
             }

@@ -46,13 +46,14 @@ class LocalStore {
         }
     }
 
-    async save(data, color, url) {
+    async save(data, color, url, title) {
         const stores = await this.fetchFromStorage(this.baseKey);
         const map = {};
         stores.forEach((store, idx) => map[store.hs.id] = idx);
         data.forEach(store => {
             store.color = color;
             store.url = url;
+            store.title = title;
             if (map[store.hs.id] !== undefined) {
                 stores[map[store.hs.id]] = store;
             } else {
