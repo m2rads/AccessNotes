@@ -156,3 +156,16 @@ export const NotePreview = styled.p`
   cursor: pointer;
   font-size: 1.25rem;
 `
+
+export const TitleInput = styled.input`
+  padding: 3px;
+  background-color: #09090b;
+  border-radius: 4px;
+  width: 100%;
+  
+  &:focus {
+    background-color: #1a1c1e;  
+    outline: none; 
+    border: 1px solid #5f6368;  
+  }
+`;

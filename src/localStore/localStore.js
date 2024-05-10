@@ -7,6 +7,7 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
+        this.titlesKey = `titles${id ? `-${id}` : ''}`; // Key to store custom titles
         this.localMode = true; 
         console.log("Local mode:", this.localMode);
 
@@ -119,6 +120,17 @@ class LocalStore {
 
     async getAllNotes() {
         return await this.fetchFromStorage(this.notesKey);
+    }
+
+    // New method to save custom titles
+    async saveCustomTitles(titles) {
+        await this.saveToStorage(this.titlesKey, titles);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.titlesKey });
+    }
+
+    // New method to get all custom titles
+    async getCustomTitles() {
+        return await this.fetchFromStorage(this.titlesKey);
     }
 }
 
