@@ -5,9 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sticky Notes</title>
     <style>
+     /* Import the Roboto font from Google Fonts */
+
+      /* Set global font settings */
+      body, html {
+        background-color: #09090b;
+      }
+
+      h1, h2, h3, h4 {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 2em; 
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      h3 {
+        font-size: 1.17em;
+      }
+
+      h4 {
+        font-size: 1em;
+      }
+
+      /* You can customize the weight and spacing as needed */
+      h1, h2, h3, h4 {
+        font-weight: normal;
+        letter-spacing: -0.5px;
+      }
+      /* ::-webkit-scrollbar {
+          width: 10px;
+      } */
+      /* .sidepanel {
+        scrollbar-color: #ffffff #09090b;
+      } */
     </style>
   </head>
-  <body style="background-color: #f0f0f0;">
+  <body class="sidepanel">
     <div id="popup-root"></div>
   </body>
   <script src="./main.js"></script>

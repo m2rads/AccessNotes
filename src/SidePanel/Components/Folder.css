@@ -1,0 +1,9 @@
+.title-edit-container .edit-icon {
+    transition: visibility 0.2s ease-in-out;
+  }
+  
+  /* This rule is only needed if you want additional hover effects like changing color or adding a background */
+  .title-edit-container:hover .edit-icon {
+    visibility: visible; /* Remove this rule if you manage visibility purely through React state */
+  }
+  

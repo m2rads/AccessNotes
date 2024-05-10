@@ -7,7 +7,8 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.localMode = false;  // Assuming you will configure this correctly
+        this.titlesKey = `titles${id ? `-${id}` : ''}`; // Key to store custom titles
+        this.localMode = false; 
         console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;
@@ -46,15 +47,14 @@ class LocalStore {
         }
     }
 
-    async save(data, color, tooltipPos, tooltipLoc, url) {
+    async save(data, color, url, title) {
         const stores = await this.fetchFromStorage(this.baseKey);
         const map = {};
         stores.forEach((store, idx) => map[store.hs.id] = idx);
         data.forEach(store => {
             store.color = color;
-            store.tooltipPos = tooltipPos;
-            store.tooltipLoc = tooltipLoc;
             store.url = url;
+            store.title = title;
             if (map[store.hs.id] !== undefined) {
                 stores[map[store.hs.id]] = store;
             } else {
@@ -120,6 +120,17 @@ class LocalStore {
 
     async getAllNotes() {
         return await this.fetchFromStorage(this.notesKey);
+    }
+
+    // New method to save custom titles
+    async saveCustomTitles(titles) {
+        await this.saveToStorage(this.titlesKey, titles);
+        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.titlesKey });
+    }
+
+    // New method to get all custom titles
+    async getCustomTitles() {
+        return await this.fetchFromStorage(this.titlesKey);
     }
 }
 

@@ -21,7 +21,7 @@ const popupRoot = document.getElementById("popup-root");
 // Side Panel / sidePanel.html
 popupRoot &&
   ReactDOM.createRoot(popupRoot).render(
-    <React.Fragment>
+    <>
       <SidePanel />
-    </React.Fragment>
+    </>
   );

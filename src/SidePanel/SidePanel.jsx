@@ -1,4 +1,4 @@
-import { Folder } from "./Folder";
+import { Folder } from "./Components/Folder";
 
 export function SidePanel() {
 
