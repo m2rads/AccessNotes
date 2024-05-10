@@ -13,7 +13,7 @@ import {
   HighlightContentArea,
   AnnotationsContainer,
   FileHeader,
-  SubTitle,
+  StyledLink,
   TitleInput,
   NotePreview
 } from './FolderStyledComponents';
@@ -55,13 +55,6 @@ export function Folder() {
 
   const handleBack = () => {
     setActiveFile(null);
-  };
-
-  const handleTitleEdit = (domain, path) => {
-    setEditTitle({
-      isEditing: true,
-      content: customTitles[domain]?.[path] || path
-    });
   };
   
   const handleTitleSave = async (domain, path) => {
@@ -160,7 +153,7 @@ export function Folder() {
     }
   }, []);
 
-  const TitleDisplayOrEdit = ({ domain, path, editTitle, setEditTitle, handleTitleSave }) => {
+  const TitleDisplayOrEdit = ({ url, domain, path, editTitle, setEditTitle, handleTitleSave }) => {
     const [hover, setHover] = useState(false);
     const currentTitle = customTitles[domain]?.[path] || path;
   
@@ -185,7 +178,9 @@ export function Folder() {
         onMouseLeave={() => setHover(false)}
         style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", cursor: 'pointer' }}
       >
-        <h3 style={{ marginRight: '10px' }}>{currentTitle}</h3>
+        <StyledLink href={url} target="_blank" rel="noopener noreferrer"> 
+          <h3 className='link-wrapper' style={{ marginRight: '10px' }}>{currentTitle}</h3>
+        </StyledLink>
         <div
           className="edit-icon"
           onClick={() => setEditTitle({ isEditing: true, content: currentTitle })}
@@ -219,6 +214,7 @@ export function Folder() {
           <div > 
             <FileTitle>
               <TitleDisplayOrEdit 
+                url={fileUrl}
                 domain={activeFile.domain} 
                 path={activeFile.path} 
                 editTitle={editTitle} 

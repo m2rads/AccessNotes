@@ -143,7 +143,7 @@ export const StyledLink = styled.a`
   text-decoration: none;
 
   &:hover .link-wrapper {
-    color: #e7e5e4;
+    color: #f4f4f5;
   }
 `;
 
@@ -162,6 +162,7 @@ export const TitleInput = styled.input`
   background-color: #09090b;
   border-radius: 4px;
   width: 100%;
+  color: #d4d4d8;
   
   &:focus {
     background-color: #1a1c1e;  
