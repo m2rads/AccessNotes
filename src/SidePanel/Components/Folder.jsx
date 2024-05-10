@@ -205,7 +205,7 @@ export function Folder() {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -100 }}
       >
-        <button onClick={handleBack} style={{ backgroundColor: "#09090b", marginBottom: '20px', borderRadius: '4px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
+        <button onClick={handleBack} style={{ backgroundColor: "#09090b", borderRadius: '4px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
           <ArrowLeftIcon />
           <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>

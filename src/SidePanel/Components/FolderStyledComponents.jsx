@@ -141,6 +141,7 @@ export const AnnotationsContainer = styled.div`
 
 export const StyledLink = styled.a`
   text-decoration: none;
+  color: #d4d4d8;
 
   &:hover .link-wrapper {
     color: #f4f4f5;
@@ -158,7 +159,7 @@ export const NotePreview = styled.p`
 `
 
 export const TitleInput = styled.input`
-  padding: 3px;
+  padding: 5px;
   background-color: #09090b;
   border-radius: 4px;
   width: 100%;
