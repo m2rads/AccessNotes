@@ -35,6 +35,7 @@ export const FileContainer = styled.div`
 `;
 
 export const FileItem = styled.div`
+  padding: 8px 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
