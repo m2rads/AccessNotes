@@ -1,8 +1,8 @@
 {
     "name": "AccessNotes",
-    "version": "2.0.0",
+    "version": "1.0.0",
     "manifest_version": 3,
-    "description": "Web annotation tool that lives in your pocket.",
+    "description": "Fastest Web Annotation Tool on Chrome.",
     "permissions": [
       "storage", "tabs", "sidePanel"
     ],
