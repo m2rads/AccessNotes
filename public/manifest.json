@@ -4,7 +4,7 @@
     "manifest_version": 3,
     "description": "Fastest Web Annotation Tool on Chrome.",
     "permissions": [
-      "storage", "tabs", "sidePanel"
+      "storage", "sidePanel"
     ],
     "icons": {
       "64": "icons/icon-64.png"
