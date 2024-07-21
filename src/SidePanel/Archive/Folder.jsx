@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { localStore } from '../../localStore/localStore';
-import './Folder.css'
 import {
-  SidebarContainer, 
-  FolderTitle, 
-  FolderItem, 
-  AnimatedIconContainer, 
+  SidebarContainer,
   FileItem,
   EditNoteArea,
   SaveButton,
@@ -17,20 +13,16 @@ import {
   TitleInput,
   NotePreview
 } from './FolderStyledComponents';
-import { FolderIcon } from '../../Icons/FolderIcon';
-import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
-import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
-import { ArrowDownIcon } from '../../Icons/ArrowDownIcon';
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
 import { ExternalLinkIcon } from '../../Icons/ExternalLinkIcon';
 import { PenIcon } from '../../Icons/PenIcon';
+import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { motion } from 'framer-motion';
 
 export function Folder() {
-  const [organizedNotes, setOrganizedNotes] = useState({});
-  const [openFolders, setOpenFolders] = useState({});
-  const [activeFile, setActiveFile] = useState(null);
+  const [pages, setPages] = useState({});
+  const [activePage, setActivePage] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
   const [isThereHighlights, setIsThereHighlights] = useState(false);
   const [customTitles, setCustomTitles] = useState({});
@@ -42,30 +34,18 @@ export function Folder() {
     exit: { opacity: 0, x: -100 }
   };  
 
-  const toggleFolder = (domain) => {
-    setOpenFolders(prevState => ({
-        ...prevState,
-        [domain]: !prevState[domain] 
-    }));
-  };
-
-  const handleFileClick = (path) => {
-    setActiveFile(path);
+  const handlePageClick = (url) => {
+    setActivePage(url);
   };
 
   const handleBack = () => {
-    setActiveFile(null);
+    setActivePage(null);
   };
   
-  const handleTitleSave = async (domain, path) => {
-    const newTitles = { ...customTitles };
-    if (!newTitles[domain]) newTitles[domain] = {};
-    newTitles[domain][path] = editTitle.content;
-    
+  const handleTitleSave = async (url) => {
+    const newTitles = { ...customTitles, [url]: editTitle.content };
     setCustomTitles(newTitles);
     setEditTitle({ isEditing: false, content: '' });
-  
-    // Save the updated titles to local storage for persistence
     await localStore.saveCustomTitles(newTitles);
   }; 
 
@@ -80,91 +60,81 @@ export function Folder() {
   };
 
   const handleEditMode = (note) => {
-    setEditNote({ id: note.id, content: note.content})
+    setEditNote({ id: note.id, content: note.content })
   }
 
-  const organizeNotes = async () => {
+  const organizePages = async () => {
     try {
-        // Fetch all highlights and custom titles
-        const highlights = await localStore.getAll();
-        const customTitles = await localStore.getCustomTitles();  // Fetch custom titles
-        const notes = await Promise.all(highlights.map(async highlight => {
-            const note = await localStore.getNoteById(highlight.hs.id);
-            return { ...highlight, note };
-        }));
-        const organized = {};
+      const highlights = await localStore.getAll();
+      const customTitles = await localStore.getCustomTitles();
+      const notes = await Promise.all(highlights.map(async highlight => {
+        const note = await localStore.getNoteById(highlight.hs.id);
+        return { ...highlight, note };
+      }));
+      const organized = {};
 
-        notes.forEach(item => {
-            try {
-                setIsThereHighlights(true)
-                const url = new URL(item.url);
-                const domain = url.hostname;
-                const path = url.pathname;
+      notes.forEach(item => {
+        try {
+          setIsThereHighlights(true);
+          if (!organized[item.url]) {
+            organized[item.url] = [];
+          }
+          organized[item.url].push(item);
 
-                if (!organized[domain]) {
-                    organized[domain] = {};
-                }
-                if (!organized[domain][path]) {
-                    organized[domain][path] = [];
-                }
-                organized[domain][path].push(item);
+          if (customTitles && customTitles[item.url]) {
+            organized[item.url].forEach(note => {
+              note.customTitle = customTitles[item.url];
+            });
+          }
+        } catch (e) {
+          console.error("Error processing item", item, e);
+        }
+      });
 
-                // Check if there is a custom title for the current path
-                if (customTitles && customTitles[domain] && customTitles[domain][path]) {
-                    organized[domain][path].forEach(note => {
-                        note.customTitle = customTitles[domain][path];  // Apply custom title to each note
-                    });
-                }
-            } catch (e) {
-                console.error("Error processing item", item, e);
-            }
-        });
-
-        setOrganizedNotes(organized);  // Save the organized notes with titles in state
-        setCustomTitles(customTitles);  // Also update the state with fetched custom titles
+      setPages(organized);
+      setCustomTitles(customTitles);
     } catch (error) {
-        console.error("Failed to organize notes and highlights", error);
+      console.error("Failed to organize pages and highlights", error);
     }
   };
 
-
   useEffect(() => {
-    organizeNotes();
+    organizePages();
   }, []);
 
-  // This is for handling and rerendering the notes
   useEffect(() => {
     if (typeof chrome?.runtime?.onMessage !== 'undefined') {
-        const handleMessage = (message) => {
-            if (message.action === 'annotationsUpdated') {
-                organizeNotes();
-            }
-        };
+      const handleMessage = (message) => {
+        if (message.action === 'annotationsUpdated') {
+          organizePages();
+        }
+      };
 
-        chrome.runtime.onMessage.addListener(handleMessage);
+      chrome.runtime.onMessage.addListener(handleMessage);
 
-        return () => {
-            if (typeof chrome?.runtime?.onMessage?.removeListener !== 'undefined') {
-                chrome.runtime.onMessage.removeListener(handleMessage);
-            }
-        };
+      return () => {
+        if (typeof chrome?.runtime?.onMessage?.removeListener !== 'undefined') {
+          chrome.runtime.onMessage.removeListener(handleMessage);
+        }
+      };
     } else {
-        console.warn('Chrome runtime API not available.');
+      console.warn('Chrome runtime API not available.');
     }
   }, []);
 
-  const TitleDisplayOrEdit = ({ url, domain, path, editTitle, setEditTitle, handleTitleSave }) => {
+  const TitleDisplayOrEdit = ({ url, editTitle, setEditTitle, handleTitleSave }) => {
     const [hover, setHover] = useState(false);
-    const currentTitle = customTitles[domain]?.[path] || path;
+    const currentTitle = customTitles[url] || new URL(url).pathname;
   
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
-        handleTitleSave(domain, path);
+        handleTitleSave(url);
       }
     };
   
     return editTitle.isEditing ? (
-      <TitleInput
+      <input
+        className="title-input"
         value={editTitle.content}
         onChange={(e) => setEditTitle({ ...editTitle, content: e.target.value })}
         onBlur={() => setEditTitle({ isEditing: false, content: '' })}
@@ -172,19 +142,13 @@ export function Folder() {
         autoFocus
       />
     ) : (
-      <div 
-        className="title-edit-container" 
-        onMouseEnter={() => setHover(true)} 
-        onMouseLeave={() => setHover(false)}
-        style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", cursor: 'pointer' }}
-      >
-        <StyledLink href={url} target="_blank" rel="noopener noreferrer"> 
-          <h3 className='link-wrapper' style={{ marginRight: '10px' }}>{currentTitle}</h3>
-        </StyledLink>
+      <div className="title-edit-container">
+        <a className="styled-link" href={url} target="_blank" rel="noopener noreferrer"> 
+          <h3 className="link-wrapper" style={{ marginRight: '10px' }}>{currentTitle}</h3>
+        </a>
         <div
           className="edit-icon"
           onClick={() => setEditTitle({ isEditing: true, content: currentTitle })}
-          style={{ visibility: hover ? 'visible' : 'hidden' }}
         >
           <PenIcon/>
         </div>
@@ -192,107 +156,81 @@ export function Folder() {
     );
   };  
 
-  const renderFileAnnotations = () => {
-    if (!activeFile) return null;
+  const renderPageAnnotations = () => {
+    if (!activePage) return null;
 
-    const annotations = organizedNotes[activeFile.domain][activeFile.path];
-    const fileUrl = annotations[0].url
+    const annotations = pages[activePage];
     
     return (
       <motion.div
         key="annotations"
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -100 }}
+        variants={variants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
       >
-        <button onClick={handleBack} style={{ backgroundColor: "#09090b", borderRadius: '4px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
+        <button className="back-button" onClick={handleBack}>
           <ArrowLeftIcon />
-          <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
+          <p>Back</p>
         </button>
 
-        <FileHeader>
-          <div > 
-            <FileTitle>
+        <div className="file-header">
+          <div> 
+            <div className="file-title">
               <TitleDisplayOrEdit 
-                url={fileUrl}
-                domain={activeFile.domain} 
-                path={activeFile.path} 
+                url={activePage}
                 editTitle={editTitle} 
                 setEditTitle={setEditTitle}
                 handleTitleSave={handleTitleSave}
               />
-            </FileTitle>
-            {/* <SubTitle className='link-wrapper'>{activeFile.path}</SubTitle> */}
+            </div>
           </div>
-        </FileHeader>
+        </div>
 
         {annotations.map((item) => (
-          <AnnotationsContainer key={`highlight-${item.hs.id}`}>
-            <HighlightContentArea>{item.hs.text || "Highlight without text"}</HighlightContentArea>
+          <div className="annotations-container" key={`highlight-${item.hs.id}`}>
+            <p className="highlight-content-area">{item.hs.text || "Highlight without text"}</p>
             {item.note && (
               <div>
                 {item.note.id === editNote.id ? (
                   <div>
-                    <EditNoteArea
+                    <textarea
+                      className="edit-note-area"
                       value={editNote.content}
                       onChange={handleNoteChange}
                     />
-                    <SaveButton onClick={handleNoteSave}>Save</SaveButton>
+                    <button className="save-button" onClick={handleNoteSave}>Save</button>
                   </div>
                 ) : (
-                  <NotePreview onClick={() => handleEditMode(item.note)}>
+                  <p className="note-preview" onClick={() => handleEditMode(item.note)}>
                     {item.note.content}
-                  </NotePreview>
+                  </p>
                 )}
               </div>
             )}
-          </AnnotationsContainer>
+          </div>
         ))}
       </motion.div>
     );
   };
 
-  const renderFolders = () => {
-    return Object.entries(organizedNotes).map(([domain, paths]) => (
-      <div key={domain}>
-        <FolderItem onClick={() => toggleFolder(domain)}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <AnimatedIconContainer className={openFolders[domain] ? 'open' : ''}>
-              {openFolders[domain] ? <ArrowDownIcon /> : <ArrowRightIcon />}
-            </AnimatedIconContainer>
-            <FolderIcon />
-            <FolderTitle>{domain}</FolderTitle>
-          </div>
-          {openFolders[domain] && (
-            <motion.div
-              key="files"
-              variants={variants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              style={{marginLeft: "20px", padding: "20px"}}
-            >
-              {Object.entries(paths).map(([path, items]) => (
-                <FileItem key={path} onClick={() => handleFileClick({ domain, path })}>
-                  <div style={{ flexShrink: "0" }}>
-                    <FileIcon />
-                  </div>
-                  <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
-                    {customTitles[domain]?.[path] || path}
-                  </h3>
-                </FileItem>
-              ))}
-            </motion.div>
-          )}
-        </FolderItem>
+  const renderPages = () => {
+    return Object.entries(pages).map(([url, items]) => (
+      <div className="file-item" key={url} onClick={() => handlePageClick(url)}>
+        <div style={{ flexShrink: "0" }}>
+          <FileIcon />
+        </div>
+        <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
+          {customTitles[url] || new URL(url).pathname}
+        </h3>
       </div>
     ));
   };  
 
   return (
-    <SidebarContainer className="folder-container">
-        {/* {activeFile ? renderFileAnnotations() : renderFolders()} */}
-        {isThereHighlights ? (activeFile ? renderFileAnnotations() : renderFolders()) : <EmptyState />}
-    </SidebarContainer>
+    <div className="sidebar-container folder-container">
+      {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
+    </div>
   );
+
 }
