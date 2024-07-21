@@ -1,4 +1,5 @@
-import { Folder } from "./Components/Folder";
+import { Folder } from "./Archive/Folder";
+import "./SidePanel.css"
 
 export function SidePanel() {
 

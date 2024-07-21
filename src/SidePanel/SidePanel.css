@@ -1,0 +1,169 @@
+/* src/components/Folder/Folder.css */
+.sidebar-container {
+    margin: 0 auto;
+    max-width: 500px;
+    background-color: #09090b;
+    padding: 24px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .folder-item {
+    background-color: #18181b;
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+  
+  .folder-title {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    letter-spacing: 1px;
+    color: #e4e4e7;
+    margin-left: 10px;
+  }
+  
+  .file-container {
+    margin-left: 20px;
+    padding: 20px;
+  }
+  
+  .file-item {
+    padding: 8px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #d4d4d8;
+  }
+  
+  .animated-icon-container {
+    margin-right: 3px;
+    transition: transform 0.5s ease;
+  }
+  
+  .animated-icon-container.open {
+    transform: rotate(1deg);
+  }
+  
+  .edit-note-area {
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #4b5563;
+    background-color: #27272a;
+    color: #e5e7eb;
+    resize: vertical;
+    font-size: 1.25rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .edit-note-area::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .edit-note-area::-webkit-scrollbar-track {
+    background: #171717;
+  }
+  
+  .edit-note-area::-webkit-scrollbar-thumb {
+    background-color: #171717;
+    border-radius: 10px;
+    border: 2px solid #171717;
+  }
+  
+  .save-button {
+    padding: 6px 8px;
+    font-size: 12px;
+    background-color: #18181b;
+    color: #e5e7eb;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .save-button:hover {
+    background-color: #27272a;
+  }
+  
+  .save-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #3f3f46;
+  }
+  
+  .save-button:active {
+    background-color: #3f3f46;
+  }
+  
+  .file-title {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    font-size: 14px;
+    font-weight: 400;
+    color: #a3a3a3;
+  }
+  
+  .sub-title {
+    color: #e5e5e5;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .file-header {
+    padding: 10px;
+  }
+  
+  .highlight-content-area {
+    font-weight: 400;
+    font-size: 18px;
+    color: #e5e7eb;
+  }
+  
+  .annotations-container {
+    margin: 16px 0;
+    padding: 24px;
+    background-color: #171717;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .styled-link {
+    text-decoration: none;
+    color: #d4d4d8;
+  }
+  
+  .styled-link:hover .link-wrapper {
+    color: #f4f4f5;
+  }
+  
+  .note-preview {
+    background-color: #27272a;
+    color: #e5e7eb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+  
+  .title-input {
+    padding: 5px;
+    background-color: #09090b;
+    border-radius: 4px;
+    width: 100%;
+    color: #d4d4d8;
+  }
+  
+  .title-input:focus {
+    background-color: #1a1c1e;
+    outline: none;
+    border: 1px solid #5f6368;
+  }
