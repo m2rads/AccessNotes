@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { localStore } from '../../localStore/localStore';
-import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
 import { ExternalLinkIcon } from '../../Icons/ExternalLinkIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { motion } from 'framer-motion';
+import FileItem from './FileItem';
 
 export function Folder() {
   const [pages, setPages] = useState({});
@@ -203,16 +203,14 @@ export function Folder() {
 
   const renderPages = () => {
     return Object.entries(pages).map(([url, items]) => (
-      <div className="file-item" key={url} onClick={() => handlePageClick(url)}>
-        <div style={{ flexShrink: "0" }}>
-          <FileIcon />
-        </div>
-        <div style={{ marginLeft: "10px", overflowX: "hidden" }} className='label'>
-          {customTitles[url] || new URL(url).pathname}
-        </div>
-      </div>
+      <FileItem 
+        key={url}
+        url={url}
+        title={customTitles[url] || new URL(url).pathname}
+        onClick={() => handlePageClick(url)}
+      />
     ));
-  };  
+  };
 
   return (
     <div className="sidebar-container folder-container">

@@ -31,14 +31,14 @@
   --font-family: 'Inter', sans-serif;
   
   /* Label */
-  --label-font-weight: 700; /* Semi Bold */
-  --label-font-size: 14.15px;
+  --label-font-weight: 600; /* Semi Bold */
+  --label-font-size: 14px;
   --label-line-height: 20px;
   --label-letter-spacing: -0.2px;
 
   /* Label Emphasised */
-  --label-emphasised-font-weight: 700; /* Bold */
-  --label-emphasised-font-size: 14px;
+  --label-emphasised-font-weight: 900; /* Bold */
+  --label-emphasised-font-size: 14.15px;
   --label-emphasised-line-height: 20px;
   --label-emphasised-letter-spacing: -0.2px;
 }
@@ -72,6 +72,7 @@ body, html {
   font-size: var(--label-emphasised-font-size);
   line-height: var(--label-emphasised-line-height);
   letter-spacing: var(--label-emphasised-letter-spacing);
+  color: var(--grey-700);
 }
 
 /* Folder.css */
@@ -89,8 +90,16 @@ body, html {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  /* color: #d4d4d8; */
   cursor: pointer;
+}
+
+.file-item:hover {
+
+}
+
+.file-item-title {
+  margin-left: 10px;
+  overflow-x: hidden;
 }
 
 .edit-note-area {
