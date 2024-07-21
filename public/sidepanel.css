@@ -1,0 +1,131 @@
+:root {
+    /* Grey Shades */
+    --grey-100: #FFFFFF;
+    --grey-200: #F1F1F0;
+    --grey-300: #E7E7E7;
+    --grey-400: #DBDBD9;
+    --grey-500: #B7B6B4;
+    --grey-600: #A5A29A;
+    --grey-700: #55534F;
+    --grey-800: #373530;
+    --grey-900: #030712;
+  
+    /* Blue Shades */
+    --blue-100: #D6E4EE;
+    --blue-200: #6798E1;
+    --blue-300: #4281DB;
+    --blue-400: #6995B9;
+    --blue-500: #1F3245;
+  
+    /* Green Shades */
+    --green-100: #DEEDDC;
+    --green-200: #769A7F;
+    --green-300: #23372A;
+  
+    /* Red Shades */
+    --red-100: #FAE3DC;
+    --red-200: #D27569;
+    --red-300: #551C18;
+  
+    /* Typography Settings */
+    --font-family: 'Inter', sans-serif;
+    
+    /* Label */
+    --label-font-weight: 600; /* Semi Bold */
+    --label-font-size: 14.15px;
+    --label-line-height: 20px;
+    --label-letter-spacing: -0.2px;
+  
+    /* Label Emphasised */
+    --label-emphasised-font-weight: 700; /* Bold */
+    --label-emphasised-font-size: 14px;
+    --label-emphasised-line-height: 20px;
+    --label-emphasised-letter-spacing: -0.2px;
+  }
+  
+  /* -------------- Globals -------------- */
+  
+  body, html {
+    background-color: var(--grey-200);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .label {
+    font-family: var(--font-family);
+    font-weight: var(--label-font-weight);
+    font-size: var(--label-font-size);
+    line-height: var(--label-line-height);
+    letter-spacing: var(--label-letter-spacing);
+  }
+  
+  .label-emphasised {
+    font-family: var(--font-family);
+    font-weight: var(--label-emphasised-font-weight);
+    font-size: var(--label-emphasised-font-size);
+    line-height: var(--label-emphasised-line-height);
+    letter-spacing: var(--label-emphasised-letter-spacing);
+  }
+  
+  /* ----------------- Thumbnail ----------------- */
+  
+  .thumbnail {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    background-color: var(--grey-900);
+  }
+  
+  .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+  
+  .placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font: bold;
+    font-size: small;
+  }
+  
+  /* ------------ Account ------------- */
+  
+  .account {
+    padding: 10px 0;
+    gap: 40px;
+  }
+  
+  .account-name {
+    color: var(--grey-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  
+  .profile-info {
+    gap: 9px;
+  }
+  
+  /* -------- New page icon ------- */
+  
+  .new-page-icon {
+    width: 34px;
+    height: 34px;
+    background-color: var(--grey-100);
+    border-radius: 12px;
+    box-shadow: 1px 1px 11px 0 rgba(183, 183, 183, 0.25);
+    border: 1px solid var(--grey-300);
+  }
+  
+  
