@@ -71,63 +71,7 @@
     line-height: var(--label-emphasised-line-height);
     letter-spacing: var(--label-emphasised-letter-spacing);
   }
-  
-  /* ----------------- Thumbnail ----------------- */
-  
-  .thumbnail {
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-    background-color: var(--grey-900);
-  }
-  
-  .profile-pic {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 3px;
-  }
-  
-  .placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    font: bold;
-    font-size: small;
-  }
-  
-  /* ------------ Account ------------- */
-  
-  .account {
-    padding: 10px 0;
-    gap: 40px;
-  }
-  
-  .account-name {
-    color: var(--grey-800);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-  
-  .profile-info {
-    gap: 9px;
-  }
-  
-  /* -------- New page icon ------- */
-  
-  .new-page-icon {
-    width: 34px;
-    height: 34px;
-    background-color: var(--grey-100);
-    border-radius: 12px;
-    box-shadow: 1px 1px 11px 0 rgba(183, 183, 183, 0.25);
-    border: 1px solid var(--grey-300);
-  }
-  
+
 /* Folder.css */
 
 .sidebar-container {
