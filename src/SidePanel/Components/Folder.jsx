@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { localStore } from '../../localStore/localStore';
-import {
-  SidebarContainer,
-  FileItem,
-  EditNoteArea,
-  SaveButton,
-  FileTitle,
-  HighlightContentArea,
-  AnnotationsContainer,
-  FileHeader,
-  StyledLink,
-  TitleInput,
-  NotePreview
-} from './FolderStyledComponents';
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
 import { ExternalLinkIcon } from '../../Icons/ExternalLinkIcon';
