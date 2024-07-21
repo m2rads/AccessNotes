@@ -133,7 +133,6 @@
 .sidebar-container {
     margin: 0 auto;
     max-width: 500px;
-    background-color: #09090b;
     padding: 24px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -238,7 +237,6 @@
   }
   
   .note-preview {
-    background-color: #27272a;
     color: #e5e7eb;
     padding: 10px;
     border-radius: 5px;
@@ -249,7 +247,6 @@
   
   .title-input {
     padding: 5px;
-    background-color: #09090b;
     border-radius: 4px;
     width: 100%;
     color: #d4d4d8;
@@ -262,7 +259,6 @@
   }
   
   .back-button {
-    background-color: #09090b;
     border-radius: 4px;
     display: flex;
     align-items: center;
