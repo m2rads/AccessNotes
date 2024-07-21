@@ -207,9 +207,9 @@ export function Folder() {
         <div style={{ flexShrink: "0" }}>
           <FileIcon />
         </div>
-        <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
+        <div style={{ marginLeft: "10px", overflowX: "hidden" }} className='label'>
           {customTitles[url] || new URL(url).pathname}
-        </h3>
+        </div>
       </div>
     ));
   };  
