@@ -89,12 +89,14 @@ body, html {
   padding: 8px 0;
   display: flex;
   justify-content: flex-start;
+  width: 100%;
+  border-radius: 3px;
   align-items: center;
   cursor: pointer;
 }
 
 .file-item:hover {
-
+  background-color: var(--grey-300);
 }
 
 .file-item-title {
