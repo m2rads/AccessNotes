@@ -11,7 +11,7 @@ const FileItem = ({ url, title, onClick }) => {
         onMouseLeave={() => setIsHovered(false)}
         onClick={onClick}
       >
-        <div style={{ flexShrink: "0" }}>
+        <div className="file-icon">
           <FileIcon />
         </div>
         <div

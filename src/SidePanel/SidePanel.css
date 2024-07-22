@@ -85,14 +85,15 @@ body, html {
   overflow-x: hidden;
 }
 
+/* --------------------- file item -------------------- */
 .file-item {
-  padding: 8px 0;
   display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  border-radius: 3px;
   align-items: center;
+  padding: 5px 8px;
+  width: 100%;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 150ms ease 0s;
 }
 
 .file-item:hover {
@@ -100,10 +101,18 @@ body, html {
 }
 
 .file-item-title {
-  margin-left: 10px;
-  overflow-x: hidden;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 40px); 
 }
 
+.file-icon {
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+/* -------------------------- */
 .edit-note-area {
   width: 90%;
   margin: 10px auto;
