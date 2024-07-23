@@ -4,6 +4,7 @@ import { EmptyState } from './EmptyState';
 import { ExternalLinkIcon } from '../../Icons/ExternalLinkIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
+import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
 import { motion } from 'framer-motion';
 import FileItem from './FileItem';
 
@@ -14,6 +15,7 @@ export function Folder() {
   const [isThereHighlights, setIsThereHighlights] = useState(false);
   const [customTitles, setCustomTitles] = useState({});
   const [editTitle, setEditTitle] = useState({ isEditing: false, content: '' });
+  const [pageStructure, setPageStructure] = useState({});
 
   const variants = {
     initial: { opacity: 0, x: 100 },
@@ -80,6 +82,19 @@ export function Folder() {
 
       setPages(organized);
       setCustomTitles(customTitles);
+      
+     // Initialize page structure if it doesn't exist
+    const storedStructure = await localStore.getPageStructure();
+    if (Object.keys(storedStructure).length === 0) {
+      const initialStructure = Object.keys(organized).reduce((acc, url) => {
+        acc[url] = { parent: null, children: [] };
+        return acc;
+      }, {});
+      setPageStructure(initialStructure);
+      await localStore.savePageStructure(initialStructure);
+    } else {
+        setPageStructure(storedStructure);
+      }
     } catch (error) {
       console.error("Failed to organize pages and highlights", error);
     }
@@ -108,6 +123,64 @@ export function Folder() {
       console.warn('Chrome runtime API not available.');
     }
   }, []);
+
+  const handleDragStart = (e, url) => {
+    e.dataTransfer.setData('text/plain', url);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e, targetUrl) => {
+    e.preventDefault();
+    const draggedUrl = e.dataTransfer.getData('text');
+    
+    if (draggedUrl !== targetUrl) {
+      const newStructure = { ...pageStructure };
+      
+      // Remove from old parent
+      if (newStructure[draggedUrl].parent) {
+        const oldParentChildren = newStructure[newStructure[draggedUrl].parent].children;
+        newStructure[newStructure[draggedUrl].parent].children = oldParentChildren.filter(url => url !== draggedUrl);
+      }
+      
+      // Add to new parent
+      newStructure[draggedUrl].parent = targetUrl;
+      if (!newStructure[targetUrl].children.includes(draggedUrl)) {
+        newStructure[targetUrl].children.push(draggedUrl);
+      }
+      
+      setPageStructure(newStructure);
+      await localStore.savePageStructure(newStructure);
+    }
+  };
+
+  const renderPageHierarchy = (url, level = 0) => {
+    const page = pageStructure[url];
+    if (!page) return null;
+
+    return (
+      <div key={url} style={{ marginLeft: `${level * 20}px` }}>
+        <FileItem
+          url={url}
+          title={customTitles[url] || new URL(url).pathname}
+          onClick={() => handlePageClick(url)}
+          onDragStart={(e) => handleDragStart(e, url)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, url)}
+          hasChildren={page.children.length > 0}
+        />
+        {page.children.map(childUrl => renderPageHierarchy(childUrl, level + 1))}
+      </div>
+    );
+  };
+
+  const renderPages = () => {
+    return Object.keys(pageStructure)
+      .filter(url => !pageStructure[url].parent)
+      .map(url => renderPageHierarchy(url));
+  };
 
   const TitleDisplayOrEdit = ({ url, editTitle, setEditTitle, handleTitleSave }) => {
     const [hover, setHover] = useState(false);
@@ -201,21 +274,9 @@ export function Folder() {
     );
   };
 
-  const renderPages = () => {
-    return Object.entries(pages).map(([url, items]) => (
-      <FileItem 
-        key={url}
-        url={url}
-        title={customTitles[url] || new URL(url).pathname}
-        onClick={() => handlePageClick(url)}
-      />
-    ));
-  };
-
   return (
     <div className="sidebar-container folder-container">
       {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
     </div>
   );
-
 }
