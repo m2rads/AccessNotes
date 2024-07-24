@@ -7,19 +7,20 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.titlesKey = `titles${id ? `-${id}` : ''}`; // Key to store custom titles
-        this.localMode = true; 
+        this.titlesKey = `titles${id ? `-${id}` : ''}`; 
+        this.structureKey = `structure${id ? `-${id}` : ''}`;
+        this.localMode = typeof chrome === 'undefined' || typeof chrome.storage === 'undefined';
         console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;
     }
-
+    
     async fetchFromStorage(key) {
         if (this.localMode) {
             return Promise.resolve(JSON.parse(localStorage.getItem(key) || '[]'));
         } else {
             return new Promise((resolve, reject) => {
-                chrome.storage.local.get([key], function(result) {
+                chrome.storage.local.get(key, function(result) {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
                     } else {
@@ -47,6 +48,18 @@ class LocalStore {
         }
     }
 
+    sendMessage(message) {
+        if (!this.localMode && chrome.runtime && chrome.runtime.sendMessage) {
+          chrome.runtime.sendMessage(message);
+        } else {
+          console.log('Message would be sent:', message);
+          // Dispatch a window message
+          window.postMessage(message, '*');
+          // Dispatch a custom event
+          document.dispatchEvent(new CustomEvent('localStoreUpdate', { detail: message }));
+        }
+    }
+
     async save(data, color, url, title) {
         const stores = await this.fetchFromStorage(this.baseKey);
         const map = {};
@@ -62,7 +75,7 @@ class LocalStore {
             }
         });
         await this.saveToStorage(this.baseKey, stores);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
+        this.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
     }
 
     async remove(id) {
@@ -71,7 +84,7 @@ class LocalStore {
         if (index !== -1) {
             stores.splice(index, 1);
             await this.saveToStorage(this.baseKey, stores);
-            chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
+            this.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
         }
     }
 
@@ -86,7 +99,7 @@ class LocalStore {
 
     async removeAll() {
         await this.saveToStorage(this.baseKey, []);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
+        this.sendMessage({ action: 'annotationsUpdated', key: this.baseKey });
     }
 
     async saveNote(id, content, url) {
@@ -98,7 +111,7 @@ class LocalStore {
             notes.push({ id, content, url });
         }
         await this.saveToStorage(this.notesKey, notes);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
+        this.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
     }
 
     async getNoteById(id) {
@@ -110,27 +123,26 @@ class LocalStore {
         const notes = await this.fetchFromStorage(this.notesKey);
         const filteredNotes = notes.filter(note => note.id !== id);
         await this.saveToStorage(this.notesKey, filteredNotes);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
+        this.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
     }
-
+    
     async removeAllNotes() {
         await this.saveToStorage(this.notesKey, []);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
+        this.sendMessage({ action: 'annotationsUpdated', key: this.notesKey });
     }
 
     async getAllNotes() {
         return await this.fetchFromStorage(this.notesKey);
     }
 
-    // New method to save custom titles
-    async saveCustomTitles(titles) {
-        await this.saveToStorage(this.titlesKey, titles);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.titlesKey });
+    async savePageStructure(structure) {
+        await this.saveToStorage(this.structureKey, structure);
+        this.sendMessage({ action: 'annotationsUpdated', key: this.structureKey });
     }
 
-    // New method to get all custom titles
-    async getCustomTitles() {
-        return await this.fetchFromStorage(this.titlesKey);
+    async getPageStructure() {
+        const structure = await this.fetchFromStorage(this.structureKey);
+        return structure || {}; // Return an empty object if no structure is found
     }
 }
 
