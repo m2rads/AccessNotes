@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { localStore } from '../../localStore/localStore';
-import './Folder.css'
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
 import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
