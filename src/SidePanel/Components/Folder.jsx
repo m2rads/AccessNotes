@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { localStore } from '../../localStore/localStore';
-import './Folder.css'
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
 import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
@@ -289,12 +288,12 @@ export function Folder() {
       >
         {pagesRef.current.map((page) => (
           <div className="file-item" key={page.id} onClick={() => handlePageClick(page)}>
-            <div style={{ flexShrink: "0" }}>
+            <div className='file-icon'>
               <FileIcon />
             </div>
-            <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
+            <div className='file-item-title label'>
               {page.title}
-            </h3>
+            </div>
           </div>
         ))}
       </motion.div>
