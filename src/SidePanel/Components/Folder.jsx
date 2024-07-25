@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { localStore } from '../../localStore/localStore';
 import './Folder.css'
 import {
   SidebarContainer, 
-  FolderTitle, 
-  FolderItem, 
-  AnimatedIconContainer, 
   FileItem,
   EditNoteArea,
   SaveButton,
@@ -17,23 +14,20 @@ import {
   TitleInput,
   NotePreview
 } from './FolderStyledComponents';
-import { FolderIcon } from '../../Icons/FolderIcon';
-import { ArrowRightIcon } from '../../Icons/ArrowRightIcon';
-import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
-import { ArrowDownIcon } from '../../Icons/ArrowDownIcon';
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
-import { ExternalLinkIcon } from '../../Icons/ExternalLinkIcon';
+import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { motion } from 'framer-motion';
 
 export function Folder() {
-  const [organizedNotes, setOrganizedNotes] = useState({});
-  const [openFolders, setOpenFolders] = useState({});
-  const [activeFile, setActiveFile] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [activePage, setActivePage] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
   const [isThereHighlights, setIsThereHighlights] = useState(false);
   const [editTitle, setEditTitle] = useState({ isEditing: false, content: '' });
+  
+  const pagesRef = useRef(pages);
 
   const variants = {
     initial: { opacity: 0, x: 100 },
@@ -41,32 +35,24 @@ export function Folder() {
     exit: { opacity: 0, x: -100 }
   };  
 
-  const toggleFolder = (domain) => {
-    setOpenFolders(prevState => ({
-        ...prevState,
-        [domain]: !prevState[domain] 
-    }));
-  };
-
-  const handleFileClick = (path) => {
-    setActiveFile(path);
+  const handlePageClick = (page) => {
+    setActivePage(page);
   };
 
   const handleBack = () => {
-    setActiveFile(null);
+    setActivePage(null);
   };
   
-  const handleTitleSave = async (domain, path) => {
-    const updatedNotes = { ...organizedNotes };
-    updatedNotes[domain][path].forEach(item => {
-      item.title = editTitle.content;
-    });
+  const handleTitleSave = async (pageId) => {
+    const updatedPages = pages.map(page => 
+      page.id === pageId ? { ...page, title: editTitle.content } : page
+    );
 
-    setOrganizedNotes(updatedNotes);
+    setPages(updatedPages);
     setEditTitle({ isEditing: false, content: '' });
 
     // Save the updated annotations to local storage
-    await localStore.save(updatedNotes[domain][path], null, updatedNotes[domain][path][0].url, editTitle.content);
+    await localStore.save(updatedPages.find(p => p.id === pageId).annotations, null, updatedPages.find(p => p.id === pageId).url, editTitle.content);
   };
 
   const handleNoteChange = (event) => {
@@ -83,73 +69,113 @@ export function Folder() {
     setEditNote({ id: note.id, content: note.content})
   }
 
-  const organizeNotes = async () => {
+  const organizePages = useCallback(async () => {
     try {
       const highlights = await localStore.getAll();
       const notes = await Promise.all(highlights.map(async highlight => {
         const note = await localStore.getNoteById(highlight.hs.id);
         return { ...highlight, note };
       }));
-      const organized = {};
-
-      notes.forEach(item => {
+      
+      const organized = notes.reduce((acc, item) => {
         try {
           setIsThereHighlights(true);
           const url = new URL(item.url);
-          const domain = url.hostname;
-          const path = url.pathname;
-
-          if (!organized[domain]) {
-            organized[domain] = {};
+          const existingPageIndex = acc.findIndex(page => page.url === item.url);
+          
+          if (existingPageIndex > -1) {
+            acc[existingPageIndex].annotations.push(item);
+          } else {
+            acc.push({
+              id: url.pathname,
+              url: item.url,
+              title: item.title || url.pathname,
+              annotations: [item]
+            });
           }
-          if (!organized[domain][path]) {
-            organized[domain][path] = [];
-          }
-          organized[domain][path].push(item);
         } catch (e) {
           console.error("Error processing item", item, e);
         }
+        return acc;
+      }, []);
+
+      setPages(organized);
+      pagesRef.current = organized;
+    } catch (error) {
+      console.error("Failed to organize pages and highlights", error);
+    }
+  }, []);
+
+  const updatePages = useCallback(async () => {
+    const highlights = await localStore.getAll();
+    const notes = await localStore.getAllNotes();
+
+    setPages(prevPages => {
+      const updatedPages = prevPages.map(page => {
+        const pageHighlights = highlights.filter(h => h.url === page.url);
+        const updatedAnnotations = pageHighlights.map(highlight => {
+          const note = notes.find(n => n.id === highlight.hs.id);
+          return { ...highlight, note };
+        });
+
+        return {
+          ...page,
+          annotations: updatedAnnotations,
+        };
       });
 
-      setOrganizedNotes(organized);
-    } catch (error) {
-      console.error("Failed to organize notes and highlights", error);
-    }
-  };
+      // Check for new pages
+      highlights.forEach(highlight => {
+        if (!updatedPages.some(page => page.url === highlight.url)) {
+          const url = new URL(highlight.url);
+          updatedPages.push({
+            id: url.pathname,
+            url: highlight.url,
+            title: highlight.title || url.pathname,
+            annotations: [{
+              ...highlight,
+              note: notes.find(n => n.id === highlight.hs.id)
+            }]
+          });
+        }
+      });
 
-  useEffect(() => {
-    organizeNotes();
+      pagesRef.current = updatedPages;
+      return updatedPages;
+    });
   }, []);
 
-  // This is for handling and rerendering the notes
+  useEffect(() => {
+    organizePages();
+  }, []);
+
   useEffect(() => {
     if (typeof chrome?.runtime?.onMessage !== 'undefined') {
-        const handleMessage = (message) => {
-            if (message.action === 'annotationsUpdated') {
-                organizeNotes();
-            }
-        };
+      const handleMessage = (message) => {
+        if (message.action === 'annotationsUpdated') {
+          organizePages();
+          updatePages();
+        }
+      };
 
-        chrome.runtime.onMessage.addListener(handleMessage);
+      chrome.runtime.onMessage.addListener(handleMessage);
 
-        return () => {
-            if (typeof chrome?.runtime?.onMessage?.removeListener !== 'undefined') {
-                chrome.runtime.onMessage.removeListener(handleMessage);
-            }
-        };
+      return () => {
+        if (typeof chrome?.runtime?.onMessage?.removeListener !== 'undefined') {
+          chrome.runtime.onMessage.removeListener(handleMessage);
+        }
+      };
     } else {
-        console.warn('Chrome runtime API not available.');
+      console.warn('Chrome runtime API not available.');
     }
-  }, []);
+  }, [updatePages]);
 
-  
-  const TitleDisplayOrEdit = ({ url, domain, path, editTitle, setEditTitle, handleTitleSave }) => {
+  const TitleDisplayOrEdit = ({ url, page, editTitle, setEditTitle, handleTitleSave }) => {
     const [hover, setHover] = useState(false);
-    const currentTitle = organizedNotes[domain][path][0].title || path;
   
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
-        handleTitleSave(domain, path);
+        handleTitleSave(page.id);
       }
     };
   
@@ -169,11 +195,11 @@ export function Folder() {
         style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", cursor: 'pointer' }}
       >
         <StyledLink href={url} target="_blank" rel="noopener noreferrer"> 
-          <h3 className='link-wrapper' style={{ marginRight: '10px' }}>{currentTitle}</h3>
+          <h3 className='link-wrapper' style={{ marginRight: '10px' }}>{page.title}</h3>
         </StyledLink>
         <div
           className="edit-icon"
-          onClick={() => setEditTitle({ isEditing: true, content: currentTitle })}
+          onClick={() => setEditTitle({ isEditing: true, content: page.title })}
           style={{ visibility: hover ? 'visible' : 'hidden' }}
         >
           <PenIcon/>
@@ -181,12 +207,12 @@ export function Folder() {
       </div>
     );
   };
-
-  const renderFileAnnotations = () => {
-    if (!activeFile) return null;
-
-    const annotations = organizedNotes[activeFile.domain][activeFile.path];
-    const fileUrl = annotations[0].url
+  
+  const renderPageAnnotations = () => {
+    if (!activePage) return null;
+    
+    const currentPage = pagesRef.current.find(page => page.id === activePage.id);
+    if (!currentPage) return null;
     
     return (
       <motion.div
@@ -199,24 +225,22 @@ export function Folder() {
           <ArrowLeftIcon />
           <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>
-
+  
         <FileHeader>
           <div > 
             <FileTitle>
               <TitleDisplayOrEdit 
-                url={fileUrl}
-                domain={activeFile.domain} 
-                path={activeFile.path} 
+                url={currentPage.url}
+                page={currentPage}
                 editTitle={editTitle} 
                 setEditTitle={setEditTitle}
                 handleTitleSave={handleTitleSave}
               />
             </FileTitle>
-            {/* <SubTitle className='link-wrapper'>{activeFile.path}</SubTitle> */}
           </div>
         </FileHeader>
-
-        {annotations.map((item) => (
+  
+        {currentPage.annotations.map((item) => (
           <AnnotationsContainer key={`highlight-${item.hs.id}`}>
             <HighlightContentArea>{item.hs.text || "Highlight without text"}</HighlightContentArea>
             {item.note && (
@@ -242,47 +266,32 @@ export function Folder() {
     );
   };
 
-  const renderFolders = () => {
-    return Object.entries(organizedNotes).map(([domain, paths]) => (
-      <div key={domain}>
-        <FolderItem onClick={() => toggleFolder(domain)}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <AnimatedIconContainer className={openFolders[domain] ? 'open' : ''}>
-              {openFolders[domain] ? <ArrowDownIcon /> : <ArrowRightIcon />}
-            </AnimatedIconContainer>
-            <FolderIcon />
-            <FolderTitle>{domain}</FolderTitle>
-          </div>
-          {openFolders[domain] && (
-            <motion.div
-              key="files"
-              variants={variants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              style={{marginLeft: "20px", padding: "20px"}}
-            >
-              {Object.entries(paths).map(([path, items]) => (
-                <FileItem key={path} onClick={() => handleFileClick({ domain, path })}>
-                  <div style={{ flexShrink: "0" }}>
-                    <FileIcon />
-                  </div>
-                  <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
-                    {items[0].title || path}
-                  </h3>
-                </FileItem>
-              ))}
-            </motion.div>
-          )}
-        </FolderItem>
-      </div>
-    ));
+  const renderPages = () => {
+    return (
+      <motion.div
+        key="pages"
+        variants={variants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
+        {pagesRef.current.map((page) => (
+          <FileItem key={page.id} onClick={() => handlePageClick(page)}>
+            <div style={{ flexShrink: "0" }}>
+              <FileIcon />
+            </div>
+            <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
+              {page.title}
+            </h3>
+          </FileItem>
+        ))}
+      </motion.div>
+    );
   };
 
   return (
     <SidebarContainer className="folder-container">
-        {/* {activeFile ? renderFileAnnotations() : renderFolders()} */}
-        {isThereHighlights ? (activeFile ? renderFileAnnotations() : renderFolders()) : <EmptyState />}
+      {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
     </SidebarContainer>
   );
 }
