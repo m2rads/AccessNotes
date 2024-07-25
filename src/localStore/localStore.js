@@ -7,7 +7,7 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.localMode = false; 
+        this.localMode = typeof chrome === 'undefined' || typeof chrome.storage === 'undefined';
         console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;
