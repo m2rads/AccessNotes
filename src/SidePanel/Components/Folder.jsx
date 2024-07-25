@@ -79,7 +79,6 @@ export function Folder() {
       
       const organized = notes.reduce((acc, item) => {
         try {
-          setIsThereHighlights(true);
           const url = new URL(item.url);
           const existingPageIndex = acc.findIndex(page => page.url === item.url);
           
@@ -98,11 +97,14 @@ export function Folder() {
         }
         return acc;
       }, []);
-
+  
+      setIsThereHighlights(organized.length > 0);
+  
       setPages(organized);
       pagesRef.current = organized;
     } catch (error) {
       console.error("Failed to organize pages and highlights", error);
+      setIsThereHighlights(false);
     }
   }, []);
 
