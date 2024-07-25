@@ -120,17 +120,6 @@ class LocalStore {
     async getAllNotes() {
         return await this.fetchFromStorage(this.notesKey);
     }
-
-    // New method to save custom titles
-    async saveCustomTitles(titles) {
-        await this.saveToStorage(this.titlesKey, titles);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.titlesKey });
-    }
-
-    // New method to get all custom titles
-    async getCustomTitles() {
-        return await this.fetchFromStorage(this.titlesKey);
-    }
 }
 
 export const localStore = new LocalStore();
