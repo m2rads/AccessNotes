@@ -292,9 +292,9 @@ export function Folder() {
             <div style={{ flexShrink: "0" }}>
               <FileIcon />
             </div>
-            <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
+            <div style={{ marginLeft: "10px", overflowX: "hidden" }}>
               {page.title}
-            </h3>
+            </div>
           </div>
         ))}
       </motion.div>
