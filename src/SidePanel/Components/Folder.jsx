@@ -1,19 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { localStore } from '../../localStore/localStore';
 import './Folder.css'
-import {
-  SidebarContainer, 
-  FileItem,
-  EditNoteArea,
-  SaveButton,
-  FileTitle,
-  HighlightContentArea,
-  AnnotationsContainer,
-  FileHeader,
-  StyledLink,
-  TitleInput,
-  NotePreview
-} from './FolderStyledComponents';
 import { FileIcon } from '../../Icons/FileIcon';
 import { EmptyState } from './EmptyState';
 import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
@@ -43,27 +30,49 @@ export function Folder() {
     setActivePage(null);
   };
   
-  const handleTitleSave = async (pageId) => {
-    const updatedPages = pages.map(page => 
+  const handleTitleSave = useCallback(async (pageId) => {
+    const updatedPages = pagesRef.current.map(page => 
       page.id === pageId ? { ...page, title: editTitle.content } : page
     );
 
     setPages(updatedPages);
+    pagesRef.current = updatedPages;
     setEditTitle({ isEditing: false, content: '' });
 
-    // Save the updated annotations to local storage
-    await localStore.save(updatedPages.find(p => p.id === pageId).annotations, null, updatedPages.find(p => p.id === pageId).url, editTitle.content);
-  };
+    // Save the updated title to local storage
+    const pageToUpdate = updatedPages.find(p => p.id === pageId);
+    if (pageToUpdate) {
+      await localStore.save(
+        pageToUpdate.annotations,
+        null,
+        pageToUpdate.url,
+        editTitle.content
+      );
+    }
+  }, [editTitle]);
 
   const handleNoteChange = (event) => {
     setEditNote(prev => ({ ...prev, content: event.target.value }));
   };
 
-  const handleNoteSave = async (event) => {
-    await localStore.saveNote(editNote.id, editNote.content);
-    setEditNote({ id: null, content: '' });
+  const handleNoteSave = useCallback(async (event) => {
     event.preventDefault();
-  };
+    await localStore.saveNote(editNote.id, editNote.content);
+    
+    // Update the local state immediately
+    const updatedPages = pagesRef.current.map(page => ({
+      ...page,
+      annotations: page.annotations.map(annotation => 
+        annotation.note && annotation.note.id === editNote.id
+          ? { ...annotation, note: { ...annotation.note, content: editNote.content } }
+          : annotation
+      )
+    }));
+
+    setPages(updatedPages);
+    pagesRef.current = updatedPages;
+    setEditNote({ id: null, content: '' });
+  }, [editNote]);
 
   const handleEditMode = (note) => {
     setEditNote({ id: note.id, content: note.content})
@@ -126,7 +135,6 @@ export function Folder() {
         };
       });
 
-      // Check for new pages
       highlights.forEach(highlight => {
         if (!updatedPages.some(page => page.url === highlight.url)) {
           const url = new URL(highlight.url);
@@ -182,7 +190,8 @@ export function Folder() {
     };
   
     return editTitle.isEditing ? (
-      <TitleInput
+      <input
+        className="title-input"
         value={editTitle.content}
         onChange={(e) => setEditTitle({ ...editTitle, content: e.target.value })}
         onBlur={() => setEditTitle({ isEditing: false, content: '' })}
@@ -196,9 +205,9 @@ export function Folder() {
         onMouseLeave={() => setHover(false)}
         style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", cursor: 'pointer' }}
       >
-        <StyledLink href={url} target="_blank" rel="noopener noreferrer"> 
+        <a className="styled-link" href={url} target="_blank" rel="noopener noreferrer"> 
           <h3 className='link-wrapper' style={{ marginRight: '10px' }}>{page.title}</h3>
-        </StyledLink>
+        </a>
         <div
           className="edit-icon"
           onClick={() => setEditTitle({ isEditing: true, content: page.title })}
@@ -228,9 +237,9 @@ export function Folder() {
           <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
         </button>
   
-        <FileHeader>
-          <div > 
-            <FileTitle>
+        <div className="file-header">
+          <div> 
+            <h4 className="file-title">
               <TitleDisplayOrEdit 
                 url={currentPage.url}
                 page={currentPage}
@@ -238,31 +247,32 @@ export function Folder() {
                 setEditTitle={setEditTitle}
                 handleTitleSave={handleTitleSave}
               />
-            </FileTitle>
+            </h4>
           </div>
-        </FileHeader>
+        </div>
   
         {currentPage.annotations.map((item) => (
-          <AnnotationsContainer key={`highlight-${item.hs.id}`}>
-            <HighlightContentArea>{item.hs.text || "Highlight without text"}</HighlightContentArea>
+          <div className="annotations-container" key={`highlight-${item.hs.id}`}>
+            <p className="highlight-content-area">{item.hs.text || "Highlight without text"}</p>
             {item.note && (
               <div>
                 {item.note.id === editNote.id ? (
                   <div>
-                    <EditNoteArea
+                    <textarea
+                      className="edit-note-area"
                       value={editNote.content}
                       onChange={handleNoteChange}
                     />
-                    <SaveButton onClick={handleNoteSave}>Save</SaveButton>
+                    <button className="save-button" onClick={handleNoteSave}>Save</button>
                   </div>
                 ) : (
-                  <NotePreview onClick={() => handleEditMode(item.note)}>
+                  <p className="note-preview" onClick={() => handleEditMode(item.note)}>
                     {item.note.content}
-                  </NotePreview>
+                  </p>
                 )}
               </div>
             )}
-          </AnnotationsContainer>
+          </div>
         ))}
       </motion.div>
     );
@@ -278,22 +288,22 @@ export function Folder() {
         exit="exit"
       >
         {pagesRef.current.map((page) => (
-          <FileItem key={page.id} onClick={() => handlePageClick(page)}>
+          <div className="file-item" key={page.id} onClick={() => handlePageClick(page)}>
             <div style={{ flexShrink: "0" }}>
               <FileIcon />
             </div>
             <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
               {page.title}
             </h3>
-          </FileItem>
+          </div>
         ))}
       </motion.div>
     );
   };
 
   return (
-    <SidebarContainer className="folder-container">
+    <div className="sidebar-container folder-container">
       {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
-    </SidebarContainer>
+    </div>
   );
 }
