@@ -33,7 +33,6 @@ export function Folder() {
   const [activeFile, setActiveFile] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
   const [isThereHighlights, setIsThereHighlights] = useState(false);
-  const [customTitles, setCustomTitles] = useState({});
   const [editTitle, setEditTitle] = useState({ isEditing: false, content: '' });
 
   const variants = {
@@ -58,16 +57,17 @@ export function Folder() {
   };
   
   const handleTitleSave = async (domain, path) => {
-    const newTitles = { ...customTitles };
-    if (!newTitles[domain]) newTitles[domain] = {};
-    newTitles[domain][path] = editTitle.content;
-    
-    setCustomTitles(newTitles);
+    const updatedNotes = { ...organizedNotes };
+    updatedNotes[domain][path].forEach(item => {
+      item.title = editTitle.content;
+    });
+
+    setOrganizedNotes(updatedNotes);
     setEditTitle({ isEditing: false, content: '' });
-  
-    // Save the updated titles to local storage for persistence
-    await localStore.saveCustomTitles(newTitles);
-  }; 
+
+    // Save the updated annotations to local storage
+    await localStore.save(updatedNotes[domain][path], null, updatedNotes[domain][path][0].url, editTitle.content);
+  };
 
   const handleNoteChange = (event) => {
     setEditNote(prev => ({ ...prev, content: event.target.value }));
@@ -85,48 +85,37 @@ export function Folder() {
 
   const organizeNotes = async () => {
     try {
-        // Fetch all highlights and custom titles
-        const highlights = await localStore.getAll();
-        const customTitles = await localStore.getCustomTitles();  // Fetch custom titles
-        const notes = await Promise.all(highlights.map(async highlight => {
-            const note = await localStore.getNoteById(highlight.hs.id);
-            return { ...highlight, note };
-        }));
-        const organized = {};
+      const highlights = await localStore.getAll();
+      const notes = await Promise.all(highlights.map(async highlight => {
+        const note = await localStore.getNoteById(highlight.hs.id);
+        return { ...highlight, note };
+      }));
+      const organized = {};
 
-        notes.forEach(item => {
-            try {
-                setIsThereHighlights(true)
-                const url = new URL(item.url);
-                const domain = url.hostname;
-                const path = url.pathname;
+      notes.forEach(item => {
+        try {
+          setIsThereHighlights(true);
+          const url = new URL(item.url);
+          const domain = url.hostname;
+          const path = url.pathname;
 
-                if (!organized[domain]) {
-                    organized[domain] = {};
-                }
-                if (!organized[domain][path]) {
-                    organized[domain][path] = [];
-                }
-                organized[domain][path].push(item);
+          if (!organized[domain]) {
+            organized[domain] = {};
+          }
+          if (!organized[domain][path]) {
+            organized[domain][path] = [];
+          }
+          organized[domain][path].push(item);
+        } catch (e) {
+          console.error("Error processing item", item, e);
+        }
+      });
 
-                // Check if there is a custom title for the current path
-                if (customTitles && customTitles[domain] && customTitles[domain][path]) {
-                    organized[domain][path].forEach(note => {
-                        note.customTitle = customTitles[domain][path];  // Apply custom title to each note
-                    });
-                }
-            } catch (e) {
-                console.error("Error processing item", item, e);
-            }
-        });
-
-        setOrganizedNotes(organized);  // Save the organized notes with titles in state
-        setCustomTitles(customTitles);  // Also update the state with fetched custom titles
+      setOrganizedNotes(organized);
     } catch (error) {
-        console.error("Failed to organize notes and highlights", error);
+      console.error("Failed to organize notes and highlights", error);
     }
   };
-
 
   useEffect(() => {
     organizeNotes();
@@ -153,9 +142,10 @@ export function Folder() {
     }
   }, []);
 
+  
   const TitleDisplayOrEdit = ({ url, domain, path, editTitle, setEditTitle, handleTitleSave }) => {
     const [hover, setHover] = useState(false);
-    const currentTitle = customTitles[domain]?.[path] || path;
+    const currentTitle = organizedNotes[domain][path][0].title || path;
   
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
@@ -190,7 +180,7 @@ export function Folder() {
         </div>
       </div>
     );
-  };  
+  };
 
   const renderFileAnnotations = () => {
     if (!activeFile) return null;
@@ -278,7 +268,7 @@ export function Folder() {
                     <FileIcon />
                   </div>
                   <h3 style={{ marginLeft: "10px", overflowX: "hidden" }}>
-                    {customTitles[domain]?.[path] || path}
+                    {items[0].title || path}
                   </h3>
                 </FileItem>
               ))}
@@ -287,7 +277,7 @@ export function Folder() {
         </FolderItem>
       </div>
     ));
-  };  
+  };
 
   return (
     <SidebarContainer className="folder-container">

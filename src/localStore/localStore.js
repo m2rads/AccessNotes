@@ -7,7 +7,6 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.titlesKey = `titles${id ? `-${id}` : ''}`; // Key to store custom titles
         this.localMode = false; 
         console.log("Local mode:", this.localMode);
 
