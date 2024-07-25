@@ -289,10 +289,10 @@ export function Folder() {
       >
         {pagesRef.current.map((page) => (
           <div className="file-item" key={page.id} onClick={() => handlePageClick(page)}>
-            <div style={{ flexShrink: "0" }}>
+            <div className='file-icon'>
               <FileIcon />
             </div>
-            <div style={{ marginLeft: "10px", overflowX: "hidden" }}>
+            <div className='file-item-title label'>
               {page.title}
             </div>
           </div>
