@@ -5,6 +5,7 @@ import { EmptyState } from './EmptyState';
 import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { motion } from 'framer-motion';
+import { PageItem } from './PageItem';
 
 export function Folder() {
   const [pages, setPages] = useState([]);
@@ -287,14 +288,7 @@ export function Folder() {
         exit="exit"
       >
         {pagesRef.current.map((page) => (
-          <div className="file-item" key={page.id} onClick={() => handlePageClick(page)}>
-            <div className='file-icon'>
-              <FileIcon />
-            </div>
-            <div className='file-item-title label'>
-              {page.title}
-            </div>
-          </div>
+          <PageItem key={page.id} page={page} onClick={handlePageClick} />
         ))}
       </motion.div>
     );
