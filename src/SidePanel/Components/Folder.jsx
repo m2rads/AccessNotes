@@ -6,6 +6,8 @@ import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { motion } from 'framer-motion';
 import { PageItem } from './PageItem';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export function Folder() {
   const [pages, setPages] = useState([]);
@@ -98,7 +100,9 @@ export function Folder() {
               id: url.pathname,
               url: item.url,
               title: item.title || url.pathname,
-              annotations: [item]
+              annotations: [item],
+              subpages: [],
+              parentId: null
             });
           }
         } catch (e) {
@@ -120,6 +124,7 @@ export function Folder() {
   const updatePages = useCallback(async () => {
     const highlights = await localStore.getAll();
     const notes = await localStore.getAllNotes();
+    const pageStructure = await localStore.getPageStructure();
 
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
@@ -129,23 +134,30 @@ export function Folder() {
           return { ...highlight, note };
         });
 
+        const pageStructureItem = pageStructure.find(p => p.id === page.id);
         return {
           ...page,
           annotations: updatedAnnotations,
+          subpages: pageStructureItem ? pageStructureItem.subpages : [],
+          parentId: pageStructureItem ? pageStructureItem.parentId : null,
         };
       });
 
       highlights.forEach(highlight => {
         if (!updatedPages.some(page => page.url === highlight.url)) {
           const url = new URL(highlight.url);
+          const newPageId = url.pathname;
+          const pageStructureItem = pageStructure.find(p => p.id === newPageId);
           updatedPages.push({
-            id: url.pathname,
+            id: newPageId,
             url: highlight.url,
             title: highlight.title || url.pathname,
             annotations: [{
               ...highlight,
               note: notes.find(n => n.id === highlight.hs.id)
-            }]
+            }],
+            subpages: pageStructureItem ? pageStructureItem.subpages : [],
+            parentId: pageStructureItem ? pageStructureItem.parentId : null,
           });
         }
       });
@@ -278,6 +290,58 @@ export function Folder() {
     );
   };
 
+  const handleDrop = useCallback(async (draggedId, targetId) => {
+    setPages(prevPages => {
+      const updatedPages = prevPages.map(page => {
+        if (page.id === draggedId) {
+          // Update the parentId of the dragged page
+          return { ...page, parentId: targetId };
+        }
+        if (page.id === targetId) {
+          // Add the dragged page to the subpages of the target
+          return { 
+            ...page, 
+            subpages: page.subpages.includes(draggedId) 
+              ? page.subpages 
+              : [...page.subpages, draggedId] 
+          };
+        }
+        // Remove the dragged page from its previous parent's subpages
+        if (page.subpages.includes(draggedId)) {
+          return { ...page, subpages: page.subpages.filter(id => id !== draggedId) };
+        }
+        return page;
+      });
+
+      // If the page was dragged to become a top-level page
+      if (!targetId) {
+        const draggedPage = updatedPages.find(page => page.id === draggedId);
+        if (draggedPage) {
+          draggedPage.parentId = null;
+        }
+      }
+
+      pagesRef.current = updatedPages;
+      return updatedPages;
+    });
+
+    // Save the updated structure to local storage
+    await localStore.savePageStructure(pagesRef.current);
+    
+    // Trigger an update to reflect changes
+    updatePages();
+  }, [updatePages]);
+
+  const isCircularReference = useCallback((draggedId, targetId) => {
+    let currentId = targetId;
+    while (currentId) {
+      if (currentId === draggedId) return true;
+      const parent = pagesRef.current.find(page => page.id === currentId);
+      currentId = parent ? parent.parentId : null;
+    }
+    return false;
+  }, []);
+
   const renderPages = () => {
     return (
       <motion.div
@@ -287,9 +351,21 @@ export function Folder() {
         animate="animate"
         exit="exit"
       >
-        {pagesRef.current.map((page) => (
-          <PageItem key={page.id} page={page} onClick={handlePageClick} />
-        ))}
+        <DndProvider backend={HTML5Backend}>
+          <div className="drop-zone">
+            {pagesRef.current.filter(page => !page.parentId).map((page) => (
+              <PageItem 
+                key={page.id} 
+                page={page} 
+                onClick={handlePageClick}
+                onDrop={handleDrop}
+                isCircularReference={isCircularReference}
+                subpages={pagesRef.current.filter(p => p.parentId === page.id)}
+                allPages={pagesRef.current}
+              />
+            ))}
+          </div>
+        </DndProvider>
       </motion.div>
     );
   };
