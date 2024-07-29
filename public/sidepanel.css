@@ -88,7 +88,7 @@ body, html {
 /* --------------------- file item -------------------- */
 .file-item {
   display: flex;
-  /* align-items: center; */
+  align-items: center;
   padding: 5px 8px;
   width: 100%;
   border-radius: 6px;
