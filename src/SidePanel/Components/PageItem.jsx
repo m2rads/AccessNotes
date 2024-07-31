@@ -2,10 +2,10 @@ import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { FileIcon } from '../../Icons/FileIcon';
 
-export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages, allPages }) => {
+export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages, allPages, depth = 0 }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'PAGE',
-        item: { id: page.id },
+        item: { id: page.id, parentId: page.parentId },
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
@@ -14,8 +14,10 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
     const [{ isOver, canDrop }, drop] = useDrop(() => ({
         accept: 'PAGE',
         canDrop: (item) => !isCircularReference(item.id, page.id) && item.id !== page.id,
-        drop: (item) => {
-            onDrop(item.id, page.id);
+        drop: (item, monitor) => {
+            if (!monitor.didDrop()) {
+                onDrop(item.id, page.id);
+            }
         },
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
@@ -26,7 +28,7 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
     const isActive = isOver && canDrop;
 
     return (
-        <div ref={drop} style={{ padding: '8px', margin: '8px 0' }}>
+        <div ref={drop} style={{ padding: '8px', paddingLeft: `${depth * 20}px`, margin: '8px 0' }}>
             <div 
                 ref={drag}
                 className={`file-item ${isDragging ? 'dragging' : ''} ${isActive ? 'drop-target' : ''}`} 
@@ -34,7 +36,8 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
                 style={{ 
                     opacity: isDragging ? 0.5 : 1,
                     backgroundColor: isActive ? '#e0e0e0' : 'transparent',
-                    border: isActive ? '2px dashed #999' : '2px solid transparent'
+                    border: isActive ? '2px dashed #999' : '2px solid transparent',
+                    cursor: 'move',
                 }}
             >
                 <div className='file-icon'>
@@ -45,7 +48,7 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
                 </div>
             </div>
             {subpages && subpages.length > 0 && (
-                <div className="subpages" style={{ marginLeft: '20px' }}>
+                <div className="subpages">
                     {subpages.map(subpage => (
                         <PageItem 
                             key={subpage.id} 
@@ -55,6 +58,7 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
                             isCircularReference={isCircularReference}
                             subpages={allPages.filter(p => p.parentId === subpage.id)}
                             allPages={allPages}
+                            depth={depth + 1}
                         />
                     ))}
                 </div>
