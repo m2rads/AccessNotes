@@ -326,7 +326,7 @@ export function Folder() {
   }, [pages]);
 
   const RootDropZone = () => {
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: 'PAGE',
       drop: (item, monitor) => {
         if (!monitor.didDrop()) {
@@ -335,19 +335,52 @@ export function Folder() {
       },
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
       }),
     }));
 
     return (
       <div 
         ref={drop}
-        className="drop-zone"
+        className="root-drop-zone"
         style={{ 
-          minHeight: '100px', 
-          border: isOver ? '2px dashed #999' : '2px solid transparent',
-          padding: '8px'
+          minHeight: '100%', 
+          padding: '16px',
+          backgroundColor: isOver ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+          transition: 'background-color 0.3s',
+          border: canDrop ? '2px dashed #999' : '2px solid transparent',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          position: 'relative',
         }}
       >
+        {isOver && canDrop && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <div
+              style={{
+                padding: '8px 16px',
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                borderRadius: '4px',
+              }}
+            >
+              Drop here to move to root
+            </div>
+          </div>
+        )}
         {pages.filter(page => !page.parentId).map((page) => (
           <PageItem 
             key={page.id} 
@@ -371,6 +404,7 @@ export function Folder() {
         initial="initial"
         animate="animate"
         exit="exit"
+        style={{ height: '100%' }}
       >
         <RootDropZone />
       </motion.div>
@@ -379,9 +413,10 @@ export function Folder() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="sidebar-container folder-container">
+      <div className="sidebar-container folder-container" style={{ height: '100%' }}>
         {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
       </div>
     </DndProvider>
   );
+
 }
