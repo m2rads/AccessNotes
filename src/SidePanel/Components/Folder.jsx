@@ -6,6 +6,8 @@ import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { motion } from 'framer-motion';
 import { PageItem } from './PageItem';
+import { DndProvider, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export function Folder() {
   const [pages, setPages] = useState([]);
@@ -278,6 +280,89 @@ export function Folder() {
     );
   };
 
+  const handleDrop = useCallback((draggedId, targetId) => {
+    setPages(prevPages => {
+      const updatedPages = prevPages.map(page => {
+        if (page.id === draggedId) {
+          // Update the parentId of the dragged page
+          return { ...page, parentId: targetId };
+        }
+        if (page.id === targetId) {
+          // Add the dragged page to the subpages of the target
+          return { 
+            ...page, 
+            subpages: page.subpages ? 
+              (page.subpages.includes(draggedId) ? page.subpages : [...page.subpages, draggedId]) 
+              : [draggedId] 
+          };
+        }
+        // Remove the dragged page from its previous parent's subpages
+        if (page.subpages && page.subpages.includes(draggedId)) {
+          return { ...page, subpages: page.subpages.filter(id => id !== draggedId) };
+        }
+        return page;
+      });
+
+      // If the page was dragged to become a top-level page
+      if (!targetId) {
+        const draggedPage = updatedPages.find(page => page.id === draggedId);
+        if (draggedPage) {
+          draggedPage.parentId = null;
+        }
+      }
+
+      return updatedPages;
+    });
+  }, []);
+
+  const isCircularReference = useCallback((draggedId, targetId) => {
+    let currentId = targetId;
+    while (currentId) {
+      if (currentId === draggedId) return true;
+      const parent = pages.find(page => page.id === currentId);
+      currentId = parent ? parent.parentId : null;
+    }
+    return false;
+  }, [pages]);
+
+  const RootDropZone = () => {
+    const [{ isOver }, drop] = useDrop(() => ({
+      accept: 'PAGE',
+      drop: (item, monitor) => {
+        if (!monitor.didDrop()) {
+          handleDrop(item.id, null);
+        }
+      },
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+      }),
+    }));
+
+    return (
+      <div 
+        ref={drop}
+        className="drop-zone"
+        style={{ 
+          minHeight: '100px', 
+          border: isOver ? '2px dashed #999' : '2px solid transparent',
+          padding: '8px'
+        }}
+      >
+        {pages.filter(page => !page.parentId).map((page) => (
+          <PageItem 
+            key={page.id} 
+            page={page} 
+            onClick={handlePageClick}
+            onDrop={handleDrop}
+            isCircularReference={isCircularReference}
+            subpages={pages.filter(p => p.parentId === page.id)}
+            allPages={pages}
+          />
+        ))}
+      </div>
+    );
+  };
+
   const renderPages = () => {
     return (
       <motion.div
@@ -287,16 +372,16 @@ export function Folder() {
         animate="animate"
         exit="exit"
       >
-        {pagesRef.current.map((page) => (
-          <PageItem key={page.id} page={page} onClick={handlePageClick} />
-        ))}
+        <RootDropZone />
       </motion.div>
     );
   };
 
   return (
-    <div className="sidebar-container folder-container">
-      {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className="sidebar-container folder-container">
+        {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
+      </div>
+    </DndProvider>
   );
 }
