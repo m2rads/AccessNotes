@@ -290,17 +290,7 @@ export function Folder() {
     );
   };
 
-  const isCircularReference = useCallback((draggedId, targetId) => {
-    let currentId = targetId;
-    while (currentId) {
-      if (currentId === draggedId) return true;
-      const parent = pagesRef.current.find(page => page.id === currentId);
-      currentId = parent ? parent.parentId : null;
-    }
-    return false;
-  }, []);
-
-  const handleDrop = useCallback(async (draggedId, targetId) => {
+const handleDrop = useCallback((draggedId, targetId) => {
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
         if (page.id === draggedId) {
@@ -311,9 +301,9 @@ export function Folder() {
           // Add the dragged page to the subpages of the target
           return { 
             ...page, 
-            subpages: page.subpages.includes(draggedId) 
-              ? page.subpages 
-              : [...page.subpages, draggedId] 
+            subpages: page.subpages ? 
+              (page.subpages.includes(draggedId) ? page.subpages : [...page.subpages, draggedId]) 
+              : [draggedId] 
           };
         }
         // Remove the dragged page from its previous parent's subpages
@@ -323,19 +313,30 @@ export function Folder() {
         return page;
       });
 
-      pagesRef.current = updatedPages;
+      // If the page was dragged to become a top-level page
+      if (!targetId) {
+        const draggedPage = updatedPages.find(page => page.id === draggedId);
+        if (draggedPage) {
+          draggedPage.parentId = null;
+        }
+      }
+
       return updatedPages;
     });
+  }, []);
 
-    // Save the updated structure to local storage
-    await localStore.savePageStructure(pagesRef.current);
-    
-    // Trigger an update to reflect changes
-    updatePages();
-  }, [updatePages]);
+  const isCircularReference = useCallback((draggedId, targetId) => {
+    let currentId = targetId;
+    while (currentId) {
+      if (currentId === draggedId) return true;
+      const parent = pages.find(page => page.id === currentId);
+      currentId = parent ? parent.parentId : null;
+    }
+    return false;
+  }, [pages]);
 
-  const TopLevelDropZone = () => {
-    const [{ isOver }, drop] = useDrop(() => ({
+  const RootDropZone = () => {
+    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: 'PAGE',
       drop: (item, monitor) => {
         if (!monitor.didDrop()) {
@@ -344,28 +345,61 @@ export function Folder() {
       },
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
       }),
     }));
 
     return (
       <div 
-        ref={drop} 
-        className="drop-zone" 
+        ref={drop}
+        className="root-drop-zone"
         style={{ 
-          minHeight: '100px',
-          backgroundColor: isOver ? '#f0f0f0' : 'transparent',
+          minHeight: '100%', 
+          padding: '16px',
+          backgroundColor: isOver ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
           transition: 'background-color 0.3s',
+          border: canDrop ? '2px dashed #999' : '2px solid transparent',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          position: 'relative',
         }}
       >
-        {pagesRef.current.filter(page => !page.parentId).map((page) => (
+        {isOver && canDrop && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <div
+              style={{
+                padding: '8px 16px',
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                borderRadius: '4px',
+              }}
+            >
+              Drop here to move to root
+            </div>
+          </div>
+        )}
+        {pages.filter(page => !page.parentId).map((page) => (
           <PageItem 
             key={page.id} 
             page={page} 
             onClick={handlePageClick}
             onDrop={handleDrop}
             isCircularReference={isCircularReference}
-            subpages={pagesRef.current.filter(p => p.parentId === page.id)}
-            allPages={pagesRef.current}
+            subpages={pages.filter(p => p.parentId === page.id)}
+            allPages={pages}
           />
         ))}
       </div>
@@ -380,17 +414,19 @@ export function Folder() {
         initial="initial"
         animate="animate"
         exit="exit"
+        style={{ height: '100%' }}
       >
-        <DndProvider backend={HTML5Backend}>
-          <TopLevelDropZone />
-        </DndProvider>
+        <RootDropZone />
       </motion.div>
     );
   };
 
   return (
-    <div className="sidebar-container folder-container">
-      {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className="sidebar-container folder-container" style={{ height: '100%' }}>
+        {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
+      </div>
+    </DndProvider>
   );
+
 }
