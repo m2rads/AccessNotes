@@ -100,7 +100,9 @@ export function Folder() {
               id: url.pathname,
               url: item.url,
               title: item.title || url.pathname,
-              annotations: [item]
+              annotations: [item],
+              subpages: [],
+              parentId: null
             });
           }
         } catch (e) {
@@ -122,6 +124,7 @@ export function Folder() {
   const updatePages = useCallback(async () => {
     const highlights = await localStore.getAll();
     const notes = await localStore.getAllNotes();
+    const pageStructure = await localStore.getPageStructure();
 
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
@@ -131,23 +134,30 @@ export function Folder() {
           return { ...highlight, note };
         });
 
+        const pageStructureItem = pageStructure.find(p => p.id === page.id);
         return {
           ...page,
           annotations: updatedAnnotations,
+          subpages: pageStructureItem ? pageStructureItem.subpages : [],
+          parentId: pageStructureItem ? pageStructureItem.parentId : null,
         };
       });
 
       highlights.forEach(highlight => {
         if (!updatedPages.some(page => page.url === highlight.url)) {
           const url = new URL(highlight.url);
+          const newPageId = url.pathname;
+          const pageStructureItem = pageStructure.find(p => p.id === newPageId);
           updatedPages.push({
-            id: url.pathname,
+            id: newPageId,
             url: highlight.url,
             title: highlight.title || url.pathname,
             annotations: [{
               ...highlight,
               note: notes.find(n => n.id === highlight.hs.id)
-            }]
+            }],
+            subpages: pageStructureItem ? pageStructureItem.subpages : [],
+            parentId: pageStructureItem ? pageStructureItem.parentId : null,
           });
         }
       });
@@ -280,7 +290,7 @@ export function Folder() {
     );
   };
 
-  const handleDrop = useCallback((draggedId, targetId) => {
+const handleDrop = useCallback((draggedId, targetId) => {
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
         if (page.id === draggedId) {

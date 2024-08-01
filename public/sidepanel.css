@@ -114,6 +114,15 @@ body, html {
   margin-right: 8px;
 }
 
+.file-item.dragging {
+  opacity: 0.5;
+}
+
+.file-item.drop-target {
+  background-color: #e0e0e0;
+  border: 2px dashed #999;
+}
+
 /* -------------------------- */
 .edit-note-area {
   width: 90%;
