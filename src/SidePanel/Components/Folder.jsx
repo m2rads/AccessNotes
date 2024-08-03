@@ -125,6 +125,7 @@ export function Folder() {
     const highlights = await localStore.getAll();
     const notes = await localStore.getAllNotes();
     const pageStructure = await localStore.getPageStructure();
+    console.log("page structure", pageStructure);
 
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
@@ -290,15 +291,15 @@ export function Folder() {
     );
   };
 
-const handleDrop = useCallback((draggedId, targetId) => {
+  const handleDrop = useCallback((draggedId, targetId) => {
+    console.log(`Drag operation: Dragged ${draggedId} onto ${targetId}`);
+    
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
         if (page.id === draggedId) {
-          // Update the parentId of the dragged page
           return { ...page, parentId: targetId };
         }
         if (page.id === targetId) {
-          // Add the dragged page to the subpages of the target
           return { 
             ...page, 
             subpages: page.subpages ? 
@@ -306,29 +307,23 @@ const handleDrop = useCallback((draggedId, targetId) => {
               : [draggedId] 
           };
         }
-        // Remove the dragged page from its previous parent's subpages
         if (page.subpages && page.subpages.includes(draggedId)) {
           return { ...page, subpages: page.subpages.filter(id => id !== draggedId) };
         }
         return page;
       });
-
-      // If the page was dragged to become a top-level page
-      if (!targetId) {
-        const draggedPage = updatedPages.find(page => page.id === draggedId);
-        if (draggedPage) {
-          draggedPage.parentId = null;
-        }
-      }
-
+  
+      console.log('Updated pages structure:', updatedPages);
       return updatedPages;
     });
-  }, []);
+  }, []);  
 
   const isCircularReference = useCallback((draggedId, targetId) => {
     let currentId = targetId;
     while (currentId) {
-      if (currentId === draggedId) return true;
+      if (currentId === draggedId) {
+        return true;
+      }
       const parent = pages.find(page => page.id === currentId);
       currentId = parent ? parent.parentId : null;
     }
@@ -340,6 +335,7 @@ const handleDrop = useCallback((draggedId, targetId) => {
       accept: 'PAGE',
       drop: (item, monitor) => {
         if (!monitor.didDrop()) {
+          console.log(`Dropping ${item.id} to root level`);
           handleDrop(item.id, null);
         }
       },
