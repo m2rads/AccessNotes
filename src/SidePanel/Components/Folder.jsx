@@ -355,7 +355,6 @@ const handleDrop = useCallback((draggedId, targetId) => {
         style={{ 
           minHeight: '100px', 
           border: isOver ? '2px dashed #999' : '2px solid transparent',
-          padding: '8px'
         }}
       >
         {pages.filter(page => !page.parentId).map((page) => (
