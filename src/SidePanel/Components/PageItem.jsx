@@ -28,18 +28,18 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
     const isActive = isOver && canDrop;
 
     return (
-        <div ref={drop} style={{ padding: '8px', margin: '8px 0' }}>
+        <div ref={drop}>
             <div 
                 ref={drag}
                 className={`file-item ${isDragging ? 'dragging' : ''} ${isActive ? 'drop-target' : ''}`} 
                 onClick={() => onClick(page)}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                style={{ 
-                    opacity: isDragging ? 0.5 : 1,
-                    backgroundColor: isActive ? '#e0e0e0' : 'transparent',
-                    border: isActive ? '2px dashed #999' : '2px solid transparent'
-                }}
+                // style={{ 
+                //     opacity: isDragging ? 0.5 : 1,
+                //     backgroundColor: isActive ? '#e0e0e0' : 'transparent',
+                //     border: isActive ? '2px dashed #999' : '2px solid transparent'
+                // }}
             >
                 <div className='file-icon'>
                     <FileIcon />

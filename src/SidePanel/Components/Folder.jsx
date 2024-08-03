@@ -389,7 +389,7 @@ const handleDrop = useCallback((draggedId, targetId) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="sidebar-container folder-container">
+      <div className="">
         {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
       </div>
     </DndProvider>
