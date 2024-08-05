@@ -45,8 +45,8 @@ export const PageItem = ({ page, onClick, onDrop, isCircularReference, subpages,
                 onMouseLeave={() => setIsHovered(false)}
                 style={{
                     opacity: isDragging ? 0.5 : 1,
-                    backgroundColor: isActive ? '#e0e0e0' : 'transparent',
-                    border: isActive ? '2px dashed #999' : '2px solid transparent'
+                    // backgroundColor: isActive ? '#e0e0e0' : 'transparent',
+                    // border: isActive ? '2px dashed #999' : '2px solid transparent'
                 }}
             >
                 <div className='file-icon'>

@@ -350,7 +350,8 @@ export function Folder() {
         className="drop-zone"
         style={{ 
           minHeight: '100px', 
-          border: isOver ? '2px dashed #999' : '2px solid transparent',
+          border: isOver ? '2px solid #6798E1' : '2px solid transparent',
+          padding: "10px"
         }}
       >
         {pages.filter(page => !page.parentId).map((page) => (
@@ -376,6 +377,7 @@ export function Folder() {
         initial="initial"
         animate="animate"
         exit="exit"
+        className='pages-wrapper'
       >
         <RootDropZone />
       </motion.div>
