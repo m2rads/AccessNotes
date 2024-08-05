@@ -110,10 +110,7 @@ body, html {
 }
 
 .file-icon {
-  padding: 0;
-  align-self: center;
-  flex-shrink: 0;
-  margin-right: 8px;
+  transition: background 150ms ease 0s;
 }
 
 .file-item.dragging {
