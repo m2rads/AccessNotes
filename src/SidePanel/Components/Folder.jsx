@@ -291,6 +291,33 @@ export function Folder() {
     );
   };
 
+  const onReorder = useCallback((draggedId, targetId, position, parentId) => {
+    setPages(prevPages => {
+      const reorder = (pages) => {
+        const draggedIndex = pages.findIndex(p => p.id === draggedId);
+        const targetIndex = pages.findIndex(p => p.id === targetId);
+        if (draggedIndex === -1 || targetIndex === -1) return pages;
+
+        const newPages = [...pages];
+        const [removed] = newPages.splice(draggedIndex, 1);
+        const insertIndex = position === 'before' ? targetIndex : targetIndex + 1;
+        newPages.splice(insertIndex, 0, removed);
+        return newPages;
+      };
+
+      if (parentId === null) {
+        return reorder(prevPages);
+      } else {
+        return prevPages.map(page => {
+          if (page.id === parentId) {
+            return { ...page, subpages: reorder(page.subpages) };
+          }
+          return page;
+        });
+      }
+    });
+  }, []);
+
   const handleDrop = useCallback((draggedId, targetId) => {
     console.log(`Drag operation: Dragged ${draggedId} onto ${targetId}`);
     
@@ -360,13 +387,14 @@ export function Folder() {
             page={page} 
             onClick={handlePageClick}
             onDrop={handleDrop}
+            onReorder={onReorder} // Pass onReorder to PageItem
             isCircularReference={isCircularReference}
             subpages={pages.filter(p => p.parentId === page.id)}
             allPages={pages}
           />
         ))}
       </div>
-    );
+    );  
   };
 
   const renderPages = () => {
@@ -387,7 +415,13 @@ export function Folder() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="">
-        {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
+        {isThereHighlights ? (
+          activePage ? 
+            renderPageAnnotations() : 
+            <RootDropZone onReorder={onReorder} /> // Pass onReorder to RootDropZone
+        ) : (
+          <EmptyState />
+        )}
       </div>
     </DndProvider>
   );
