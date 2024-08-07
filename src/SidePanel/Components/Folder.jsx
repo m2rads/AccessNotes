@@ -291,12 +291,24 @@ export function Folder() {
     );
   };
 
-  const onReorder = useCallback((draggedId, targetId, position, parentId) => {
+  const onReorder = useCallback((draggedId, targetId, position) => {
     setPages(prevPages => {
-      const reorder = (pages) => {
+      const reorderPages = (pages, draggedId, targetId, position) => {
         const draggedIndex = pages.findIndex(p => p.id === draggedId);
         const targetIndex = pages.findIndex(p => p.id === targetId);
-        if (draggedIndex === -1 || targetIndex === -1) return pages;
+        
+        if (draggedIndex === -1 || targetIndex === -1) {
+          // If the dragged or target page is not in this level, check subpages
+          return pages.map(page => {
+            if (page.subpages && page.subpages.length > 0) {
+              return {
+                ...page,
+                subpages: reorderPages(page.subpages, draggedId, targetId, position)
+              };
+            }
+            return page;
+          });
+        }
 
         const newPages = [...pages];
         const [removed] = newPages.splice(draggedIndex, 1);
@@ -305,16 +317,7 @@ export function Folder() {
         return newPages;
       };
 
-      if (parentId === null) {
-        return reorder(prevPages);
-      } else {
-        return prevPages.map(page => {
-          if (page.id === parentId) {
-            return { ...page, subpages: reorder(page.subpages) };
-          }
-          return page;
-        });
-      }
+      return reorderPages(prevPages, draggedId, targetId, position);
     });
   }, []);
 
@@ -322,28 +325,34 @@ export function Folder() {
     console.log(`Drag operation: Dragged ${draggedId} onto ${targetId}`);
     
     setPages(prevPages => {
-      const updatedPages = prevPages.map(page => {
-        if (page.id === draggedId) {
-          return { ...page, parentId: targetId };
-        }
-        if (page.id === targetId) {
-          return { 
-            ...page, 
-            subpages: page.subpages ? 
-              (page.subpages.includes(draggedId) ? page.subpages : [...page.subpages, draggedId]) 
-              : [draggedId] 
-          };
-        }
-        if (page.subpages && page.subpages.includes(draggedId)) {
-          return { ...page, subpages: page.subpages.filter(id => id !== draggedId) };
-        }
-        return page;
-      });
-  
+      const updatePages = (pages) => {
+        return pages.map(page => {
+          if (page.id === draggedId) {
+            return { ...page, parentId: targetId };
+          }
+          if (page.id === targetId) {
+            return { 
+              ...page, 
+              subpages: page.subpages ? 
+                (page.subpages.includes(draggedId) ? page.subpages : [...page.subpages, draggedId]) 
+                : [draggedId] 
+            };
+          }
+          if (page.subpages && page.subpages.includes(draggedId)) {
+            return { ...page, subpages: page.subpages.filter(id => id !== draggedId) };
+          }
+          if (page.subpages) {
+            return { ...page, subpages: updatePages(page.subpages) };
+          }
+          return page;
+        });
+      };
+
+      const updatedPages = updatePages(prevPages);
       console.log('Updated pages structure:', updatedPages);
       return updatedPages;
     });
-  }, []);  
+  }, []);
 
   const isCircularReference = useCallback((draggedId, targetId) => {
     let currentId = targetId;
@@ -371,6 +380,7 @@ export function Folder() {
         }),
     }));
 
+  const rootPages = pages.filter(page => !page.parentId);
     return (
       <div 
         ref={drop}
@@ -378,10 +388,11 @@ export function Folder() {
         style={{ 
             minHeight: '100px', 
             border: isOver ? '2px solid #6798E1' : '2px solid transparent',
-            padding: "10px"
+            padding: "10px",
+            transition: 'border-color 0.3s'
         }}
       >
-        {pages.filter(page => !page.parentId).map((page, index) => (
+        {rootPages.map((page, index) => (
           <PageItem 
             key={page.id} 
             page={page} 
@@ -392,6 +403,7 @@ export function Folder() {
             subpages={pages.filter(p => p.parentId === page.id)}
             allPages={pages}
             isFirst={index === 0}
+            isLast={index === rootPages.length - 1}
           />
         ))}
       </div>

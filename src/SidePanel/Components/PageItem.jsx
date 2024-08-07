@@ -3,7 +3,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { FileIcon } from '../../Icons/FileIcon';
 import { ChevronRight } from 'lucide-react';
 
-export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference, subpages, allPages, isFirst }) => {
+export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference, subpages, allPages, isFirst, isLast }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
     const ref = useRef(null);
@@ -19,8 +19,10 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'PAGE',
         canDrop: (item) => !isCircularReference(item.id, page.id) && item.id !== page.id,
-        drop: (item) => {
-            onDrop(item.id, page.id);
+        drop: (item, monitor) => {
+            if (!monitor.didDrop()) {
+                onDrop(item.id, page.id);
+            }
         },
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
@@ -30,7 +32,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
     const [{ isOverTop }, dropTop] = useDrop(() => ({
         accept: 'PAGE',
         canDrop: (item) => !isCircularReference(item.id, page.id) && item.id !== page.id,
-        drop: (item) => onReorder(item.id, page.id, 'before', page.parentId),
+        drop: (item) => onReorder(item.id, page.id, 'before'),
         collect: (monitor) => ({
             isOverTop: !!monitor.isOver(),
         }),
@@ -39,7 +41,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
     const [{ isOverBottom }, dropBottom] = useDrop(() => ({
         accept: 'PAGE',
         canDrop: (item) => !isCircularReference(item.id, page.id) && item.id !== page.id,
-        drop: (item) => onReorder(item.id, page.id, 'after', page.parentId),
+        drop: (item) => onReorder(item.id, page.id, 'after'),
         collect: (monitor) => ({
             isOverBottom: !!monitor.isOver(),
         }),
@@ -57,7 +59,13 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
 
     return (
         <div>
-            {isFirst && <div ref={dropTop} style={{ height: '5px', background: isOverTop ? '#6798E1' : 'transparent' }} />}
+            {isFirst && (
+                <div ref={dropTop} style={{ 
+                    height: '5px', 
+                    background: isOverTop ? '#6798E1' : 'transparent',
+                    transition: 'background-color 0.3s'
+                }} />
+            )}
             <div ref={dragDropRef}>
                 <div 
                     className={`file-item ${isDragging ? 'dragging' : ''} ${isOver ? 'drop-target' : ''}`}
@@ -70,6 +78,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                         alignItems: 'center',
                         padding: '5px',
                         background: isOver ? '#2c2c2c' : 'transparent',
+                        transition: 'background-color 0.3s, opacity 0.3s'
                     }}
                 >
                     <div className='file-icon' style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B7B6B4' }}>
@@ -80,7 +89,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                                 style={{
                                     cursor: 'pointer',
                                     transform: isExpanded ? 'rotate(90deg)' : 'none',
-                                    transition: 'transform 0.3s ease',
+                                    transition: 'transform 0.3s ease, opacity 0.3s',
                                     opacity: isHovered ? 1 : 0,
                                 }}
                             />
@@ -96,7 +105,11 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                     </div>
                 </div>
             </div>
-            <div ref={dropBottom} style={{ height: '5px', background: isOverBottom ? '#6798E1' : 'transparent' }} />
+            <div ref={dropBottom} style={{ 
+                height: '5px', 
+                background: isOverBottom ? '#6798E1' : 'transparent',
+                transition: 'background-color 0.3s'
+            }} />
             {isExpanded && subpages && subpages.length > 0 && (
                 <div className="subpages" style={{ marginLeft: '20px' }}>
                     {subpages.map((subpage, index) => (
@@ -110,6 +123,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                             subpages={allPages.filter(p => p.parentId === subpage.id)}
                             allPages={allPages}
                             isFirst={index === 0}
+                            isLast={index === subpages.length - 1}
                         />
                     ))}
                 </div>
