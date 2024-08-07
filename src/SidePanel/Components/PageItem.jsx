@@ -3,7 +3,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { FileIcon } from '../../Icons/FileIcon';
 import { ChevronRight } from 'lucide-react';
 
-export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference, subpages, allPages }) => {
+export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference, subpages, allPages, isFirst }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
     const ref = useRef(null);
@@ -57,7 +57,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
 
     return (
         <div>
-            <div ref={dropTop} style={{ height: '5px', background: isOverTop ? '#6798E1' : 'transparent' }} />
+            {isFirst && <div ref={dropTop} style={{ height: '5px', background: isOverTop ? '#6798E1' : 'transparent' }} />}
             <div ref={dragDropRef}>
                 <div 
                     className={`file-item ${isDragging ? 'dragging' : ''} ${isOver ? 'drop-target' : ''}`}
@@ -66,6 +66,10 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                     onMouseLeave={() => setIsHovered(false)}
                     style={{
                         opacity: isDragging ? 0.5 : 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '5px',
+                        background: isOver ? '#2c2c2c' : 'transparent',
                     }}
                 >
                     <div className='file-icon' style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B7B6B4' }}>
@@ -95,7 +99,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
             <div ref={dropBottom} style={{ height: '5px', background: isOverBottom ? '#6798E1' : 'transparent' }} />
             {isExpanded && subpages && subpages.length > 0 && (
                 <div className="subpages" style={{ marginLeft: '20px' }}>
-                    {subpages.map(subpage => (
+                    {subpages.map((subpage, index) => (
                         <PageItem
                             key={subpage.id}
                             page={subpage}
@@ -105,6 +109,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                             isCircularReference={isCircularReference}
                             subpages={allPages.filter(p => p.parentId === subpage.id)}
                             allPages={allPages}
+                            isFirst={index === 0}
                         />
                     ))}
                 </div>

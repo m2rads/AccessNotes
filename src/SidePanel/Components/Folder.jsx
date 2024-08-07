@@ -359,16 +359,16 @@ export function Folder() {
 
   const RootDropZone = () => {
     const [{ isOver }, drop] = useDrop(() => ({
-      accept: 'PAGE',
-      drop: (item, monitor) => {
-        if (!monitor.didDrop()) {
-          console.log(`Dropping ${item.id} to root level`);
-          handleDrop(item.id, null);
-        }
-      },
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-      }),
+        accept: 'PAGE',
+        drop: (item, monitor) => {
+            if (!monitor.didDrop()) {
+                console.log(`Dropping ${item.id} to root level`);
+                handleDrop(item.id, null);
+            }
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+        }),
     }));
 
     return (
@@ -376,25 +376,26 @@ export function Folder() {
         ref={drop}
         className="drop-zone"
         style={{ 
-          minHeight: '100px', 
-          border: isOver ? '2px solid #6798E1' : '2px solid transparent',
-          padding: "10px"
+            minHeight: '100px', 
+            border: isOver ? '2px solid #6798E1' : '2px solid transparent',
+            padding: "10px"
         }}
       >
-        {pages.filter(page => !page.parentId).map((page) => (
+        {pages.filter(page => !page.parentId).map((page, index) => (
           <PageItem 
             key={page.id} 
             page={page} 
             onClick={handlePageClick}
             onDrop={handleDrop}
-            onReorder={onReorder} // Pass onReorder to PageItem
+            onReorder={onReorder}
             isCircularReference={isCircularReference}
             subpages={pages.filter(p => p.parentId === page.id)}
             allPages={pages}
+            isFirst={index === 0}
           />
         ))}
       </div>
-    );  
+    );
   };
 
   const renderPages = () => {
