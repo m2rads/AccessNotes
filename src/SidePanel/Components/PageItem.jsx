@@ -3,6 +3,8 @@ import { useDrag, useDrop } from 'react-dnd';
 import { FileIcon } from '../../Icons/FileIcon';
 import { ChevronRight } from 'lucide-react';
 
+export const PageStructureContext = React.createContext(null);
+
 export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference, subpages, allPages, isFirst, isLast }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
@@ -32,7 +34,12 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
     const [{ isOverTop }, dropTop] = useDrop(() => ({
         accept: 'PAGE',
         canDrop: (item) => !isCircularReference(item.id, page.id) && item.id !== page.id,
-        drop: (item) => onReorder(item.id, page.id, 'before'),
+        drop: (item, monitor) => {
+            onReorder(item.id, page.id, 'before')
+            if (!monitor.didDrop()) {
+                onDrop(item.id, page.parentId);
+            }
+        },
         collect: (monitor) => ({
             isOverTop: !!monitor.isOver(),
         }),
@@ -41,7 +48,12 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
     const [{ isOverBottom }, dropBottom] = useDrop(() => ({
         accept: 'PAGE',
         canDrop: (item) => !isCircularReference(item.id, page.id) && item.id !== page.id,
-        drop: (item) => onReorder(item.id, page.id, 'after'),
+        drop: (item, monitor) => {
+            onReorder(item.id, page.id, 'after')
+            if (!monitor.didDrop()) {
+                onDrop(item.id, page.parentId);
+            }
+        },
         collect: (monitor) => ({
             isOverBottom: !!monitor.isOver(),
         }),
