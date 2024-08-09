@@ -6,6 +6,8 @@ import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
 import { PenIcon } from '../../Icons/PenIcon';
 import { motion } from 'framer-motion';
 import { PageItem } from './PageItem';
+import { DndProvider, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export function Folder() {
   const [pages, setPages] = useState([]);
@@ -98,7 +100,9 @@ export function Folder() {
               id: url.pathname,
               url: item.url,
               title: item.title || url.pathname,
-              annotations: [item]
+              annotations: [item],
+              subpages: [],
+              parentId: null
             });
           }
         } catch (e) {
@@ -120,6 +124,8 @@ export function Folder() {
   const updatePages = useCallback(async () => {
     const highlights = await localStore.getAll();
     const notes = await localStore.getAllNotes();
+    const pageStructure = await localStore.getPageStructure();
+    console.log("page structure", pageStructure);
 
     setPages(prevPages => {
       const updatedPages = prevPages.map(page => {
@@ -129,23 +135,30 @@ export function Folder() {
           return { ...highlight, note };
         });
 
+        const pageStructureItem = pageStructure.find(p => p.id === page.id);
         return {
           ...page,
           annotations: updatedAnnotations,
+          subpages: pageStructureItem ? pageStructureItem.subpages : [],
+          parentId: pageStructureItem ? pageStructureItem.parentId : null,
         };
       });
 
       highlights.forEach(highlight => {
         if (!updatedPages.some(page => page.url === highlight.url)) {
           const url = new URL(highlight.url);
+          const newPageId = url.pathname;
+          const pageStructureItem = pageStructure.find(p => p.id === newPageId);
           updatedPages.push({
-            id: url.pathname,
+            id: newPageId,
             url: highlight.url,
             title: highlight.title || url.pathname,
             annotations: [{
               ...highlight,
               note: notes.find(n => n.id === highlight.hs.id)
-            }]
+            }],
+            subpages: pageStructureItem ? pageStructureItem.subpages : [],
+            parentId: pageStructureItem ? pageStructureItem.parentId : null,
           });
         }
       });
@@ -278,6 +291,124 @@ export function Folder() {
     );
   };
 
+  const onReorder = useCallback((draggedId, targetId, position) => {
+    setPages(prevPages => {
+      const reorderPages = (pages, draggedId, targetId, position) => {
+        const draggedIndex = pages.findIndex(p => p.id === draggedId);
+        const targetIndex = pages.findIndex(p => p.id === targetId);
+        
+        if (draggedIndex === -1 || targetIndex === -1) {
+          // If the dragged or target page is not in this level, check subpages
+          return pages.map(page => {
+            if (page.subpages && page.subpages.length > 0) {
+              return {
+                ...page,
+                subpages: reorderPages(page.subpages, draggedId, targetId, position)
+              };
+            }
+            return page;
+          });
+        }
+
+        const newPages = [...pages];
+        const [removed] = newPages.splice(draggedIndex, 1);
+        const insertIndex = position === 'before' ? targetIndex : targetIndex + 1;
+        newPages.splice(insertIndex, 0, removed);
+        return newPages;
+      };
+
+      return reorderPages(prevPages, draggedId, targetId, position);
+    });
+  }, []);
+
+  const handleDrop = useCallback((draggedId, targetId) => {
+    console.log(`Drag operation: Dragged ${draggedId} onto ${targetId}`);
+    
+    setPages(prevPages => {
+      const updatePages = (pages) => {
+        return pages.map(page => {
+          if (page.id === draggedId) {
+            return { ...page, parentId: targetId };
+          }
+          if (page.id === targetId) {
+            return { 
+              ...page, 
+              subpages: page.subpages ? 
+                (page.subpages.includes(draggedId) ? page.subpages : [...page.subpages, draggedId]) 
+                : [draggedId] 
+            };
+          }
+          if (page.subpages && page.subpages.includes(draggedId)) {
+            return { ...page, subpages: page.subpages.filter(id => id !== draggedId) };
+          }
+          if (page.subpages) {
+            return { ...page, subpages: updatePages(page.subpages) };
+          }
+          return page;
+        });
+      };
+
+      const updatedPages = updatePages(prevPages);
+      console.log('Updated pages structure:', updatedPages);
+      return updatedPages;
+    });
+  }, []);
+
+  const isCircularReference = useCallback((draggedId, targetId) => {
+    let currentId = targetId;
+    while (currentId) {
+      if (currentId === draggedId) {
+        return true;
+      }
+      const parent = pages.find(page => page.id === currentId);
+      currentId = parent ? parent.parentId : null;
+    }
+    return false;
+  }, [pages]);
+
+  const RootDropZone = () => {
+    const [{ isOver }, drop] = useDrop(() => ({
+        accept: 'PAGE',
+        drop: (item, monitor) => {
+            if (!monitor.didDrop()) {
+                console.log(`Dropping ${item.id} to root level`);
+                handleDrop(item.id, null);
+            }
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+        }),
+    }));
+
+  const rootPages = pages.filter(page => !page.parentId);
+    return (
+      <div 
+        ref={drop}
+        className="drop-zone"
+        style={{ 
+            minHeight: '100px', 
+            padding: "10px",
+            transition: 'border-color 0.3s'
+        }}
+      >
+        {rootPages.map((page, index) => (
+          <PageItem 
+            key={page.id} 
+            page={page} 
+            onClick={handlePageClick}
+            onDrop={handleDrop}
+            onReorder={onReorder}
+            isCircularReference={isCircularReference}
+            subpages={pages.filter(p => p.parentId === page.id)}
+            allPages={pages}
+            isFirst={index === 0}
+            isLast={index === rootPages.length - 1}
+          />
+        ))}
+      </div>
+    );
+  };
+
   const renderPages = () => {
     return (
       <motion.div
@@ -286,17 +417,24 @@ export function Folder() {
         initial="initial"
         animate="animate"
         exit="exit"
+        className='pages-wrapper'
       >
-        {pagesRef.current.map((page) => (
-          <PageItem key={page.id} page={page} onClick={handlePageClick} />
-        ))}
+        <RootDropZone />
       </motion.div>
     );
   };
 
   return (
-    <div className="sidebar-container folder-container">
-      {isThereHighlights ? (activePage ? renderPageAnnotations() : renderPages()) : <EmptyState />}
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className="">
+        {isThereHighlights ? (
+          activePage ? 
+            renderPageAnnotations() : 
+            <RootDropZone onReorder={onReorder} /> // Pass onReorder to RootDropZone
+        ) : (
+          <EmptyState />
+        )}
+      </div>
+    </DndProvider>
   );
 }

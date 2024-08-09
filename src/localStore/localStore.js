@@ -120,6 +120,21 @@ class LocalStore {
     async getAllNotes() {
         return await this.fetchFromStorage(this.notesKey);
     }
+
+    async savePageStructure(pages) {
+        const structure = pages.map(page => ({
+            id: page.id,
+            parentId: page.parentId,
+            subpages: page.subpages
+        }));
+        await this.saveToStorage('pageStructure', structure);
+        chrome.runtime.sendMessage({ action: 'pageStructureUpdated' });
+    }
+
+    async getPageStructure() {
+        return await this.fetchFromStorage('pageStructure') || [];
+    }
+
 }
 
 export const localStore = new LocalStore();
