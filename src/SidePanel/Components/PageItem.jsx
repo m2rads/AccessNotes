@@ -3,8 +3,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import { FileIcon } from '../../Icons/FileIcon';
 import { ChevronRight } from 'lucide-react';
 
-export const PageStructureContext = React.createContext(null);
-
 export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference, subpages, allPages, isFirst, isLast }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
