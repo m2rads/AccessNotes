@@ -387,7 +387,6 @@ export function Folder() {
         className="drop-zone"
         style={{ 
             minHeight: '100px', 
-            border: isOver ? '2px solid #6798E1' : '2px solid transparent',
             padding: "10px",
             transition: 'border-color 0.3s'
         }}

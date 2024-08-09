@@ -89,11 +89,9 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                         display: 'flex',
                         alignItems: 'center',
                         padding: '5px',
-                        background: isOver ? '#2c2c2c' : 'transparent',
-                        transition: 'background-color 0.3s, opacity 0.3s'
                     }}
                 >
-                    <div className='file-icon' style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B7B6B4' }}>
+                    <div className='file-icon' style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DBDBD9' }}>
                         {subpages && subpages.length > 0 ? (
                             <ChevronRight
                                 size={16}
