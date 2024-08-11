@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, ChevronLeft } from 'lucide-react';
+import { Link, ChevronLeft, ExternalLink } from 'lucide-react';
 
 const PageHeader = ({ page, onBack }) => {
     return (
@@ -17,7 +17,7 @@ const PageHeader = ({ page, onBack }) => {
                     rel="noopener noreferrer"
                     className="page-link"
                 >
-                    <Link size={16} />
+                    <ExternalLink size={15} />
                 </a>
             </div>
         </div>

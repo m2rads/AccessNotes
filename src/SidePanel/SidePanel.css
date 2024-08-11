@@ -186,6 +186,7 @@ body, html {
 
 .page-link {
   display: flex;
+  margin-right: 2px;
   align-items: center;
   color: var(--grey-600);
   text-decoration: none;
