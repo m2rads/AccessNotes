@@ -8,21 +8,15 @@ import { motion } from 'framer-motion';
 import { PageItem } from './PageItem';
 import { DndProvider, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Page } from './Page';
 
 export function Folder() {
   const [pages, setPages] = useState([]);
   const [activePage, setActivePage] = useState(null);
   const [editNote, setEditNote] = useState({ id: null, content: '' });
   const [isThereHighlights, setIsThereHighlights] = useState(false);
-  const [editTitle, setEditTitle] = useState({ isEditing: false, content: '' });
   
   const pagesRef = useRef(pages);
-
-  const variants = {
-    initial: { opacity: 0, x: 100 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -100 }
-  };  
 
   const handlePageClick = (page) => {
     setActivePage(page);
@@ -31,27 +25,34 @@ export function Folder() {
   const handleBack = () => {
     setActivePage(null);
   };
-  
-  const handleTitleSave = useCallback(async (pageId) => {
-    const updatedPages = pagesRef.current.map(page => 
-      page.id === pageId ? { ...page, title: editTitle.content } : page
-    );
 
-    setPages(updatedPages);
-    pagesRef.current = updatedPages;
-    setEditTitle({ isEditing: false, content: '' });
-
-    // Save the updated title to local storage
-    const pageToUpdate = updatedPages.find(p => p.id === pageId);
-    if (pageToUpdate) {
-      await localStore.save(
-        pageToUpdate.annotations,
-        null,
-        pageToUpdate.url,
-        editTitle.content
+  const handleTitleChange = useCallback(async (newTitle) => {
+    if (activePage) {
+      const updatedPages = pagesRef.current.map(page => 
+        page.id === activePage.id ? { ...page, title: newTitle } : page
       );
+
+      setPages(updatedPages);
+      pagesRef.current = updatedPages;
+
+      // Save the updated title to local storage
+      const pageToUpdate = updatedPages.find(p => p.id === activePage.id);
+      if (pageToUpdate) {
+        await localStore.save(
+          pageToUpdate.annotations,
+          null,
+          pageToUpdate.url,
+          newTitle
+        );
+      }
+
+      // Update activePage
+      setActivePage(prevActivePage => ({
+        ...prevActivePage,
+        title: newTitle
+      }));
     }
-  }, [editTitle]);
+  }, [activePage]);
 
   const handleNoteChange = (event) => {
     setEditNote(prev => ({ ...prev, content: event.target.value }));
@@ -193,104 +194,6 @@ export function Folder() {
     }
   }, [updatePages]);
 
-  const TitleDisplayOrEdit = ({ url, page, editTitle, setEditTitle, handleTitleSave }) => {
-    const [hover, setHover] = useState(false);
-  
-    const handleKeyDown = (event) => {
-      if (event.key === 'Enter') {
-        handleTitleSave(page.id);
-      }
-    };
-  
-    return editTitle.isEditing ? (
-      <input
-        className="title-input"
-        value={editTitle.content}
-        onChange={(e) => setEditTitle({ ...editTitle, content: e.target.value })}
-        onBlur={() => setEditTitle({ isEditing: false, content: '' })}
-        onKeyDown={handleKeyDown}
-        autoFocus
-      />
-    ) : (
-      <div 
-        className="title-edit-container" 
-        onMouseEnter={() => setHover(true)} 
-        onMouseLeave={() => setHover(false)}
-        style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", cursor: 'pointer' }}
-      >
-        <a className="styled-link" href={url} target="_blank" rel="noopener noreferrer"> 
-          <h3 className='link-wrapper' style={{ marginRight: '10px' }}>{page.title}</h3>
-        </a>
-        <div
-          className="edit-icon"
-          onClick={() => setEditTitle({ isEditing: true, content: page.title })}
-          style={{ visibility: hover ? 'visible' : 'hidden' }}
-        >
-          <PenIcon/>
-        </div>
-      </div>
-    );
-  };
-  
-  const renderPageAnnotations = () => {
-    if (!activePage) return null;
-    
-    const currentPage = pagesRef.current.find(page => page.id === activePage.id);
-    if (!currentPage) return null;
-    
-    return (
-      <motion.div
-        key="annotations"
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -100 }}
-      >
-        <button onClick={handleBack} style={{ backgroundColor: "#09090b", borderRadius: '4px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer' }}>
-          <ArrowLeftIcon />
-          <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
-        </button>
-  
-        <div className="file-header">
-          <div> 
-            <h4 className="file-title">
-              <TitleDisplayOrEdit 
-                url={currentPage.url}
-                page={currentPage}
-                editTitle={editTitle} 
-                setEditTitle={setEditTitle}
-                handleTitleSave={handleTitleSave}
-              />
-            </h4>
-          </div>
-        </div>
-  
-        {currentPage.annotations.map((item) => (
-          <div className="annotations-container" key={`highlight-${item.hs.id}`}>
-            <p className="highlight-content-area">{item.hs.text || "Highlight without text"}</p>
-            {item.note && (
-              <div>
-                {item.note.id === editNote.id ? (
-                  <div>
-                    <textarea
-                      className="edit-note-area"
-                      value={editNote.content}
-                      onChange={handleNoteChange}
-                    />
-                    <button className="save-button" onClick={handleNoteSave}>Save</button>
-                  </div>
-                ) : (
-                  <p className="note-preview" onClick={() => handleEditMode(item.note)}>
-                    {item.note.content}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
-      </motion.div>
-    );
-  };
-
   const onReorder = useCallback((draggedId, targetId, position) => {
     setPages(prevPages => {
       const reorderPages = (pages, draggedId, targetId, position) => {
@@ -409,28 +312,21 @@ export function Folder() {
     );
   };
 
-  const renderPages = () => {
-    return (
-      <motion.div
-        key="pages"
-        variants={variants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className='pages-wrapper'
-      >
-        <RootDropZone />
-      </motion.div>
-    );
-  };
-
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="">
         {isThereHighlights ? (
           activePage ? 
-            renderPageAnnotations() : 
-            <RootDropZone onReorder={onReorder} /> // Pass onReorder to RootDropZone
+            <Page
+              page={activePage}
+              onBack={handleBack}
+              onTitleChange={handleTitleChange}
+              editNote={editNote}
+              handleNoteChange={handleNoteChange}
+              handleNoteSave={handleNoteSave}
+              handleEditMode={handleEditMode}
+            /> : 
+            <RootDropZone onReorder={onReorder} />
         ) : (
           <EmptyState />
         )}
