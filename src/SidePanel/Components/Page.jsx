@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeftIcon } from '../../Icons/ArrowLeftIcon';
+import PageHeader from './PageHeader';
 import { PageTitle } from './PageTitle';
 
 export const Page = ({ 
@@ -19,19 +19,17 @@ export const Page = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -100 }}
     >
-      <button onClick={onBack} style={{ backgroundColor: "#09090b", borderRadius: '4px', display: "flex", alignItems: "center", border: 'none', cursor: 'pointer', marginBottom: '20px' }}>
-        <ArrowLeftIcon />
-        <p style={{marginLeft: "5px", color: "#9ca3af"}}>Back</p>
-      </button>
-
-      <div className="file-header">
-        <PageTitle 
+      <PageHeader 
+        page={page}
+        onBack={onBack}
+      />
+      
+      <PageTitle 
           url={page.url}
           page={page}
           onTitleChange={onTitleChange}
-        />
-      </div>
-
+      />
+      
       {page.annotations.map((item) => (
         <div className="annotations-container" key={`highlight-${item.hs.id}`}>
           <p className="highlight-content-area">{item.hs.text || "Highlight without text"}</p>
