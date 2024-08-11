@@ -12,16 +12,20 @@ export const PageTitle = ({ url, page, onTitleChange }) => {
   }, [page.title]);
 
   const handleChange = (evt) => {
-    const newTitle = evt.target.value.replace(/<\/?[^>]+(>|$)/g, "");
+    const newTitle = evt.target.value.replace(/<\/?[^>]+(>|$)/g, "").trim().replace(/&nbsp;/g, ' ');
     setTitle(newTitle);
-    setIsEmpty(newTitle.trim() === '');
-    onTitleChange(newTitle.trim() || 'Untitled');
+    setIsEmpty(newTitle === '');
+    if (newTitle !== '') {
+      onTitleChange(newTitle);
+    } else {
+      onTitleChange(''); // Pass empty string to parent when title is empty
+    }
   };
 
   const handleBlur = () => {
     if (title.trim() === '') {
       setIsEmpty(true);
-      onTitleChange('Untitled');
+      onTitleChange(''); // Pass empty string to parent when title is empty
     }
   };
 
@@ -29,33 +33,15 @@ export const PageTitle = ({ url, page, onTitleChange }) => {
     <div className="title-container" style={{ display: 'flex', alignItems: 'center' }}>
       <ContentEditable
         innerRef={titleRef}
-        html={isEmpty ? '' : title}
+        html={title}
         disabled={false}
         onChange={handleChange}
         onBlur={handleBlur}
         tagName='h1'
-        style={{
-          outline: 'none',
-          color: isEmpty ? '#6B7280' : '#000000',
-          fontSize: '24px',
-          fontWeight: 'bold',
-          marginRight: '10px',
-          padding: '5px',
-          borderRadius: '4px',
-          minWidth: '100px',
-        }}
+        className={`title-input ${isEmpty ? 'empty' : ''}`}
       />
       {isEmpty && (
-        <span 
-          style={{
-            position: 'absolute',
-            color: '#6B7280',
-            marginLeft: "4px",
-            fontSize: '24px',
-            fontWeight: 'bold',
-            pointerEvents: 'none',
-          }}
-        >
+        <span className="title-placeholder">
           Untitled
         </span>
       )}
