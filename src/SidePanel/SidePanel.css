@@ -160,6 +160,7 @@ body, html {
   justify-content: space-between;
   padding: 11.5px 8px;
   border-bottom: 1px solid #e5e7eb;
+  box-sizing: border-box;
 }
 
 .page-header-left {
@@ -172,7 +173,7 @@ body, html {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 10px;
-  max-width: calc(100% - 50px); 
+  max-width: calc(100% - 40px); 
 }
 
 .back-button {
