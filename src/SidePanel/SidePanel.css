@@ -176,18 +176,24 @@ body, html {
   margin-right: 5px;
   padding: 0;
   background: none;
+  color: var(--grey-600);
+  transition: color 150ms ease;
+}
+
+.back-button:hover {
+  color: var(--grey-700);
 }
 
 .page-link {
   display: flex;
   align-items: center;
-  color: #6B7280;
+  color: var(--grey-600);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 150ms ease;
 }
 
 .page-link:hover {
-  color: #4B5563;
+  color: var(--grey-700);
 }
 
 /* -------------------------- */
