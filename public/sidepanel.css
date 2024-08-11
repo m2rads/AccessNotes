@@ -41,12 +41,21 @@
   --label-emphasised-font-size: 14.15px;
   --label-emphasised-line-height: 20px;
   --label-emphasised-letter-spacing: -0.2px;
+
+  /* Body Regular */
+  --body-font-family: 'Inter', sans-serif;
+  --body-font-size: 14px;
+  --body-font-weight: 400;
+  --body-line-height: 20px;
+  --body-letter-spacing: -0.25px;
 }
 
 /* -------------- Globals -------------- */
 
 body, html {
   /* background-color: var(--grey-200); */
+  padding: 0;
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-family: var(--font-family);
 }
@@ -72,6 +81,15 @@ body, html {
   font-size: var(--label-emphasised-font-size);
   line-height: var(--label-emphasised-line-height);
   letter-spacing: var(--label-emphasised-letter-spacing);
+  color: var(--grey-700);
+}
+
+.body-regular {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size);
+  font-weight: var(--body-font-weight);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--body-letter-spacing);
   color: var(--grey-700);
 }
 
@@ -131,6 +149,45 @@ body, html {
   overflow-y: auto;
   padding: 10px;
   box-sizing: border-box;
+}
+
+/* -------------- Page Header -------------- */
+
+.page-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11.5px 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.back-button {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  padding: 0;
+  background: none;
+}
+
+.page-link {
+  display: flex;
+  align-items: center;
+  color: #6B7280;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.page-link:hover {
+  color: #4B5563;
 }
 
 /* -------------------------- */
@@ -243,19 +300,6 @@ body, html {
   /* background-color: #1a1c1e; */
   outline: none;
   border: 1px solid #5f6368;
-}
-
-.back-button {
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  border: none;
-  cursor: pointer;
-}
-
-.back-button p {
-  margin-left: 5px;
-  /* color: #9ca3af; */
 }
 
 .title-edit-container {
