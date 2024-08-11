@@ -167,6 +167,14 @@ body, html {
   align-items: center;
 }
 
+.page-header-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+  max-width: calc(100% - 80px); 
+}
+
 .back-button {
   border-radius: 4px;
   display: flex;
