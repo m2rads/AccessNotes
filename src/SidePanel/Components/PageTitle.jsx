@@ -50,6 +50,7 @@ export const PageTitle = ({ url, page, onTitleChange }) => {
           style={{
             position: 'absolute',
             color: '#6B7280',
+            marginLeft: "4px",
             fontSize: '24px',
             fontWeight: 'bold',
             pointerEvents: 'none',
