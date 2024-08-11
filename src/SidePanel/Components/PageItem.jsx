@@ -109,7 +109,7 @@ export const PageItem = ({ page, onClick, onDrop, onReorder, isCircularReference
                         )}
                     </div>
                     <div className={`file-item-title file-icon ${isHovered ? 'label-emphasised' : 'label'}`} style={{ marginLeft: '8px' }}>
-                        {page.title}
+                        {page.title || "Untitled"}
                     </div>
                 </div>
             </div>

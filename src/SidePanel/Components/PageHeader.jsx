@@ -9,7 +9,7 @@ const PageHeader = ({ page, onBack }) => {
                     <button onClick={onBack} className="back-button">
                     <ChevronLeft size={16} />
                     </button>
-                    <div className='body-regular'>{page.title}</div>
+                    <div className='body-regular'>{page.title || "Untitled"}</div>
                 </div>
                 <a 
                     href={page.url} 
