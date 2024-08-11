@@ -59,9 +59,6 @@ export const PageTitle = ({ url, page, onTitleChange }) => {
           Untitled
         </span>
       )}
-      <a className="styled-link" href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '14px', color: '#6B7280' }}>
-        {url}
-      </a>
     </div>
   );
 };
