@@ -166,6 +166,7 @@ body, html {
 .page-header-left {
   display: flex;
   align-items: center;
+  max-width: calc(100% - 30px); /* Adjust based on the width of your external link icon */
 }
 
 .page-header-title {
@@ -173,7 +174,23 @@ body, html {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 10px;
-  max-width: calc(100% - 40px); 
+  max-width: calc(100% - 40px);
+}
+
+/* Truncate to 10 characters for smaller screens */
+@media (max-width: 767px) {
+  .page-header-title {
+    max-width: 10ch;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Truncate to 20 characters for larger screens */
+@media (min-width: 768px) {
+  .page-header-title {
+    max-width: 20ch;
+    text-overflow: ellipsis;
+  }
 }
 
 .back-button {
@@ -187,6 +204,7 @@ body, html {
   background: none;
   color: var(--grey-600);
   transition: color 150ms ease;
+  flex-shrink: 0;
 }
 
 .back-button:hover {
@@ -200,6 +218,7 @@ body, html {
   color: var(--grey-600);
   text-decoration: none;
   transition: color 150ms ease;
+  flex-shrink: 0;
 }
 
 .page-link:hover {
