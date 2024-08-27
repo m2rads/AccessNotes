@@ -7,7 +7,7 @@ class LocalStore {
 
         this.baseKey = `accessnotes${id ? `-${id}` : ''}`;
         this.notesKey = `notes${id ? `-${id}` : ''}`;
-        this.localMode = false; 
+        this.localMode = typeof chrome === 'undefined' || typeof chrome.storage === 'undefined';
         console.log("Local mode:", this.localMode);
 
         LocalStore.instance = this;
@@ -121,16 +121,20 @@ class LocalStore {
         return await this.fetchFromStorage(this.notesKey);
     }
 
-    // New method to save custom titles
-    async saveCustomTitles(titles) {
-        await this.saveToStorage(this.titlesKey, titles);
-        chrome.runtime.sendMessage({ action: 'annotationsUpdated', key: this.titlesKey });
+    async savePageStructure(pages) {
+        const structure = pages.map(page => ({
+            id: page.id,
+            parentId: page.parentId,
+            subpages: page.subpages
+        }));
+        await this.saveToStorage('pageStructure', structure);
+        chrome.runtime.sendMessage({ action: 'pageStructureUpdated' });
     }
 
-    // New method to get all custom titles
-    async getCustomTitles() {
-        return await this.fetchFromStorage(this.titlesKey);
+    async getPageStructure() {
+        return await this.fetchFromStorage('pageStructure') || [];
     }
+
 }
 
 export const localStore = new LocalStore();
