@@ -6,8 +6,7 @@ A Chrome extension for seamless note-taking and accessibility features while bro
 [![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/genffgnemddlpddpdfjbhanbnacgfplc)](https://chromewebstore.google.com/detail/accessnotes/genffgnemddlpddpdfjbhanbnacgfplc)
 
 
-<video src="https://video.twimg.com/ext_tw_video/1787194390328545280/pu/vid/avc1/1152x720/tooHzVkwUrm0KnjP.mp4?tag=12" width="100%" autoplay loop muted playsinline>
-</video>
+[![AccessNotes Demo](https://img.youtube.com/vi/cMj5zASjoZs/maxresdefault.jpg)](https://www.youtube.com/watch?v=cMj5zASjoZs)
 
 ## Quick Start 🚀
 
