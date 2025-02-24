@@ -5,9 +5,6 @@ A Chrome extension for seamless note-taking and accessibility features while bro
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/genffgnemddlpddpdfjbhanbnacgfplc)](https://chromewebstore.google.com/detail/accessnotes/genffgnemddlpddpdfjbhanbnacgfplc)
 [![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/genffgnemddlpddpdfjbhanbnacgfplc)](https://chromewebstore.google.com/detail/accessnotes/genffgnemddlpddpdfjbhanbnacgfplc)
 
-<video src="https://www.youtube.com/watch?v=cMj5zASjoZs" width="100%" controls autoplay loop muted>
-</video>
-
 ## Quick Start 🚀
 
 1. Build the extension:
