@@ -1,8 +1,34 @@
-# React + Vite
+# AccessNotes 🎯
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Chrome extension for seamless note-taking and accessibility features while browsing.
 
-Currently, two official plugins are available:
+## Quick Start 🚀
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Build the extension:
+```bash
+npm install
+npm run build
+```
+
+2. Load in Chrome:
+   - Open `chrome://extensions/`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `dist` folder
+
+## Development 💻
+
+```bash
+npm run dev     # Start dev server
+npm run build   # Production build
+```
+
+## Tech Stack 🛠️
+
+- React + Vite
+- Chrome Extensions API
+- Modern CSS
+
+## License
+
+MIT © 2024
