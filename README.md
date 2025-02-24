@@ -1,4 +1,4 @@
-# AccessNotes v2.0 🎯
+# AccessNotes 🎯
 
 A Chrome extension for seamless note-taking and accessibility features while browsing.
 
